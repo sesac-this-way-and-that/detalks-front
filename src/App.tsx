@@ -1,8 +1,16 @@
+import { Route, Routes } from "react-router-dom";
+import "./styles/index.scss";
+import Main from "./components/Main";
+import NotFound from "./components/NotFound";
+
 function App() {
   return (
-    <div className="App">
-      <h1>React Open</h1>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 
