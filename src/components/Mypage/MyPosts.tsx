@@ -141,7 +141,7 @@ const MyPosts: React.FC = () => {
           1
         </button>
       );
-      if (startPage > 2) {
+      if (startPage >= 2) {
         pages.push(<span key="dots1">...</span>);
       }
     }
@@ -159,7 +159,7 @@ const MyPosts: React.FC = () => {
     }
 
     if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
+      if (endPage <= totalPages - 1) {
         pages.push(<span key="dots2">...</span>);
       }
       pages.push(

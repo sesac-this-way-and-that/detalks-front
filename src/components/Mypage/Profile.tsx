@@ -1,6 +1,14 @@
 import React from "react";
 
-const Profile: React.FC = () => {
+interface ProfileProps {
+  userInfo: {
+    name: string;
+    summary: string;
+    about: string;
+  };
+}
+
+const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
   const questions = [
     {
       id: 1,
@@ -38,6 +46,7 @@ const Profile: React.FC = () => {
       date: "2024-06-05 12:00:00",
     },
   ];
+
   return (
     <>
       <div>
@@ -61,7 +70,7 @@ const Profile: React.FC = () => {
       </div>
       <div>
         <h3>자기소개</h3>
-        <p>안녕하세요....</p>
+        <p>{userInfo.about}</p>
       </div>
       <div>
         <h3>Top 5</h3>

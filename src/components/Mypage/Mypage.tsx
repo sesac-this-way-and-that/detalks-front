@@ -5,9 +5,20 @@ import Profile from "./Profile";
 
 const Mypage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
+  const [userInfo, setUserInfo] = useState({
+    name: "이기혁",
+    summary: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.",
+    about: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.\n\n...",
+  });
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+
+  const handleUserInfoChange = (newUserInfo: typeof userInfo) => {
+    setUserInfo(newUserInfo);
+  };
+
   return (
     <section>
       <h2>마이페이지</h2>
@@ -17,9 +28,9 @@ const Mypage: React.FC = () => {
         </div>
         <div>
           <p>
-            <span>이기혁</span> 님
+            <span>{userInfo.name}</span> 님
           </p>
-          <p>안녕하세요. 프론트엔드를 하고 있는 개발자입니다.</p>
+          <p>{userInfo.summary}</p>
           <div>
             <span>
               <p>java</p>
@@ -53,9 +64,14 @@ const Mypage: React.FC = () => {
         </div>
 
         <div className="mypage-components-container">
-          {activeTab === "profile" && <Profile />}
+          {activeTab === "profile" && <Profile userInfo={userInfo} />}
           {activeTab === "mypost" && <MyPosts />}
-          {activeTab === "editprofile" && <EditProfile />}
+          {activeTab === "editprofile" && (
+            <EditProfile
+              userInfo={userInfo}
+              onUserInfoChange={handleUserInfoChange}
+            />
+          )}
         </div>
       </article>
     </section>
