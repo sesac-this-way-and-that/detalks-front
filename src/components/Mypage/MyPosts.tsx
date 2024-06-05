@@ -104,7 +104,7 @@ const MyPosts: React.FC = () => {
     },
   ];
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 1;
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (page: number) => {
@@ -114,8 +114,67 @@ const MyPosts: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = questions.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(questions.length / itemsPerPage);
+  const pageNumbers = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    if (startPage > 1) {
+      pages.push(
+        <button
+          key="first"
+          className={1 === currentPage ? "active" : ""}
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        pages.push(<span key="dots1">...</span>);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={i === currentPage ? "active" : ""}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(<span key="dots2">...</span>);
+      }
+      pages.push(
+        <button
+          key="last"
+          className={totalPages === currentPage ? "active" : ""}
+          onClick={() => handlePageChange(totalPages)}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pages;
+  };
 
   return (
     <div>
@@ -152,12 +211,20 @@ const MyPosts: React.FC = () => {
           </ul>
         ))}
       </div>
-      <div>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button key={index + 1} onClick={() => handlePageChange(index + 1)}>
-            {index + 1}
-          </button>
-        ))}
+      <div className="pagination">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          이전
+        </button>
+        {renderPageNumbers()}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          다음
+        </button>
       </div>
     </div>
   );
