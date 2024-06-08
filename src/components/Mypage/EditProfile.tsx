@@ -8,24 +8,30 @@ interface EditProfileProps {
     summary: string;
     about: string;
   };
+
   onUserInfoChange: (newUserInfo: {
     name: string;
     summary: string;
     about: string;
   }) => void;
+  onProfileImageChange: (imageUrl: string) => void;
 }
 
 const EditProfile: React.FC<EditProfileProps> = ({
   userInfo,
   onUserInfoChange,
+  onProfileImageChange, 
 }) => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [name, setName] = useState(userInfo.name);
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
-
+  const handleProfileImageChange = (imageUrl: string) => {
+    onProfileImageChange(imageUrl);
+  };
   const handleOpenPasswordModal = () => {
     setIsPasswordModalOpen(true);
   };
@@ -47,13 +53,30 @@ const EditProfile: React.FC<EditProfileProps> = ({
     onUserInfoChange({ name, summary, about });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      setSelectedFile(file);
+    }
+  };
+
   return (
     <div>
       <div>
         <h3>프로필 사진 수정</h3>
-        <div className="profile-picture-section">
-          <img src="" alt="프로필 사진" className="profile-picture" />
-        </div>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {imageUrl && (
+          <div>
+            <img src={imageUrl} alt="프로필 사진" style={{ width: "200px" }} />
+          </div>
+        )}
       </div>
       <form className="edit-profile-form" onSubmit={handleSubmit}>
         <div className="form-group">

@@ -10,6 +10,7 @@ const Mypage: React.FC = () => {
     summary: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.",
     about: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.\n\n...",
   });
+  const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -19,12 +20,16 @@ const Mypage: React.FC = () => {
     setUserInfo(newUserInfo);
   };
 
+  const handleProfileImageChange = (imageUrl: string) => {
+    setProfileImageUrl(imageUrl);
+  };
+
   return (
     <section>
       <h2>마이페이지</h2>
       <article>
         <div>
-          <img src="" alt="" />
+          <img src={profileImageUrl} alt="프로필 사진" />
         </div>
         <div>
           <p>
@@ -70,6 +75,7 @@ const Mypage: React.FC = () => {
             <EditProfile
               userInfo={userInfo}
               onUserInfoChange={handleUserInfoChange}
+              onProfileImageChange={handleProfileImageChange}
             />
           )}
         </div>
