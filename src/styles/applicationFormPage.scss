@@ -1,6 +1,4 @@
 .application_wrapper {
-  padding: 24px 16px;
-
   .headerTitle {
     font-size: 30px;
     margin-bottom: 50px;
@@ -47,7 +45,6 @@
       border-radius: 5px;
       padding: 6px 10px 2px 10px;
       button {
-        // height: 28px;
         width: 28px;
         display: grid;
         place-items: center;
