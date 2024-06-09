@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
 
@@ -8,7 +9,6 @@ interface EditProfileProps {
     summary: string;
     about: string;
   };
-
   onUserInfoChange: (newUserInfo: {
     name: string;
     summary: string;
@@ -20,7 +20,7 @@ interface EditProfileProps {
 const EditProfile: React.FC<EditProfileProps> = ({
   userInfo,
   onUserInfoChange,
-  onProfileImageChange, 
+  onProfileImageChange,
 }) => {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -29,9 +29,13 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [name, setName] = useState(userInfo.name);
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
-  const handleProfileImageChange = (imageUrl: string) => {
-    onProfileImageChange(imageUrl);
-  };
+
+  useEffect(() => {
+    setName(userInfo.name);
+    setSummary(userInfo.summary);
+    setAbout(userInfo.about);
+  }, [userInfo]);
+
   const handleOpenPasswordModal = () => {
     setIsPasswordModalOpen(true);
   };
@@ -48,9 +52,63 @@ const EditProfile: React.FC<EditProfileProps> = ({
     setIsWithdrawModalOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    onUserInfoChange({ name, summary, about });
+    try {
+      const token =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibWVtYmVyTmFtZSI6InRlc3QiLCJpc3MiOiJzZXNhYy10aGlzLXdheS1hbmQtdGhhdCIsImV4cCI6MTcxNzkyNTIyMiwiaWF0IjoxNzE3ODM4ODIyfQ.DUSaKLMfrVU50wib_QzZTwGCqqQbYQsYNXEhSo_cAGWP5C34zx-1mpBx0DP9Z8hgxqcM7LUHwOTxFH0PR2T57Q"; //localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+
+      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+
+      let profileImageUrl = "default.jpg"; // Default image URL
+
+      // if (selectedFile) {
+      //   const formData = new FormData();
+      //   formData.append("file", selectedFile);
+      //   const imageUploadResponse = await axios.post(
+      //     `${process.env.REACT_APP_API_SERVER}/upload`,
+      //     formData,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //         "Content-Type": "multipart/form-data",
+      //       },
+      //     }
+      //   );
+      //   profileImageUrl = imageUploadResponse.data.imageUrl;
+      // }
+
+      const requestData = {
+        name,
+        summary,
+        about,
+        img: profileImageUrl,
+      };
+
+      console.log("Request Data:", requestData); // Log the data being sent
+
+      const response = await axios.patch(url, requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Ensure Content-Type is correct
+        },
+      });
+
+      console.log("Response:", response.data); // Log the response
+
+      onUserInfoChange({ name, summary, about });
+      onProfileImageChange(profileImageUrl);
+      alert("Profile updated successfully");
+    } catch (error) {
+      console.error("Error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        // Handle specific error response from server
+        console.error("Response Error:", error.response.data);
+        alert(`Failed to update profile: ${error.response.data.message}`);
+      } else {
+        alert("Failed to update profile");
+      }
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

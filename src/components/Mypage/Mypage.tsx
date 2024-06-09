@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditProfile from "./EditProfile";
 import MyPosts from "./MyPosts";
 import Profile from "./Profile";
-
+import { useInfoStore } from "../../store";
 const Mypage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
-  const [userInfo, setUserInfo] = useState({
-    name: "이기혁",
-    summary: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.",
-    about: "안녕하세요. 프론트엔드를 하고 있는 개발자입니다.\n\n...",
-  });
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
+  const userData = useInfoStore((state) => state.userInfo);
+  const getInfo = useInfoStore((state) => state.getInfo);
+  const [userInfo, setUserInfo] = useState({
+    name: userData?.name || "default-name",
+    summary: userData?.summary || "한 줄 소개가 없습니다.",
+    about: userData?.about || "자기소개가 없습니다.",
+  });
+
+  // getInfo();
+  // console.log("gkgk" + userData);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -24,6 +29,11 @@ const Mypage: React.FC = () => {
     setProfileImageUrl(imageUrl);
   };
 
+  useEffect(() => {
+    // Call getInfo whenever userInfo changes
+    getInfo();
+  }, [userInfo, getInfo]);
+  
   return (
     <section>
       <h2>마이페이지</h2>
