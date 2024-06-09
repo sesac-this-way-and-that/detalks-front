@@ -14,6 +14,7 @@ const Mypage: React.FC = () => {
     summary: userData?.summary || "한 줄 소개가 없습니다.",
     about: userData?.about || "자기소개가 없습니다.",
   });
+  const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
   // getInfo();
   // console.log("gkgk" + userData);

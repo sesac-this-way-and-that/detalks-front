@@ -9,6 +9,7 @@ interface EditProfileProps {
     summary: string;
     about: string;
   };
+
   onUserInfoChange: (newUserInfo: {
     name: string;
     summary: string;
@@ -108,6 +109,20 @@ const EditProfile: React.FC<EditProfileProps> = ({
       } else {
         alert("Failed to update profile");
       }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      setSelectedFile(file);
     }
   };
 
