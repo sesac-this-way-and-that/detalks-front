@@ -1,51 +1,220 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ModifyPassword from "./ModifyPassword";
+import WithdrawUser from "./WithdrawUser";
 
-const EditProfile: React.FC = () => {
+interface EditProfileProps {
+  userInfo: {
+    name: string;
+    summary: string;
+    about: string;
+  };
+
+  onUserInfoChange: (newUserInfo: {
+    name: string;
+    summary: string;
+    about: string;
+  }) => void;
+  onProfileImageChange: (imageUrl: string) => void;
+}
+
+const EditProfile: React.FC<EditProfileProps> = ({
+  userInfo,
+  onUserInfoChange,
+  onProfileImageChange,
+}) => {
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [name, setName] = useState(userInfo.name);
+  const [summary, setSummary] = useState(userInfo.summary);
+  const [about, setAbout] = useState(userInfo.about);
+
+  useEffect(() => {
+    setName(userInfo.name);
+    setSummary(userInfo.summary);
+    setAbout(userInfo.about);
+  }, [userInfo]);
+
+  const handleOpenPasswordModal = () => {
+    setIsPasswordModalOpen(true);
+  };
+
+  const handleClosePasswordModal = () => {
+    setIsPasswordModalOpen(false);
+  };
+
+  const handleOpenWithdrawModal = () => {
+    setIsWithdrawModalOpen(true);
+  };
+
+  const handleCloseWithdrawModal = () => {
+    setIsWithdrawModalOpen(false);
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const token =
+        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibWVtYmVyTmFtZSI6InRlc3QiLCJpc3MiOiJzZXNhYy10aGlzLXdheS1hbmQtdGhhdCIsImV4cCI6MTcxNzkyNTIyMiwiaWF0IjoxNzE3ODM4ODIyfQ.DUSaKLMfrVU50wib_QzZTwGCqqQbYQsYNXEhSo_cAGWP5C34zx-1mpBx0DP9Z8hgxqcM7LUHwOTxFH0PR2T57Q"; //localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+
+      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+
+      let profileImageUrl = "default.jpg"; // Default image URL
+
+      // if (selectedFile) {
+      //   const formData = new FormData();
+      //   formData.append("file", selectedFile);
+      //   const imageUploadResponse = await axios.post(
+      //     `${process.env.REACT_APP_API_SERVER}/upload`,
+      //     formData,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${token}`,
+      //         "Content-Type": "multipart/form-data",
+      //       },
+      //     }
+      //   );
+      //   profileImageUrl = imageUploadResponse.data.imageUrl;
+      // }
+
+      const requestData = {
+        name,
+        summary,
+        about,
+        img: profileImageUrl,
+      };
+
+      console.log("Request Data:", requestData); // Log the data being sent
+
+      const response = await axios.patch(url, requestData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Ensure Content-Type is correct
+        },
+      });
+
+      console.log("Response:", response.data); // Log the response
+
+      onUserInfoChange({ name, summary, about });
+      onProfileImageChange(profileImageUrl);
+      alert("Profile updated successfully");
+    } catch (error) {
+      console.error("Error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        // Handle specific error response from server
+        console.error("Response Error:", error.response.data);
+        alert(`Failed to update profile: ${error.response.data.message}`);
+      } else {
+        alert("Failed to update profile");
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      setSelectedFile(file);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      setSelectedFile(file);
+    }
+  };
+
   return (
     <div>
       <div>
         <h3>프로필 사진 수정</h3>
-        <div className="profile-picture-section">
-          <img src="" alt="프로필 사진" className="profile-picture" />
-        </div>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {imageUrl && (
+          <div>
+            <img src={imageUrl} alt="프로필 사진" style={{ width: "200px" }} />
+          </div>
+        )}
       </div>
-      <form className="edit-profile-form">
+      <form className="edit-profile-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="nickname">닉네임</label>
+          <label htmlFor="name">닉네임</label>
           <input
             type="text"
-            id="nickname"
-            name="nickname"
-            defaultValue="이기혁"
+            id="name"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="introduction">한 줄 소개</label>
+          <label htmlFor="summary">한 줄 소개</label>
           <input
             type="text"
-            id="introduction"
-            name="introduction"
-            defaultValue="안녕하세요. 프론트엔드를 하고 있는 개발자입니다."
+            id="summary"
+            name="summary"
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label htmlFor="bio">자기소개</label>
+          <label htmlFor="about">자기소개</label>
           <textarea
-            id="bio"
-            name="bio"
+            id="about"
+            name="about"
             rows={5}
-            defaultValue={`안녕하세요. 프론트엔드를 하고 있는 개발자입니다.\n\n...`}
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="">비밀번호 수정</label>
+          <button type="button" onClick={handleOpenPasswordModal}>
+            비밀번호 수정하기
+          </button>
         </div>
         <div className="form-buttons">
           <button type="submit" className="submit-button">
             내 정보 수정
           </button>
-          <button type="button" className="cancel-button">
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={handleOpenWithdrawModal}
+          >
             회원 탈퇴
           </button>
         </div>
       </form>
+      {isPasswordModalOpen && (
+        <div className="modal">
+          <ModifyPassword
+            handleUserDataChange={() => {}}
+            currentPw=""
+            onHide={handleClosePasswordModal}
+          />
+        </div>
+      )}
+      {isWithdrawModalOpen && (
+        <div className="modal">
+          <WithdrawUser onHide={handleCloseWithdrawModal} />
+        </div>
+      )}
     </div>
   );
 };
