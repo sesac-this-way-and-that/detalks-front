@@ -126,20 +126,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === "string") {
-          setImageUrl(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-      setSelectedFile(file);
-    }
-  };
-
   return (
     <div>
       <div>
