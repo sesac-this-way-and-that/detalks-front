@@ -14,7 +14,6 @@ const Mypage: React.FC = () => {
     summary: userData?.summary || "한 줄 소개가 없습니다.",
     about: userData?.about || "자기소개가 없습니다.",
   });
-  const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
   // getInfo();
   // console.log("gkgk" + userData);
@@ -34,7 +33,7 @@ const Mypage: React.FC = () => {
     // Call getInfo whenever userInfo changes
     getInfo();
   }, [userInfo, getInfo]);
-  
+
   return (
     <section>
       <h2>마이페이지</h2>
