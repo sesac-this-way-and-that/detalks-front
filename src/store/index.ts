@@ -13,7 +13,7 @@ type UserInfo = {
   summary?: string;
   about?: string;
   rep: 1;
-  // social: "NONE",
+  social: string,
   created: Date;
   visited: Date;
   updated: string;
@@ -52,8 +52,7 @@ export const useInfoStore = create<UserStore>()(
       isLogin: false,
       getInfo: async () => {
         try {
-          const token =
-            "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibWVtYmVyTmFtZSI6InRlc3QiLCJpc3MiOiJzZXNhYy10aGlzLXdheS1hbmQtdGhhdCIsImV4cCI6MTcxNzkyNTIyMiwiaWF0IjoxNzE3ODM4ODIyfQ.DUSaKLMfrVU50wib_QzZTwGCqqQbYQsYNXEhSo_cAGWP5C34zx-1mpBx0DP9Z8hgxqcM7LUHwOTxFH0PR2T57Q"; //localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+          const token = localStorage.getItem("authToken"); // Assuming you store your token in localStorage
           const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
           const res = await axios.get(url, {
             headers: {
