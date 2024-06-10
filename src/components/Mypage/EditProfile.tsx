@@ -26,7 +26,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("default.jpg");
   const [name, setName] = useState(userInfo.name);
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
@@ -56,49 +56,39 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const token =
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwibWVtYmVyTmFtZSI6InRlc3QiLCJpc3MiOiJzZXNhYy10aGlzLXdheS1hbmQtdGhhdCIsImV4cCI6MTcxNzkyNTIyMiwiaWF0IjoxNzE3ODM4ODIyfQ.DUSaKLMfrVU50wib_QzZTwGCqqQbYQsYNXEhSo_cAGWP5C34zx-1mpBx0DP9Z8hgxqcM7LUHwOTxFH0PR2T57Q"; //localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+      const token = localStorage.getItem("authToken"); // Assuming you store your token in localStorage
 
       const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
 
-      let profileImageUrl = "default.jpg"; // Default image URL
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("summary", summary);
+      formData.append("about", about);
 
-      // if (selectedFile) {
-      //   const formData = new FormData();
-      //   formData.append("file", selectedFile);
-      //   const imageUploadResponse = await axios.post(
-      //     `${process.env.REACT_APP_API_SERVER}/upload`,
-      //     formData,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${token}`,
-      //         "Content-Type": "multipart/form-data",
-      //       },
-      //     }
-      //   );
-      //   profileImageUrl = imageUploadResponse.data.imageUrl;
-      // }
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      } else {
+        formData.append("img", imageUrl); // Append default image URL if no file is selected
+      }
 
-      const requestData = {
-        name,
-        summary,
-        about,
-        img: profileImageUrl,
-      };
+      console.log("FormData Entries:");
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
 
-      console.log("Request Data:", requestData); // Log the data being sent
-
-      const response = await axios.patch(url, requestData, {
+      const response = await axios.patch(url, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json", // Ensure Content-Type is correct
+          "Content-Type": "multipart/form-data",
         },
       });
 
       console.log("Response:", response.data); // Log the response
 
       onUserInfoChange({ name, summary, about });
-      onProfileImageChange(profileImageUrl);
+      if (selectedFile) {
+        onProfileImageChange(URL.createObjectURL(selectedFile));
+      }
       alert("Profile updated successfully");
     } catch (error) {
       console.error("Error:", error);

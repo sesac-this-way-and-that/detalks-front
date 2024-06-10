@@ -9,39 +9,71 @@ interface WithdrawUserProps {
 const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
+  const [reason, setReason] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //     event.preventDefault();
-  //     if (!userId || !password) return alert("아이디와 비밀번호를 입력해주세요.");
+  const handleReasonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setReason(event.target.value);
+  };
 
-  //     const confirm = window.confirm("정말로 회원탈퇴를 진행하시겠습니까?");
-  //     if (!confirm) return;
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  //     const res = await axios({
-  //         method: "delete",
-  //         url: `${process.env.REACT_APP_API_SERVER}/api/withdrawal`,
-  //         data: { id: userId, password },
-  //     });
+    if (!password) {
+      return alert("비밀번호를 입력해주세요.");
+    }
 
-  //     if (res.data.success) {
-  //         alert("회원탈퇴가 완료되었습니다.");
-  //         isLogin();
-  //         navigate("/");
-  //     } else {
-  //         alert(res.data);
-  //     }
-  // };
+    const confirm = window.confirm("정말로 회원탈퇴를 진행하시겠습니까?");
+    if (!confirm) return;
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      console.log(token);
+      const formData = new URLSearchParams();
+      formData.append("pwd", password);
+      formData.append("reason", reason);
+
+      const response = await axios.request({
+        method: "delete",
+        url: url,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: formData.toString(),
+      });
+      
+
+      if (response.data.result) {
+        alert("회원탈퇴가 완료되었습니다.");
+        navigate("/");
+      } else {
+        alert(response.data.msg);
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Response Error:", error.response.data);
+        alert(`Failed to delete account: ${error.response.data.message}`);
+      } else {
+        alert("Failed to delete account");
+      }
+    }
+  };
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         setIsMenuOpen(false);
         onHide();
       }
@@ -64,10 +96,9 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
       <p>30일 까지 정보를 유지한 뒤 삭제됩니다.</p>
       <div className="mypage-profile-container">
         <p className="mypage-smalltitle">
-          회원탈퇴를 위해 비밀번호를 입력해주세요.
+          회원탈퇴를 위해 비밀번호와 탈퇴 사유를 입력해주세요.
         </p>
-        <form>
-          {/* onSubmit={handleSubmit}> */}
+        <form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="password">비밀번호:</label>
             <input
@@ -76,6 +107,15 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
               value={password}
               onChange={handlePasswordChange}
               autoComplete="current-password"
+            />
+          </div>
+          <div>
+            <label htmlFor="reason">탈퇴 사유:</label>
+            <input
+              type="text"
+              id="reason"
+              value={reason}
+              onChange={handleReasonChange}
             />
           </div>
           <button type="submit" className="withdraw-btn">
