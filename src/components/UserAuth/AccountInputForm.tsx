@@ -53,7 +53,7 @@ export default function AccountInputForm({
         .post(url, formData)
         .then((res) => {
           console.log("then res.data: ", res.data);
-          localStorage.setItem("loginToken", res.data.token);
+          localStorage.setItem("authToken", res.data.token);
           alert("로그인 성공");
           // nav("/main");
         })
