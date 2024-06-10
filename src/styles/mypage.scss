@@ -1,0 +1,247 @@
+@import "color.scss";
+@font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+button {
+  font-family: "S-CoreDream-3Light";
+}
+section {
+  width: 900px;
+  color: rgb(26, 26, 26);
+  padding-top: 50px;
+  .title {
+    color: $main-color;
+    font-size: 30px;
+  }
+  article {
+    width: 100%;
+  }
+  .mypage-profile {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    .profile-img {
+      width: 180px;
+      height: 180px;
+      border: 1px solid rgb(231, 231, 231);
+      border-radius: 5px;
+    }
+    .profile-content {
+      width: 75%;
+      height: 180px;
+      margin-bottom: 60px;
+      .profile-name {
+        font-size: 20px;
+        font-weight: bold;
+        color: $main-color;
+        margin-bottom: 10px;
+      }
+      .profile-summary {
+        height: 100px;
+        margin-bottom: 15px;
+      }
+      .profile-tag {
+        span {
+          color: rgb(67, 67, 67);
+          background-color: #fdcc51;
+          padding: 2px 18px;
+          border-radius: 10px;
+          margin-right: 10px;
+          box-shadow: 1px 1px 1px rgb(195, 195, 195);
+        }
+      }
+    }
+  }
+  .mypage-tab {
+    .mypage-button-container {
+      display: flex;
+      button {
+        border: 1px solid rgb(207, 207, 207);
+        width: 130px;
+        height: 30px;
+        background-color: $block-color;
+        border-radius: 5px 5px 0 0;
+        border-bottom: none;
+        color: $main-color;
+        &:hover {
+          background-color: $main-color;
+          color: white;
+        }
+      }
+      .active {
+        background-color: $main-color;
+        color: white;
+      }
+      .line {
+        width: 100%;
+        height: 30px;
+        border-bottom: 1px solid rgb(207, 207, 207);
+      }
+    }
+    .mypage-components-container {
+      border: 1px solid rgb(207, 207, 207);
+      background-color: $block-color;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      padding: 20px;
+      h3 {
+        color: $main-color;
+        font-size: 21px;
+        margin-bottom: 15px;
+      }
+      .box {
+        border: 1px solid rgb(231, 231, 231);
+        border-radius: 5px;
+        box-shadow: 1px 1px 1px rgb(195, 195, 195);
+        padding: 15px;
+      }
+      .mypage-profile-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        .mypage-profile-ability {
+          width: 300px;
+          .box {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            height: 200px;
+            div {
+              width: 134px;
+              text-align: center;
+              p {
+                // border: 1px solid red;
+                &:first-child {
+                  font-size: 20px;
+                  font-weight: bold;
+                  color: $deep-blue-color;
+                }
+              }
+            }
+          }
+        }
+        .mypage-profile-about {
+          width: 530px;
+          .box {
+            height: 200px;
+          }
+        }
+      }
+      .mypage-profile-top {
+        ul {
+          display: flex;
+          justify-content: space-between;
+          border: 1px solid rgb(231, 231, 231);
+          border-radius: 5px;
+          box-shadow: 1px 1px 1px rgb(195, 195, 195);
+          padding: 15px;
+          margin-bottom: 10px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          li {
+            // border: 1px solid blue;
+            &:first-child {
+              color: rgb(67, 67, 67);
+              font-weight: bold;
+            }
+            &:nth-child(2) {
+              width: 80px;
+              text-align: end;
+              line-height: 20px;
+              span {
+                border: 1px solid rgb(167, 167, 167);
+                border-radius: 15px;
+                padding: 0 10px;
+                font-size: 10px;
+              }
+            }
+            &:nth-child(3) {
+              width: 540px;
+              color: $deep-blue-color;
+            }
+            &:last-child {
+              width: 120px;
+              text-align: end;
+              font-size: 11px;
+              color: gray;
+              line-height: 24px;
+            }
+          }
+        }
+      }
+      .mypost-filter-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        div {
+          ul {
+            display: flex;
+          }
+        }
+        .mypost-filter-1 {
+          width: 130px;
+          ul {
+            justify-content: space-between;
+            li {
+              &:hover {
+                color: $main-color;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+        .mypost-filter-2 {
+          width: 180px;
+          height: 27px;
+          border: 1px solid rgb(231, 231, 231);
+          border-radius: 5px;
+          font-size: 12px;
+          ul {
+            justify-content: space-evenly;
+            align-items: center;
+            li {
+              border: 1px solid rgb(207, 207, 207);
+              background-color: rgb(231, 231, 231);
+              margin-top: 2px;
+              border-radius: 5px;
+              padding: 1px 4px;
+            }
+          }
+        }
+      }
+      .pagination {
+        width: 500px;
+        margin: 0 auto;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        button {
+          background-color: white;
+          border: 1px solid rgb(231, 231, 231);
+          padding: 6px 13px;
+          border-radius: 5px;
+          cursor: pointer;
+          &:hover {
+            background-color: $main-color;
+            color: white;
+          }
+        }
+        .numbers-btn {
+          button {
+            margin: 0 3px;
+          }
+          .active {
+            background-color: $main-color;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

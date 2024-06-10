@@ -49,45 +49,53 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
 
   return (
     <>
-      <div>
-        <h3>나의 능력치</h3>
-        <div>
-          <p>20</p>
-          <p>평가</p>
+      <div className="mypage-profile-container">
+        <div className="mypage-profile-ability">
+          <h3>나의 능력치</h3>
+          <div className="box">
+            <div>
+              <p>20</p>
+              <p>평가</p>
+            </div>
+            <div>
+              <p>20</p>
+              <p>팔로워</p>
+            </div>
+            <div>
+              <p>20</p>
+              <p>질문</p>
+            </div>
+            <div>
+              <p>20</p>
+              <p>답변</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <p>20</p>
-          <p>팔로워</p>
-        </div>
-        <div>
-          <p>20</p>
-          <p>질문</p>
-        </div>
-        <div>
-          <p>20</p>
-          <p>답변</p>
+        <div className="mypage-profile-about">
+          <h3>자기소개</h3>
+          <div className="box">
+            <p>{userInfo.about}</p>
+          </div>
         </div>
       </div>
-      <div>
-        <h3>자기소개</h3>
-        <p>{userInfo.about}</p>
-      </div>
-      <div>
+      <div className="mypage-profile-top">
         <h3>Top 5</h3>
-        {questions.map((question) => (
-          <ul key={question.id}>
-            <li>
-              <span>{question.type}</span>
-            </li>
-            <li>
-              <span>{question.rating} 평점</span>
-            </li>
-            <li>
-              <span>{question.title}</span>
-            </li>
-            <li>{question.date}</li>
-          </ul>
-        ))}
+        <div className="box">
+          {questions.map((question) => (
+            <ul key={question.id}>
+              <li>
+                <span>{question.type}</span>
+              </li>
+              <li>
+                <span>{question.rating} 평점</span>
+              </li>
+              <li>
+                <span>{question.title}</span>
+              </li>
+              <li>{question.date}</li>
+            </ul>
+          ))}
+        </div>
       </div>
     </>
   );

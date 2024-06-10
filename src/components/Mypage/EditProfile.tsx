@@ -129,7 +129,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
       </div>
       <form className="edit-profile-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">닉네임</label>
+          <h3>
+            <label htmlFor="name">닉네임</label>
+          </h3>
           <input
             type="text"
             id="name"
@@ -139,7 +141,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
           />
         </div>
         <div className="form-group">
-          <label htmlFor="summary">한 줄 소개</label>
+          <h3>
+            <label htmlFor="summary">한 줄 소개</label>
+          </h3>
           <input
             type="text"
             id="summary"
@@ -149,7 +153,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
           />
         </div>
         <div className="form-group">
-          <label htmlFor="about">자기소개</label>
+          <h3>
+            <label htmlFor="about">자기소개</label>
+          </h3>
           <textarea
             id="about"
             name="about"
@@ -159,7 +165,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
           />
         </div>
         <div className="form-group">
-          <label htmlFor="">비밀번호 수정</label>
+          <h3>
+            <label htmlFor="">비밀번호 수정</label>
+          </h3>
           <button type="button" onClick={handleOpenPasswordModal}>
             비밀번호 수정하기
           </button>
