@@ -1,5 +1,5 @@
 @import "color.scss";
-
+@import "mypage.scss";
 @font-face {
   font-family: "S-CoreDream-3Light";
   src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
@@ -35,4 +35,8 @@ input {
 p {
   padding: 0;
   margin: 0;
+}
+
+section {
+  margin: 0 auto;
 }
