@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
@@ -30,6 +30,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [name, setName] = useState(userInfo.name);
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setName(userInfo.name);
@@ -66,7 +67,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       formData.append("about", about);
 
       if (selectedFile) {
-        formData.append("file", selectedFile);
+        formData.append("img", selectedFile);
       } else {
         formData.append("img", imageUrl); // Append default image URL if no file is selected
       }
@@ -109,6 +110,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       reader.onload = () => {
         if (typeof reader.result === "string") {
           setImageUrl(reader.result);
+          onProfileImageChange(reader.result); // Update the profile image URL
         }
       };
       reader.readAsDataURL(file);
@@ -116,14 +118,28 @@ const EditProfile: React.FC<EditProfileProps> = ({
     }
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
-    <div>
-      <div>
+    <div className="edit-profile">
+      <div className="edit-profile-img">
         <h3>프로필 사진 수정</h3>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
         {imageUrl && (
-          <div>
-            <img src={imageUrl} alt="프로필 사진" style={{ width: "200px" }} />
+          <div onClick={handleImageClick} className="profile-img">
+            <img
+              src={imageUrl}
+              alt="프로필 사진"
+              style={{ width: "180px", cursor: "pointer" }}
+            />
           </div>
         )}
       </div>
@@ -168,17 +184,21 @@ const EditProfile: React.FC<EditProfileProps> = ({
           <h3>
             <label htmlFor="">비밀번호 수정</label>
           </h3>
-          <button type="button" onClick={handleOpenPasswordModal}>
+          <button
+            type="button"
+            onClick={handleOpenPasswordModal}
+            className="modify-pwd-btn"
+          >
             비밀번호 수정하기
           </button>
         </div>
-        <div className="form-buttons">
-          <button type="submit" className="submit-button">
+        <div className="form-btns">
+          <button type="submit" className="submit-btn">
             내 정보 수정
           </button>
           <button
             type="button"
-            className="cancel-button"
+            className="cancel-btn"
             onClick={handleOpenWithdrawModal}
           >
             회원 탈퇴
@@ -186,18 +206,24 @@ const EditProfile: React.FC<EditProfileProps> = ({
         </div>
       </form>
       {isPasswordModalOpen && (
-        <div className="modal">
-          <ModifyPassword
-            handleUserDataChange={() => {}}
-            currentPw=""
-            onHide={handleClosePasswordModal}
-          />
-        </div>
+        <>
+          <div className="modal">
+            <ModifyPassword
+              handleUserDataChange={() => {}}
+              currentPw=""
+              onHide={handleClosePasswordModal}
+            />
+          </div>
+          <div className="modal-backdrop"></div>
+        </>
       )}
       {isWithdrawModalOpen && (
-        <div className="modal">
-          <WithdrawUser onHide={handleCloseWithdrawModal} />
-        </div>
+        <>
+          <div className="modal">
+            <WithdrawUser onHide={handleCloseWithdrawModal} />
+          </div>
+          <div className="modal-backdrop"></div>
+        </>
       )}
     </div>
   );

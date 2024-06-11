@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import axios from "axios";
-
+import cancel from "../../assets/cancel.png";
 interface Passwords {
   currentPassword: string;
   newPassword: string;
@@ -84,39 +84,53 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
 
   return (
     <div className="modal-content">
-      <div>
-        <label htmlFor="currentPassword">현재 비밀번호</label>
-        <input
-          type="password"
-          id="currentPassword"
-          name="currentPassword"
-          value={passwords.currentPassword}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="newPassword">새 비밀번호</label>
-        <input
-          type="password"
-          id="newPassword"
-          name="newPassword"
-          value={passwords.newPassword}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="confirmPassword">비밀번호 확인</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          value={passwords.confirmPassword}
-          onChange={handleCheckPassword}
-        />
+      <div className="form-container">
+        <div className="form-group">
+          <label htmlFor="currentPassword">
+            <h3>현재 비밀번호</h3>
+          </label>
+          <input
+            type="password"
+            id="currentPassword"
+            name="currentPassword"
+            value={passwords.currentPassword}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="newPassword">
+            <h3>새 비밀번호</h3>
+          </label>
+          <input
+            type="password"
+            id="newPassword"
+            name="newPassword"
+            value={passwords.newPassword}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">
+            <h3>비밀번호 확인</h3>
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={passwords.confirmPassword}
+            onChange={handleCheckPassword}
+          />
+        </div>
       </div>
       <div className="check">{passwordMatchMessage}</div>
-      <button onClick={handleSaveChanges}>변경사항 저장</button>
-      <button className="hide" onClick={onHide}>X</button>
+      <div className="form-btns">
+        <button onClick={handleSaveChanges} className="save-btn">
+          변경사항 저장
+        </button>
+        <button className="hide" onClick={onHide}>
+          <img src={cancel} alt="" />
+        </button>
+      </div>
     </div>
   );
 };

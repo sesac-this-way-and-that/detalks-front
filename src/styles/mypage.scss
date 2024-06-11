@@ -9,6 +9,19 @@
 button {
   font-family: "S-CoreDream-3Light";
 }
+.profile-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 180px;
+  height: 180px;
+  border: 1px solid rgb(231, 231, 231);
+  border-radius: 5px;
+  overflow: hidden;
+  img {
+    height: 180px;
+  }
+}
 section {
   width: 900px;
   color: rgb(26, 26, 26);
@@ -25,12 +38,6 @@ section {
     justify-content: space-between;
     margin-top: 20px;
 
-    .profile-img {
-      width: 180px;
-      height: 180px;
-      border: 1px solid rgb(231, 231, 231);
-      border-radius: 5px;
-    }
     .profile-content {
       width: 75%;
       height: 180px;
@@ -240,6 +247,186 @@ section {
             background-color: $main-color;
             color: white;
           }
+        }
+      }
+      .edit-profile {
+        .edit-profile-img {
+          margin-bottom: 20px;
+        }
+        .edit-profile-form {
+          .form-group {
+            margin-bottom: 20px;
+            input {
+              height: 30px;
+              padding: 10px;
+              font-family: "S-CoreDream-3Light";
+            }
+            textarea {
+              width: 100%;
+              border: 1px solid rgb(231, 231, 231);
+              border-radius: 5px;
+              padding: 10px;
+              font-family: "S-CoreDream-3Light";
+            }
+            #summary {
+              width: 100%;
+            }
+            .modify-pwd-btn {
+              width: 100%;
+              height: 30px;
+              border: 1px solid rgb(231, 231, 231);
+              border-radius: 5px;
+              cursor: pointer;
+              box-shadow: 1px 1px 1px rgb(207, 207, 207);
+              &:hover {
+                box-shadow: none;
+                background-color: $deep-blue-color;
+                color: white;
+              }
+              margin-bottom: 20px;
+            }
+          }
+          .form-btns {
+            display: flex;
+            justify-content: space-between;
+            button {
+              width: 47%;
+              height: 30px;
+              border: 1px solid rgb(231, 231, 231);
+              border-radius: 5px;
+              cursor: pointer;
+              box-shadow: 1px 1px 1px rgb(207, 207, 207);
+              &:hover {
+                box-shadow: none;
+                background-color: $deep-blue-color;
+                color: white;
+              }
+            }
+            .cancel-btn {
+              &:hover {
+                box-shadow: none;
+                background-color: rgb(186, 0, 0);
+                color: white;
+                font-weight: bold;
+              }
+            }
+          }
+        }
+        .modal {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1000;
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          max-width: 400px;
+          width: 100%;
+
+          .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .title {
+              font-size: 20px;
+              margin-bottom: 3px;
+              color: rgb(186, 0, 0);
+              font-weight: bold;
+            }
+            .middletitle {
+              font-size: 11px;
+              margin-bottom: 15px;
+            }
+            .smalltitle {
+              font-size: 15px;
+              margin-bottom: 10px;
+              font-weight: bold;
+            }
+
+            .form-container {
+              width: 100%;
+              margin-bottom: 15px;
+
+              .form-group {
+                label {
+                  display: block;
+                  margin-bottom: 5px;
+                  font-weight: bold;
+                  font-size: 15px;
+                }
+
+                input[type="password"],
+                input[type="text"] {
+                  width: 100%;
+                  padding: 8px;
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                  box-sizing: border-box;
+                  margin-bottom: 10px;
+                }
+              }
+              .withdraw-btn {
+                margin-top: 10px;
+                border: 1px solid rgb(231, 231, 231);
+                width: 100%;
+                border-radius: 5px;
+                height: 30px;
+                box-shadow: 1px 1px 1px rgb(207, 207, 207);
+                cursor: pointer;
+                &:hover {
+                  box-shadow: none;
+                  background-color: rgb(186, 0, 0);
+                  color: white;
+                  font-weight: bold;
+                }
+              }
+            }
+
+            .form-btns {
+              width: 100%;
+              margin-top: 10px;
+              .save-btn {
+                border: 1px solid rgb(231, 231, 231);
+                width: 100%;
+                border-radius: 5px;
+                height: 30px;
+                box-shadow: 1px 1px 1px rgb(207, 207, 207);
+                cursor: pointer;
+                &:hover {
+                  box-shadow: none;
+                  background-color: $deep-blue-color;
+                  color: white;
+                }
+              }
+            }
+          }
+
+          .hide {
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            img {
+              width: 15px;
+            }
+          }
+        }
+
+        .modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
         }
       }
     }
