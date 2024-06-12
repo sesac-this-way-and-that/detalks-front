@@ -4,18 +4,18 @@ interface accountStoreType {
   email: string;
   name: string;
   pwd: string;
-  inputValid: boolean;
+  verificationCode: string;
   setEmail: (email: string) => void;
   setPwd: (pwd: string) => void;
   setName: (name: string) => void;
-  setInputValid: (inputValid: boolean) => void;
+  setVerificationCode: (verificationCode: string) => void;
 }
 
 const accountStore = create<accountStoreType>((set) => ({
   email: "",
   name: "",
   pwd: "",
-  inputValid: false,
+  verificationCode: "",
   setEmail: (state) => {
     set(() => ({ email: state }));
   },
@@ -25,8 +25,8 @@ const accountStore = create<accountStoreType>((set) => ({
   setName: (state) => {
     set(() => ({ name: state }));
   },
-  setInputValid: (state) => {
-    set(() => ({ inputValid: state }));
+  setVerificationCode: (state) => {
+    set(() => ({ verificationCode: state }));
   },
 }));
 
