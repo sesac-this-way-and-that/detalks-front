@@ -10,6 +10,7 @@ import FindPassword from "./components/UserAuth/FindPasswordPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import GoogleAccount from "./components/UserAuth/GoogleAccount";
+import Board from "./components/Board/Board";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           path="/oauth2/google/redirect/header"
           element={<GoogleAccount />}
         />
+        <Route path="/board" element={<Board/>}/>
         <Route path="/findPassword" element={<FindPassword />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="*" element={<NotFound />} />
