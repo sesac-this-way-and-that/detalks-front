@@ -66,7 +66,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       formData.append("about", about);
 
       if (selectedFile) {
-        formData.append("file", selectedFile);
+        formData.append("img", selectedFile);
       } else {
         formData.append("img", imageUrl); // Append default image URL if no file is selected
       }
