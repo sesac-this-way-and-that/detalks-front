@@ -5,6 +5,10 @@ interface ProfileProps {
     name: string;
     summary: string;
     about: string;
+    qcount: number;
+    acount: number;
+    rep: number;
+    img: string;
   };
 }
 
@@ -54,19 +58,19 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
           <h3>나의 능력치</h3>
           <div className="box">
             <div>
-              <p>20</p>
+              <p>{userInfo.rep}</p>
               <p>평가</p>
             </div>
             <div>
-              <p>20</p>
+              <p>0</p>
               <p>팔로워</p>
             </div>
             <div>
-              <p>20</p>
+              <p>{userInfo.qcount}</p>
               <p>질문</p>
             </div>
             <div>
-              <p>20</p>
+              <p>{userInfo.acount}</p>
               <p>답변</p>
             </div>
           </div>

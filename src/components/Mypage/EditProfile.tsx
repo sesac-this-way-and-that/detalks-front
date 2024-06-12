@@ -2,18 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
+import { useInfoStore } from "../../store";
 
 interface EditProfileProps {
   userInfo: {
     name: string;
     summary: string;
     about: string;
+    qcount: number;
+    acount: number;
+    rep: number;
+    img: string;
   };
-
   onUserInfoChange: (newUserInfo: {
     name: string;
     summary: string;
     about: string;
+    qcount: number;
+    acount: number;
+    rep: number;
+    img: string;
   }) => void;
   onProfileImageChange: (imageUrl: string) => void;
 }
@@ -26,7 +34,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("default.jpg");
+  const [imageUrl, setImageUrl] = useState<string>(userInfo.img);
   const [name, setName] = useState(userInfo.name);
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
@@ -36,6 +44,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
     setName(userInfo.name);
     setSummary(userInfo.summary);
     setAbout(userInfo.about);
+    setImageUrl(userInfo.img);
   }, [userInfo]);
 
   const handleOpenPasswordModal = () => {
@@ -68,14 +77,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
       if (selectedFile) {
         formData.append("img", selectedFile);
-      } else {
-        formData.append("img", imageUrl); // Append default image URL if no file is selected
       }
-
-      console.log("FormData Entries:");
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
 
       const response = await axios.patch(url, formData, {
         headers: {
@@ -86,7 +88,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
       console.log("Response:", response.data); // Log the response
 
-      onUserInfoChange({ name, summary, about });
+      onUserInfoChange({ name, summary, about, qcount: userInfo.qcount, acount: userInfo.acount, rep: userInfo.rep, img: imageUrl });
       if (selectedFile) {
         onProfileImageChange(URL.createObjectURL(selectedFile));
       }

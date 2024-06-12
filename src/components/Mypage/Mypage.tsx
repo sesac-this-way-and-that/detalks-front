@@ -1,22 +1,29 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import EditProfile from "./EditProfile";
 import MyPosts from "./MyPosts";
 import Profile from "./Profile";
 import { useInfoStore } from "../../store";
+
 const Mypage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
+  const { userId } = useParams<{ userId: string }>();
   const userData = useInfoStore((state) => state.userInfo);
+  const loggedInUserId = userData?.idx; // Replace with the actual logged-in user's ID
   const getInfo = useInfoStore((state) => state.getInfo);
   const [userInfo, setUserInfo] = useState({
     name: userData?.name || "default-name",
     summary: userData?.summary || "한 줄 소개가 없습니다.",
     about: userData?.about || "자기소개가 없습니다.",
+    img: userData?.img || "default.jpg",
+    qcount: userData?.qcount || 0,
+    acount: userData?.acount || 0,
+    rep: userData?.rep || 0,
   });
 
-  // getInfo();
-  // console.log("gkgk" + userData);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -29,17 +36,40 @@ const Mypage: React.FC = () => {
     setProfileImageUrl(imageUrl);
   };
 
+  const isCurrentUser = userId == loggedInUserId;
+  // console.log(isCurrentUser + userId + loggedInUserId);
+  console.log(userData);
   useEffect(() => {
-    // Call getInfo whenever userInfo changes
-    getInfo();
-  }, [userInfo, getInfo]);
+    if (isCurrentUser) {
+      getInfo();
+    } else {
+      axios
+        .get(`${process.env.REACT_APP_API_SERVER}/member/${userId}`)
+        .then((response) => {
+          const data = response.data.data;
+          console.log(data);
+          setUserInfo({
+            name: data.name || "default-name",
+            summary: data.summary || "한 줄 소개가 없습니다.",
+            about: data.about || "자기소개가 없습니다.",
+            img: data.img || "default.jpg",
+            qcount: data?.qcount || 0,
+            acount: data?.acount || 0,
+            rep: data?.rep || 0,
+          });
+        });
+    }
+  }, [userId, getInfo, isCurrentUser]);
 
   return (
     <section>
       <h2 className="title">마이페이지</h2>
       <article className="mypage-profile">
         <div className="profile-img">
-          <img src={profileImageUrl} alt="프로필 사진" />
+          <img
+            src={process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img}
+            alt={userInfo.img}
+          />
         </div>
         <div className="profile-content">
           <p className="profile-name">
@@ -48,7 +78,7 @@ const Mypage: React.FC = () => {
           <p className="profile-summary">{userInfo.summary}</p>
           <div className="profile-tag">
             <span>java</span>
-            <span>javascript </span>
+            <span>javascript</span>
           </div>
         </div>
       </article>
@@ -66,19 +96,21 @@ const Mypage: React.FC = () => {
           >
             내 활동
           </button>
-          <button
-            className={activeTab === "editprofile" ? "active" : ""}
-            onClick={() => handleTabChange("editprofile")}
-          >
-            정보수정
-          </button>
+          {isCurrentUser && (
+            <button
+              className={activeTab === "editprofile" ? "active" : ""}
+              onClick={() => handleTabChange("editprofile")}
+            >
+              정보수정
+            </button>
+          )}
           <div className="line"></div>
         </div>
 
         <div className="mypage-components-container">
           {activeTab === "profile" && <Profile userInfo={userInfo} />}
           {activeTab === "mypost" && <MyPosts />}
-          {activeTab === "editprofile" && (
+          {activeTab === "editprofile" && isCurrentUser && (
             <EditProfile
               userInfo={userInfo}
               onUserInfoChange={handleUserInfoChange}

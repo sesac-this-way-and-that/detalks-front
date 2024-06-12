@@ -12,13 +12,13 @@ type UserInfo = {
   img?: string;
   summary?: string;
   about?: string;
-  rep: 1;
-  social: string,
-  created: Date;
-  visited: Date;
-  updated: string;
-  qcount: number;
-  acount: number;
+  rep?: number;
+  social?: string,
+  created?: Date;
+  visited?: Date;
+  updated?: string;
+  qcount?: number;
+  acount?: number;
 };
 /*
 "idx": 1,
