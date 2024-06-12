@@ -29,7 +29,12 @@ export default function VerificationInput() {
     <>
       <label>
         <p>인증번호 입력</p>
-        <input type="text" ref={codeRef} onChange={storeCode} />
+        <input
+          type="text"
+          ref={codeRef}
+          onChange={storeCode}
+          disabled={beforeVerification ? false : true}
+        />
         <span id="VerifyInputMsg">{verifyMsg}</span>
       </label>
       {beforeVerification ? (

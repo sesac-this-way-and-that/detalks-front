@@ -24,14 +24,14 @@ export default function LoginPage() {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("pwd", pwd);
-    setEmail("");
-    setPwd("");
     axios
       .post(url, formData)
       .then((res) => {
         console.log("then res.data: ", res.data);
         localStorage.setItem("authToken", res.data.token);
         alert("로그인 성공");
+        setEmail("");
+        setPwd("");
         nav("/");
       })
       .catch((err) => {
