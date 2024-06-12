@@ -36,27 +36,23 @@ const Mypage: React.FC = () => {
 
   return (
     <section>
-      <h2>마이페이지</h2>
-      <article>
-        <div>
+      <h2 className="title">마이페이지</h2>
+      <article className="mypage-profile">
+        <div className="profile-img">
           <img src={profileImageUrl} alt="프로필 사진" />
         </div>
-        <div>
-          <p>
+        <div className="profile-content">
+          <p className="profile-name">
             <span>{userInfo.name}</span> 님
           </p>
-          <p>{userInfo.summary}</p>
-          <div>
-            <span>
-              <p>java</p>
-            </span>
-            <span>
-              <p>javascript</p>
-            </span>
+          <p className="profile-summary">{userInfo.summary}</p>
+          <div className="profile-tag">
+            <span>java</span>
+            <span>javascript </span>
           </div>
         </div>
       </article>
-      <article>
+      <article className="mypage-tab">
         <div className="mypage-button-container">
           <button
             className={activeTab === "profile" ? "active" : ""}
@@ -76,6 +72,7 @@ const Mypage: React.FC = () => {
           >
             정보수정
           </button>
+          <div className="line"></div>
         </div>
 
         <div className="mypage-components-container">

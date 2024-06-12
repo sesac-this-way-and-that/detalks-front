@@ -104,7 +104,7 @@ const MyPosts: React.FC = () => {
     },
   ];
 
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (page: number) => {
@@ -160,7 +160,7 @@ const MyPosts: React.FC = () => {
 
     if (endPage < totalPages) {
       if (endPage <= totalPages - 1) {
-        pages.push(<span key="dots2">...</span>);
+        pages.push(<span key="dots2">......</span>);
       }
       pages.push(
         <button
@@ -177,17 +177,17 @@ const MyPosts: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       <h3>내 활동</h3>
-      <div>
-        <div>
+      <div className="mypost-filter-container">
+        <div className="mypost-filter-1">
           <ul>
             <li>전체</li>
             <li>질문</li>
             <li>답변</li>
           </ul>
         </div>
-        <div>
+        <div className="mypost-filter-2">
           <ul>
             <li>최신순</li>
             <li>평점순</li>
@@ -195,7 +195,7 @@ const MyPosts: React.FC = () => {
           </ul>
         </div>
       </div>
-      <div>
+      <div className="mypage-profile-top">
         {currentItems.map((question) => (
           <ul key={question.id}>
             <li>
@@ -218,7 +218,7 @@ const MyPosts: React.FC = () => {
         >
           이전
         </button>
-        {renderPageNumbers()}
+        <div className="numbers-btn">{renderPageNumbers()}</div>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -226,7 +226,7 @@ const MyPosts: React.FC = () => {
           다음
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

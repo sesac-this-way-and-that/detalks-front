@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import cancel from "../../assets/cancel.png";
 interface WithdrawUserProps {
   onHide: () => void;
 }
@@ -47,7 +47,6 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
         },
         data: formData.toString(),
       });
-      
 
       if (response.data.result) {
         alert("회원탈퇴가 완료되었습니다.");
@@ -93,14 +92,14 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   return (
     <div ref={modalRef} className="modal-content">
       <p className="title">정말로 탈퇴하시겠습니까?</p>
-      <p>30일 까지 정보를 유지한 뒤 삭제됩니다.</p>
-      <div className="mypage-profile-container">
-        <p className="mypage-smalltitle">
-          회원탈퇴를 위해 비밀번호와 탈퇴 사유를 입력해주세요.
-        </p>
+      <p className="middletitle">30일 까지 정보를 유지한 뒤 삭제됩니다.</p>
+      <p className="smalltitle">
+        회원탈퇴를 위해 비밀번호와 탈퇴 사유를 입력해주세요.
+      </p>
+      <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="password">비밀번호:</label>
+          <div className="form-group">
+            <label htmlFor="password">비밀번호</label>
             <input
               type="password"
               id="password"
@@ -109,8 +108,8 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
               autoComplete="current-password"
             />
           </div>
-          <div>
-            <label htmlFor="reason">탈퇴 사유:</label>
+          <div className="form-group">
+            <label htmlFor="reason">탈퇴 사유</label>
             <input
               type="text"
               id="reason"
@@ -124,7 +123,7 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
         </form>
       </div>
       <button className="hide" onClick={onHide}>
-        X
+        <img src={cancel} alt="" />
       </button>
     </div>
   );
