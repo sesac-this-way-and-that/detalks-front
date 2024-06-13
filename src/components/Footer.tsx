@@ -6,7 +6,9 @@ export default function Footer() {
           {/* <img src={Logo} alt="" /> */}
           <p>DEBUG TALKS</p>
           <p>
-            <a href="" target="blank"><span>Our Github</span></a>
+            <a href="https://github.com/sesac-this-way-and-that" target="blank">
+              <span>Our Github</span>
+            </a>
           </p>
         </div>
         <div className="footer-content">
