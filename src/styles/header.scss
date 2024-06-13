@@ -26,6 +26,7 @@ $mobile: 480px;
   padding: 0 25px 0;
   transition: 0.3s;
   position: fixed;
+  z-index: 3;
 
   .headerContainer {
     margin: 0 auto;
@@ -409,13 +410,13 @@ $mobile: 480px;
 }
 
 // 노트북
-@media (min-width: $notebook) and (max-width: $desktop - 1) {
+@media (min-width: $notebook) and (max-width: $desktop) {
   .container {
     max-width: 960px;
   }
 }
 
-@media screen and (max-width: $tablet - 1) {
+@media screen and (max-width: $notebook) {
   .container {
     width: 100%;
   }

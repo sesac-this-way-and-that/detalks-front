@@ -112,7 +112,7 @@ export default function Header() {
             {isAuthenticated ? (
               <>
                 <li className="myname">
-                  <Link to="/mypage">
+                  <Link to={"/mypage/" + userData?.idx}>
                     <div className="profile-img">
                       <img
                         src={

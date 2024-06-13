@@ -15,6 +15,7 @@ const Mypage: React.FC = () => {
   const loggedInUserId = userData?.idx; // Replace with the actual logged-in user's ID
   const getInfo = useInfoStore((state) => state.getInfo);
   const [userInfo, setUserInfo] = useState({
+    idx: userData?.idx || 0,
     name: userData?.name || "default-name",
     summary: userData?.summary || "한 줄 소개가 없습니다.",
     about: userData?.about || "자기소개가 없습니다.",
@@ -43,12 +44,14 @@ const Mypage: React.FC = () => {
     if (isCurrentUser) {
       getInfo();
     } else {
+      console.log("하하");
       axios
         .get(`${process.env.REACT_APP_API_SERVER}/member/${userId}`)
         .then((response) => {
           const data = response.data.data;
           console.log(data);
           setUserInfo({
+            idx: data.idx,
             name: data.name || "default-name",
             summary: data.summary || "한 줄 소개가 없습니다.",
             about: data.about || "자기소개가 없습니다.",
@@ -60,7 +63,9 @@ const Mypage: React.FC = () => {
         });
     }
   }, [userId, getInfo, isCurrentUser]);
-
+  // useEffect(() => {
+  //   getInfo();
+  // }, [userData]);
   return (
     <section>
       <h2 className="title">마이페이지</h2>

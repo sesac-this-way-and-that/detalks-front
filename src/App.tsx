@@ -36,7 +36,7 @@ function App() {
         <Route path="/board/:userId" element={<Board />} />
         <Route path="/board/modify/:userId/:postId" element={<Board />} />
         <Route path="/board/create/:userId" element={<Board />} />
-        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypage/:userId" element={<Mypage />} />
         <Route path="/user/:userId" element={<Mypage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

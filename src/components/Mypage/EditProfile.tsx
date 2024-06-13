@@ -3,9 +3,11 @@ import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
 import { useInfoStore } from "../../store";
+import { getCipherInfo } from "crypto";
 
 interface EditProfileProps {
   userInfo: {
+    idx: number;
     name: string;
     summary: string;
     about: string;
@@ -15,6 +17,7 @@ interface EditProfileProps {
     img: string;
   };
   onUserInfoChange: (newUserInfo: {
+    idx: number;
     name: string;
     summary: string;
     about: string;
@@ -39,7 +42,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [summary, setSummary] = useState(userInfo.summary);
   const [about, setAbout] = useState(userInfo.about);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const getInfo = useInfoStore((state) => state.getInfo);
   useEffect(() => {
     setName(userInfo.name);
     setSummary(userInfo.summary);
@@ -88,11 +91,22 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
       console.log("Response:", response.data); // Log the response
 
-      onUserInfoChange({ name, summary, about, qcount: userInfo.qcount, acount: userInfo.acount, rep: userInfo.rep, img: imageUrl });
+      onUserInfoChange({
+        idx: userInfo.idx,
+        name,
+        summary,
+        about,
+        qcount: userInfo.qcount,
+        acount: userInfo.acount,
+        rep: userInfo.rep,
+        img: imageUrl,
+      });
       if (selectedFile) {
         onProfileImageChange(URL.createObjectURL(selectedFile));
       }
-      alert("Profile updated successfully");
+      alert("회원님의 정보가 정상적으로 수정되었습니다.");
+      getInfo();
+      window.location.href = `/mypage/${userInfo.idx}`;
     } catch (error) {
       console.error("Error:", error);
       if (axios.isAxiosError(error) && error.response) {
@@ -135,10 +149,10 @@ const EditProfile: React.FC<EditProfileProps> = ({
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
-        {imageUrl && (
+        {userInfo.img && (
           <div onClick={handleImageClick} className="profile-img">
             <img
-              src={imageUrl}
+              src={process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img}
               alt="프로필 사진"
               style={{ width: "180px", cursor: "pointer" }}
             />
