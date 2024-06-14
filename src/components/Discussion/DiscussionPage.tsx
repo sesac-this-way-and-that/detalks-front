@@ -1,6 +1,57 @@
+import { useEffect, useState } from "react";
 import "../../styles/discussionPage.scss";
+import axios from "axios";
+import { DiscussionInformation } from "../../types/discussion";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Discussion() {
+  const navigate = useNavigate();
+  // const DEFAULT_DISCUSSIONINFO: DiscussionInformation = {
+  //   answerList: [],
+  //   author: {
+  //     memberIdx: 0,
+  //     memberName: "",
+  //   },
+  //   bookmarkState: false,
+  //   createdAt: new Date(),
+  //   isSolved: false,
+  //   modifiedAt: new Date(),
+  //   questionContent: "",
+  //   questionId: 0,
+  //   questionState: false,
+  //   questionTitle: "",
+  //   tagNameList: [],
+  //   viewCount: 0,
+  //   voteCount: 0,
+  // };
+
+  const [discussionList, setDiscussionList] = useState<DiscussionInformation[]>(
+    []
+  );
+
+  const handleIinformation = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/questions`;
+    const token = localStorage.getItem("authToken");
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDiscussionList(response.data.data.content);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleIinformation();
+  }, []);
+  console.log(discussionList);
   return (
     <section className="discussion_wrapper">
       <article className="discussion_container_1">
@@ -14,186 +65,54 @@ export default function Discussion() {
           </ul>
         </div>
       </article>
-      <article className="discussion_container_2">
-        <ul className="post_summary_stats">
-          <li className="statsList">0평점</li>
-          <li className="statsList">1 답변</li>
-          <li className="statsList">48 열람</li>
-        </ul>
-        <div className="post_content_area">
-          <div className="post_title">백엔드 작업하다가 403에러가 나와요</div>
-          <div className="post_content">
-            안녕하세요 이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요
-            이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요 이러한 작업
-            중에 오류가 나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가
-            나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가 나서 너무
-            힘들어요
-          </div>
-          <div className="post_footer">
-            <div className="post_lang">
-              <div className="lang_type">Java</div>
-              <div className="lang_type">Javascript</div>
-            </div>
-            <div className="post_userDetails">
-              <div className="post_image">
-                <img
-                  className="post_userImg"
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                />
+      {discussionList.map((discussion, idx) => {
+        return (
+          <article
+            className="discussion_container_2"
+            key={discussion.questionId}
+          >
+            <ul className="post_summary_stats">
+              <li className="statsList">{discussion.voteCount} 평점</li>
+              <li className="statsList">1 답변</li>
+              <li className="statsList">{discussion.viewCount} 열람</li>
+            </ul>
+            <div className="post_content_area">
+              <div className="post_title">{discussion.questionTitle}</div>
+
+              <div
+                className="post_content"
+                onClick={() => {
+                  navigate(`/closed/${discussion.questionId}`);
+                }}
+              >
+                {discussion.questionContent}
               </div>
-              <div className="post_userIno">
-                이기혁님 <span>485</span>
+
+              <div className="post_footer">
+                <div className="post_lang">
+                  <div className="lang_type">{discussion.tagNameList}</div>
+                </div>
+                <div className="post_userDetails">
+                  <div className="post_image">
+                    <img
+                      className="post_userImg"
+                      src="https://picsum.photos/200/300?grayscale"
+                      alt=""
+                    />
+                  </div>
+                  <div className="post_userIno">
+                    {discussion.author.memberName}
+                    <span>{discussion.viewCount}</span>
+                  </div>
+                  <div className="post_createdAt">
+                    {discussion.createdAt.toString()}
+                  </div>
+                </div>
               </div>
-              <div className="post_createdAt">2024-06-04 16:09:30</div>
             </div>
-          </div>
-        </div>
-      </article>
-      <article className="discussion_container_2">
-        <ul className="post_summary_stats">
-          <li className="statsList">0평점</li>
-          <li className="statsList">1 답변</li>
-          <li className="statsList">48 열람</li>
-        </ul>
-        <div className="post_content_area">
-          <div className="post_title">백엔드 작업하다가 403에러가 나와요</div>
-          <div className="post_content">
-            안녕하세요 이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요
-            이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요 이러한 작업
-            중에 오류가 나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가
-            나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가 나서 너무
-            힘들어요
-          </div>
-          <div className="post_footer">
-            <div className="post_lang">
-              <div className="lang_type">Java</div>
-              <div className="lang_type">Javascript</div>
-            </div>
-            <div className="post_userDetails">
-              <div className="post_image">
-                <img
-                  className="post_userImg"
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                />
-              </div>
-              <div className="post_userIno">
-                이기혁님 <span>485</span>
-              </div>
-              <div className="post_createdAt">2024-06-04 16:09:30</div>
-            </div>
-          </div>
-        </div>
-      </article>{" "}
-      <article className="discussion_container_2">
-        <ul className="post_summary_stats">
-          <li className="statsList">0평점</li>
-          <li className="statsList">1 답변</li>
-          <li className="statsList">48 열람</li>
-        </ul>
-        <div className="post_content_area">
-          <div className="post_title">백엔드 작업하다가 403에러가 나와요</div>
-          <div className="post_content">
-            안녕하세요 이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요
-            이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요 이러한 작업
-            중에 오류가 나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가
-            나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가 나서 너무
-            힘들어요
-          </div>
-          <div className="post_footer">
-            <div className="post_lang">
-              <div className="lang_type">Java</div>
-              <div className="lang_type">Javascript</div>
-            </div>
-            <div className="post_userDetails">
-              <div className="post_image">
-                <img
-                  className="post_userImg"
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                />
-              </div>
-              <div className="post_userIno">
-                이기혁님 <span>485</span>
-              </div>
-              <div className="post_createdAt">2024-06-04 16:09:30</div>
-            </div>
-          </div>
-        </div>
-      </article>{" "}
-      <article className="discussion_container_2">
-        <ul className="post_summary_stats">
-          <li className="statsList">0평점</li>
-          <li className="statsList">1 답변</li>
-          <li className="statsList">48 열람</li>
-        </ul>
-        <div className="post_content_area">
-          <div className="post_title">백엔드 작업하다가 403에러가 나와요</div>
-          <div className="post_content">
-            안녕하세요 이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요
-            이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요 이러한 작업
-            중에 오류가 나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가
-            나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가 나서 너무
-            힘들어요
-          </div>
-          <div className="post_footer">
-            <div className="post_lang">
-              <div className="lang_type">Java</div>
-              <div className="lang_type">Javascript</div>
-            </div>
-            <div className="post_userDetails">
-              <div className="post_image">
-                <img
-                  className="post_userImg"
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                />
-              </div>
-              <div className="post_userIno">
-                이기혁님 <span>485</span>
-              </div>
-              <div className="post_createdAt">2024-06-04 16:09:30</div>
-            </div>
-          </div>
-        </div>
-      </article>{" "}
-      <article className="discussion_container_2">
-        <ul className="post_summary_stats">
-          <li className="statsList">0평점</li>
-          <li className="statsList">1 답변</li>
-          <li className="statsList">48 열람</li>
-        </ul>
-        <div className="post_content_area">
-          <div className="post_title">백엔드 작업하다가 403에러가 나와요</div>
-          <div className="post_content">
-            안녕하세요 이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요
-            이러한 작업 중에 오류가 나서 너무 힘들어요 안녕하세요 이러한 작업
-            중에 오류가 나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가
-            나서 너무 힘들어요안녕하세요 이러한 작업 중에 오류가 나서 너무
-            힘들어요
-          </div>
-          <div className="post_footer">
-            <div className="post_lang">
-              <div className="lang_type">Java</div>
-              <div className="lang_type">Javascript</div>
-            </div>
-          </div>
-          <div className="post_userDetails">
-            <div className="post_image">
-              <img
-                className="post_userImg"
-                src="https://picsum.photos/200/300?grayscale"
-                alt=""
-              />
-            </div>
-            <div className="post_userIno">
-              이기혁님 <span>485</span>
-            </div>
-            <div className="post_createdAt">2024-06-04 16:09:30</div>
-          </div>
-        </div>
-      </article>
+          </article>
+        );
+      })}
     </section>
   );
 }
