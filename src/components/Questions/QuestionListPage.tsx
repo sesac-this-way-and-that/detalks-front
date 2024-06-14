@@ -35,7 +35,11 @@ export default function QuestionListPage() {
   useEffect(() => {
     handleIinformation();
   }, []);
-  console.log(discussionList);
+
+  useEffect(() => {
+    console.log(discussionList);
+  }, [discussionList]);
+
   return (
     <section className="discussion_wrapper">
       <article className="discussion_container_1">

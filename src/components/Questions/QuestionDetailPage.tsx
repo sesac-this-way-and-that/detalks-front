@@ -1,12 +1,13 @@
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import "../../styles/questionDetailPage.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { QuestionDetail } from "../../types/question";
 import authStore from "../../store/authStore";
 
 export default function QuestionDetailPage() {
   const { authToken } = authStore();
+  const navigate = useNavigate();
 
   const { questionId } = useParams<{ questionId: string }>();
   const [questionData, setQuestionData] = useState<QuestionDetail>();
@@ -98,7 +99,12 @@ export default function QuestionDetailPage() {
       <article className="closed_container1" key={questionData?.questionId}>
         <div className="closed_header">
           <h1 className="headerTitle">문제 해결</h1>
-          <button className="closed_askQBtn">질문 하기</button>
+          <button
+            className="closed_askQBtn"
+            onClick={() => navigate(`/question/create`)}
+          >
+            질문 하기
+          </button>
         </div>
         <div className="question_container">
           <div className="question_section1">{questionData?.questionTitle}</div>
@@ -144,7 +150,14 @@ export default function QuestionDetailPage() {
             ></div>
           </div>
           <div className="question_section4">
-            <div className="section_text">수정</div>
+            <div
+              className="section_text"
+              onClick={() =>
+                navigate(`/question/update/${questionData?.questionId}`)
+              }
+            >
+              수정
+            </div>
             <div className="section_text">삭제</div>
           </div>
         </div>
