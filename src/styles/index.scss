@@ -1,6 +1,7 @@
 @import "color.scss";
 @import "mypage.scss";
 @import "main.scss";
+@import "footer.scss";
 @font-face {
   font-family: "S-CoreDream-3Light";
   src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
@@ -41,4 +42,5 @@ p {
 section {
   margin: 0 auto;
   padding-top: 120px;
+  padding-bottom: 120px;
 }

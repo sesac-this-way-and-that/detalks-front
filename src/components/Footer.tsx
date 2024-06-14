@@ -4,11 +4,18 @@ export default function Footer() {
       <div className="container">
         <div className="logo">
           {/* <img src={Logo} alt="" /> */}
-          DebugTalks
+          <p>DEBUG TALKS</p>
+          <p>
+            <a href="https://github.com/sesac-this-way-and-that" target="blank">
+              <span>Our Github</span>
+            </a>
+          </p>
         </div>
         <div className="footer-content">
           <div>
-            <p>Front</p>
+            <p>
+              <span>Front</span>
+            </p>
             <ul>
               <li>ReactJS</li>
               <li>Typescript</li>
@@ -17,7 +24,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p>Back</p>
+            <p>
+              <span>Back</span>
+            </p>
             <ul>
               <li>Spring Boot</li>
               <li>Swagger</li>
@@ -28,7 +37,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p>Our Team</p>
+            <p>
+              <span>Our Teams</span>
+            </p>
             <ul>
               <li>김성민</li>
               <li>임학민</li>
@@ -46,12 +57,6 @@ export default function Footer() {
               Debug Talks
             </a>
           </div> */}
-        </div>
-        <div className="git-btn">
-          <a href="https://github.com/sesac-this-way-and-that" target="_blank">
-            {/* <img src={Github} alt="" /> */}
-            Git DebugTalks
-          </a>
         </div>
       </div>
     </footer>
