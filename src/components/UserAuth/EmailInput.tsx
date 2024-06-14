@@ -5,10 +5,11 @@ import axios from "axios";
 
 export default function EmailInput({ accessType }: AccountForm) {
   const [emailMsg, setEmailMsg] = useState<string>("");
+  const [validCheck, setValidCheck] = useState<boolean>(false);
   const { setEmail } = accountStore();
 
   // 이메일 유효성 검사
-  const emailPattern = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]{2,}$/;
+  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
   const emailValidation = (email: string) => {
     if (emailPattern.test(email) === false) {
       return false;
@@ -47,22 +48,16 @@ export default function EmailInput({ accessType }: AccountForm) {
           break;
       }
     }
-  };
-  const storeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
   return (
     <>
       <label>
         <p>이메일</p>
-        <input
-          type="email"
-          required
-          onChange={emailOnChange}
-          onBlur={storeEmail}
-          name="email"
-        />
-        <span id="emailInputMsg">{emailMsg}</span>
+        <input type="email" required onChange={emailOnChange} name="email" />
+        <div>
+          <span id="emailInputMsg">{emailMsg}</span>
+        </div>
       </label>
     </>
   );

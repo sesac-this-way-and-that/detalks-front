@@ -3,7 +3,3 @@ export interface AccountForm {
   accessText?: string; // 화면에 출력하기 위한 텍스트 (ex. 로그인, 회원가입)
   accessForm?(): void; // 정보 전송 버튼 클릭 시 각각 적용되는 함수
 }
-
-export function Logout() {
-  localStorage.removeItem("loginToken");
-}

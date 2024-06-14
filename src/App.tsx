@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import "./styles/index.scss";
-import "./styles/userAuth.scss";
 import Main from "./components/Main";
 import NotFound from "./components/NotFound";
 import Mypage from "./components/Mypage/Mypage";

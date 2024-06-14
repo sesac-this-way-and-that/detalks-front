@@ -1,101 +1,144 @@
-.validOk {
-  color: rgb(0, 0, 230);
+@import "color.scss";
+
+$validmsg-pass-color: #0000e6;
+$validmsg-fail-color: #e60000;
+
+section {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    color: $main-color;
+    font-size: 30px;
+    margin: 30px;
+  }
+  article {
+    width: 100%;
+  }
 }
-.validFail {
-  color: rgb(230, 0, 0);
+
+button {
+  font-family: "S-CoreDream-3Light";
+  border: 0;
+  border-radius: 10px;
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+  }
 }
+
+a {
+  color: $deep-blue-color;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.validmsg-pass {
+  color: $validmsg-pass-color;
+}
+
+.validmsg-fail {
+  color: $validmsg-fail-color;
+}
+
 .accountInputForm {
-  min-width: 200px;
-  max-width: 50%;
-  width: 20%;
+  margin: 20px;
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  span {
-    display: block;
-  }
-  button {
-    border: 0;
-    &:hover {
-      cursor: pointer;
-    }
-  }
+  border: 1px solid #888;
+  border-radius: 20px;
+  box-shadow: 1px 1px 3px #888;
 
-  .pageType {
-    .logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background-color: #90ca82;
-      margin-bottom: 30px;
-    }
-    p {
-      color: cornflowerblue;
-      font-size: 30px;
-      font-weight: 900;
-    }
-  }
   .inputContainer {
     width: 100%;
     padding: 20px;
-    border: 1px solid gray;
-    border-radius: 20px;
-    box-shadow: 1px 1px 3px gray;
-    input {
-      width: 100%;
-      height: 30px;
-      background-color: #ffffff00;
-      // border: none;
-      // border-bottom: solid 1px #aaa;
-      // margin: 3px;
-      // margin-top: 20px;
-      // padding: 3px 0;
-      outline: none;
-      text-indent: 15px;
+    label {
+      margin: 0 auto;
+      position: relative;
+      p {
+        color: $deep-blue-color;
+        margin-top: 5px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      input {
+        font-family: "S-CoreDream-3Light";
+        width: 100%;
+        height: 35px;
+        background-color: #ffffff00;
+        margin-top: 10px;
+        margin-bottom: 3px;
+        border-radius: 10px;
+        outline: none;
+        text-indent: 15px;
+      }
+      div {
+        padding: 0;
+        margin: 0;
+        height: 30px;
+        span {
+          display: block;
+          font-size: 13px;
+          color: $validmsg-fail-color;
+          padding: 0 3px;
+        }
+      }
     }
     button {
       width: 100%;
+      height: 35px;
       padding: 7px;
-      margin: 20px 3px 10px;
-      border-radius: 2px;
-      background-color: #ddd;
+      background-color: $deep-blue-color;
+      color: #fff;
       &:hover {
         background-color: #bbb;
       }
     }
-    span {
-      font-size: 0.8rem;
-      color: rgb(230, 0, 0);
-      padding: 0 3px;
+    .inInputBtn {
+      position: absolute;
+      width: 90px;
+      height: 25px;
+      font-size: 13px;
+      padding: 0px;
+      bottom: 66px;
+      left: 243px;
     }
   }
-  hr {
-    width: 100%;
-    border: 1px solid #aaa;
+
+  button {
+    &:disabled {
+      background-color: #bbb;
+    }
   }
 }
 .socialContainer {
-  width: 95%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  p {
-    color: #888;
+  button {
+    padding: 0;
     margin: 5px;
+    width: 100%;
+    height: 35px;
   }
-  .socialButtons {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    button {
-      padding: 0;
-      margin: 5px 15px;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-    }
+  .googleAccountBtn {
+    background-color: #fff;
+    color: #000;
+    border: #888 1px solid;
+  }
+  .githubAccountBtn {
+    background-color: #000;
+    color: #fff;
+  }
+}
+
+.accountLink {
+  width: auto;
+  span {
+    color: #bbb;
   }
 }
