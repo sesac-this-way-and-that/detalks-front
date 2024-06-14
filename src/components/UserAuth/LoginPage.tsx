@@ -7,6 +7,7 @@ import accountStore from "../../store/userStore";
 import axios from "axios";
 import { useEffect } from "react";
 import authStore from "../../store/authStore";
+import { useInfoStore } from "../../store";
 
 export default function LoginPage() {
   const { email, pwd, setEmail, setPwd } = accountStore();
@@ -24,7 +25,7 @@ export default function LoginPage() {
 
   const accessType = "login";
   const accessText = "로그인";
-
+  const getInfo = useInfoStore((state) => state.getInfo);
   const submitFunc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -43,6 +44,7 @@ export default function LoginPage() {
         console.log("then res.data: ", res.data);
         localStorage.setItem("authToken", res.data.token);
         setAuthToken(localStorage.getItem("authToken"));
+        getInfo();
         alert("로그인 성공");
         setEmail("");
         setPwd("");

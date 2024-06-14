@@ -2,28 +2,40 @@ import "../styles/header.scss";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useInfoStore } from "../store";
+import authStore from "../store/authStore";
 
 export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const userData = useInfoStore((state) => state.userInfo);
   const getInfo = useInfoStore((state) => state.getInfo);
+  const removeToken = authStore((state) => state.removeAuthToken);
   // const history = useHistory();
-
+  const getToken = authStore((state) => state.authToken);
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = getToken;
     if (token) {
       getInfo();
       setIsAuthenticated(true);
     }
-  }, [getInfo]);
+    console.log("하핳2");
+  }, [getInfo, getToken]);
 
+  const nav = useNavigate();
+  const prevLocation = window.location.href;
+
+  console.log(prevLocation);
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    let newLocation = prevLocation;
+    if (prevLocation.includes("mypage")) {
+      newLocation = prevLocation.replace("mypage", "user");
+    }
+    removeToken();
     setIsAuthenticated(false);
+    window.location.href = newLocation;
   };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +95,7 @@ export default function Header() {
             </button>
           </form>
           <ul className="headerMenu">
-            {isAuthenticated ? (
+            {getToken ? (
               <li className="myname-mobile">
                 <Link to="/mypage">
                   <div className="profile-img">

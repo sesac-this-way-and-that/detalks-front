@@ -13,7 +13,7 @@ type UserInfo = {
   summary?: string;
   about?: string;
   rep?: number;
-  social?: string,
+  social?: string;
   created?: Date;
   visited?: Date;
   updated?: string;
