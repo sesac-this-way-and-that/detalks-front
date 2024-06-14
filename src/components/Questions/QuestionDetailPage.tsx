@@ -1,43 +1,66 @@
-import { SyntheticEvent, useEffect, useState } from "react";
-import "../../styles/ClosedPage.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import "../../styles/questionDetailPage.scss";
 import { useParams } from "react-router-dom";
-import {
-  faBold,
-  faItalic,
-  faUnderline,
-  faStrikethrough,
-  faSuperscript,
-  faSubscript,
-  faListOl,
-  faList,
-  faRotateLeft,
-  faRotateRight,
-  faLink,
-  faUnlink,
-  faAlignLeft,
-  faAlignCenter,
-  faAlignRight,
-  faAlignJustify,
-  faIndent,
-  faOutdent,
-  faImage,
-} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { DiscussionDetail } from "../../types/discussion";
+import { QuestionDetail } from "../../types/question";
+import authStore from "../../store/authStore";
 
-export default function ClosedPage() {
+export default function QuestionDetailPage() {
+  const { authToken } = authStore();
+
   const { questionId } = useParams<{ questionId: string }>();
-  const [questionData, setQuestionData] = useState<DiscussionDetail>();
-  console.log("questionId: ", questionId);
+  const [questionData, setQuestionData] = useState<QuestionDetail>();
+
+  const [formattedText, setFormattedText] = useState<string>("");
+  const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const formatTextToHTML = (text: string) => {
+      const regex = /`([^`]*)`/g;
+      const parts: string[] = [];
+      let lastIndex = 0;
+      let match;
+
+      while ((match = regex.exec(text)) !== null) {
+        const start = match.index;
+        const end = regex.lastIndex;
+        const before = text.slice(lastIndex, start);
+        const code = match[1];
+
+        // Add the text before the code block
+        if (before) {
+          parts.push(before.replace(/\n/g, "<br>"));
+        }
+
+        // Add the code block with highlighting and preserve line breaks within the code block
+        parts.push(
+          `<span style="background-color: lightgray; font-family: monospace; white-space: pre-wrap; display: inline-block;">${code.replace(
+            /\n/g,
+            "<br>"
+          )}</span>`
+        );
+
+        lastIndex = end;
+      }
+
+      // Add the remaining text after the last code block
+      if (lastIndex < text.length) {
+        parts.push(text.slice(lastIndex).replace(/\n/g, "<br>"));
+      }
+
+      return parts.join("");
+    };
+
+    setFormattedText(formatTextToHTML(textAreaInputValue));
+  }, [textAreaInputValue]);
 
   const handleSelectedQuesId = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
-    const token = localStorage.getItem("authToken");
     try {
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
       console.log("API Response:", response.data);
@@ -122,7 +145,7 @@ export default function ClosedPage() {
           </div>
           <div className="question_section4">
             <div className="section_text">수정</div>
-            <div className="section_text">팔로우</div>
+            <div className="section_text">삭제</div>
           </div>
         </div>
       </article>
@@ -166,121 +189,19 @@ export default function ClosedPage() {
       </article>
       <article className="closed_container4">
         <h1 className="subTitle">내 답변</h1>
-        <div className="richEditorText richEditorText_container">
-          <div className="options">
-            {/* Text Format */}
-            <button id="bold" className="option-button format">
-              <FontAwesomeIcon icon={faBold} />
-            </button>
-            <button id="italic" className="option-button format">
-              <FontAwesomeIcon icon={faItalic} />
-            </button>
-            <button id="underline" className="option-button format">
-              <FontAwesomeIcon icon={faUnderline} />
-            </button>
-            <button id="strikethrough" className="option-button format">
-              <FontAwesomeIcon icon={faStrikethrough} />
-            </button>
-            <button id="superscript" className="option-button script">
-              <FontAwesomeIcon icon={faSuperscript} />
-            </button>
-            <button id="subscript" className="option-button script">
-              <FontAwesomeIcon icon={faSubscript} />
-            </button>
-            {/* List */}
-            <button id="insertOrderedList" className="option-button">
-              <FontAwesomeIcon icon={faListOl} />
-            </button>
-            <button id="insertUnorderedList" className="option-button">
-              <FontAwesomeIcon icon={faList} />
-            </button>
-
-            {/* undo/redo */}
-            <button id="undo" className="option-button">
-              <FontAwesomeIcon icon={faRotateLeft} />
-            </button>
-            <button id="redo" className="option-button">
-              <FontAwesomeIcon icon={faRotateRight} />
-            </button>
-            {/* Link */}
-            <button id="createLink" className="adv-option-button">
-              <FontAwesomeIcon icon={faLink} />
-            </button>
-            <button id="unlink" className="option-button">
-              <FontAwesomeIcon icon={faUnlink} />
-            </button>
-
-            {/* Alignment */}
-            <button id="justifyLeft" className="option-button align">
-              <FontAwesomeIcon icon={faAlignLeft} />
-            </button>
-            <button id="justifyCenter" className="option-button align">
-              <FontAwesomeIcon icon={faAlignCenter} />
-            </button>
-            <button id="justifyRight" className="option-button align">
-              <FontAwesomeIcon icon={faAlignRight} />
-            </button>
-            <button id="justifyFull" className="option-button align">
-              <FontAwesomeIcon icon={faAlignJustify} />
-            </button>
-            <button id="indent" className="option-button spacing">
-              <FontAwesomeIcon icon={faIndent} />
-              <i className="fa-solid fa-indent"></i>
-            </button>
-            <button id="outdent" className="option-button spacing">
-              <FontAwesomeIcon icon={faOutdent} />
-              <i className="fa-solid fa-outdent"></i>
-            </button>
-            {/* Headings */}
-            <select id="formatblock" className="adv-option-button">
-              <option value="H1">H1</option>
-              <option value="H2">H2</option>
-              <option value="H3">H3</option>
-              <option value="H4">H4</option>
-              <option value="H5">H5</option>
-              <option value="H6">H6</option>
-            </select>
-            {/* Font */}
-            <select id="fontName" className="adv-option-button"></select>
-            <select id="fontSize" className="adv-option-button"></select>
-
-            {/* Color */}
-            <div className="input-wrapper">
-              <input
-                type="color"
-                id="foreColor"
-                className="adv-option-button"
-              />
-              <label htmlFor="foreColor">Font Color</label>
-            </div>
-            <div className="input-wrapper">
-              <input
-                type="color"
-                id="backColor"
-                className="adv-option-button"
-              />
-              <label htmlFor="backColor">Highlight Color</label>
-            </div>
-
-            {/* image */}
-            <button id="insertImage" className="option-button">
-              <FontAwesomeIcon icon={faImage} />
-              <i className="fa-solid fa-image"></i>
-            </button>
-            <input
-              type="file"
-              id="imageInput"
-              accept="image/*"
-              multiple
-              style={{ display: "none" }}
+        <div className="richEditorText_container">
+          <div>
+            <textarea
+              ref={textAreaRef}
+              value={textAreaInputValue}
+              onChange={(e) => setTextAreaInputValue(e.target.value)}
+              style={{ width: "100%", height: "200px" }}
+            />
+            <div
+              className="here"
+              dangerouslySetInnerHTML={{ __html: formattedText }}
             />
           </div>
-          {/* <div
-            id="text-input"
-            contentEditable={true}
-            onInput={applicationHandleContentChange}
-            dangerouslySetInnerHTML={{ __html: applicationContent }}
-          ></div> */}
         </div>
         <div className="closedBtn_container">
           <button className="closedBtn">답변 하기</button>

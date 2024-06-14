@@ -134,8 +134,9 @@
     }
     .application_footer {
       .application_lang {
-        display: inline-block;
+        display: flex;
         padding: 2px;
+        gap: 10px;
         margin-bottom: 5px;
         .application_lang_type {
           display: inline-block;
@@ -147,6 +148,20 @@
         }
         .application_lang_type:last-child {
           margin-right: 0;
+        }
+        .xBtnForTag {
+          position: absolute;
+          left: 168px;
+          top: 653px;
+          border: 1px solid black;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 15px;
+          height: 15px;
+          background-color: #ffffff;
+          cursor: pointer;
         }
       }
     }

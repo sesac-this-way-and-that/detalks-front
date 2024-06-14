@@ -9,35 +9,33 @@ import FindPassword from "./components/UserAuth/FindPasswordPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import GoogleAccount from "./components/UserAuth/GoogleAccount";
-import Board from "./components/Board/Board";
-import Discussion from "./components/Discussion/Discussion";
+import QuestionCreateAndModifyPage from "./components/Questions/QuestionCreateAndModifyPage";
+import QuestionListPage from "./components/Questions/QuestionListPage";
+import QuestionDetailPage from "./components/Questions/QuestionDetailPage";
 
 function App() {
   return (
     <>
       <Header></Header>
       <Routes>
-        {/* /board */}
-        {/* /board/1 */}
-        {/* /board/modify/사용자id&질문id */}
-        {/* /board/create/사용자id */}
-        {/* /mypage */}
-        {/* /user/사용자id */}
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route
+        {/* <Route
           path="/oauth2/google/redirect/header"
           element={<GoogleAccount />}
-        />
+        /> */}
         <Route path="/findPassword" element={<FindPassword />} />
-        <Route path="/board" element={<Discussion />} />
-        <Route path="/board/:userId" element={<Board />} />
-        <Route path="/board/modify/:userId/:postId" element={<Board />} />
-        <Route path="/board/create/:userId" element={<Board />} />
         <Route path="/mypage/:userId" element={<Mypage />} />
         <Route path="/user/:userId" element={<Mypage />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/questions" element={<QuestionListPage />} />
+        <Route path="/question/:questionId" element={<QuestionDetailPage />} />
+        <Route path="/question" element={<QuestionCreateAndModifyPage />} />
+        {/* <Route
+          path="/question/create/:questionId"
+          element={<Question type="create" />}
+        /> */}
       </Routes>
       <Footer></Footer>
     </>
