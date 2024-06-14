@@ -6,9 +6,6 @@ import axios from "axios";
 export default function NameInput({ accessType }: AccountForm) {
   const [nameMsg, setNameMsg] = useState<string>("");
   const { setName } = accountStore();
-  const storeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
 
   // 이름 유효성 검사
   const namePattern = /^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$/;
@@ -44,19 +41,16 @@ export default function NameInput({ accessType }: AccountForm) {
     } else {
       setNameMsg("이름은 2자 이상 10자 이하로 입력해야 합니다.");
     }
+    setName(e.target.value);
   };
   return (
     <>
       <label>
         <p>이름</p>
-        <input
-          type="text"
-          required
-          onChange={nameOnChange}
-          onBlur={storeName}
-          name="name"
-        />
-        <span id="nameInputMsg">{nameMsg}</span>
+        <input type="text" required onChange={nameOnChange} name="name" />
+        <div>
+          <span id="nameInputMsg">{nameMsg}</span>
+        </div>
       </label>
     </>
   );

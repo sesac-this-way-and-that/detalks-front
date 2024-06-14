@@ -9,8 +9,7 @@ export default function PwdInput({ accessType }: AccountForm) {
   const { setPwd } = accountStore();
 
   // 비밀번호 유효성 검사
-  const pwdPattern =
-    /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[@$!%*#?&])[A-Za-z0-9@$!%*#?&]{8,16}$/;
+  const pwdPattern = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\W)(?=\S+$).{8,16}/;
   const pwdValidation = (pw: string) => {
     if (pwdPattern.test(pw) === false) {
       return false;
@@ -32,6 +31,7 @@ export default function PwdInput({ accessType }: AccountForm) {
         }
         break;
     }
+    setPwd(e.target.value);
   };
   const pwdCheckOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value !== inputPwd) {
@@ -40,28 +40,22 @@ export default function PwdInput({ accessType }: AccountForm) {
       setPwdCheckMsg("비밀번호가 일치합니다.");
     }
   };
-
-  const storePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPwd(e.target.value);
-  };
   return (
     <>
       <label>
         <p>비밀번호</p>
-        <input
-          type="password"
-          required
-          onChange={pwdOnChange}
-          onBlur={storePwd}
-          name="pwd"
-        />
-        <span id="pwInputMsg">{pwdMsg}</span>
+        <input type="password" required onChange={pwdOnChange} name="pwd" />
+        <div>
+          <span id="pwInputMsg">{pwdMsg}</span>
+        </div>
       </label>
       {accessType !== "login" ? (
         <label>
           <p>비밀번호 확인</p>
           <input type="password" required onChange={pwdCheckOnChange} />
-          <span id="pwCheckInputMsg">{pwdCheckMsg}</span>
+          <div>
+            <span id="pwCheckInputMsg">{pwdCheckMsg}</span>
+          </div>
         </label>
       ) : null}
     </>

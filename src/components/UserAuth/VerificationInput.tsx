@@ -15,9 +15,7 @@ export default function VerificationInput() {
 
   const checkVerification = () => {
     if (code === verificationCode) {
-      setVerifyMsg(
-        "인증번호가 일치합니다. 회원가입 버튼을 눌러서 진행해주세요."
-      );
+      setVerifyMsg("인증번호가 일치합니다.");
       setBeforeVerification(false);
       setVerificationCode("");
     } else {
@@ -35,17 +33,26 @@ export default function VerificationInput() {
           onChange={storeCode}
           disabled={beforeVerification ? false : true}
         />
-        <span id="VerifyInputMsg">{verifyMsg}</span>
+        <div>
+          <button
+            type="button"
+            className="inInputBtn"
+            onClick={checkVerification}
+          >
+            인증번호 확인
+          </button>
+          <span id="VerifyInputMsg">{verifyMsg}</span>
+        </div>
       </label>
-      {beforeVerification ? (
-        <button type="button" onClick={checkVerification}>
-          인증번호 확인
+      <>
+        <button
+          type="submit"
+          className="registerSubmit"
+          disabled={beforeVerification ? true : false}
+        >
+          회원가입
         </button>
-      ) : (
-        <>
-          <button type="submit">회원가입</button>
-        </>
-      )}
+      </>
     </>
   );
 }
