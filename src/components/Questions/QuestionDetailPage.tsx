@@ -4,14 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { QuestionDetail } from "../../types/question";
 import authStore from "../../store/authStore";
+import Answer from "./Answer";
 
 export default function QuestionDetailPage() {
   const { authToken } = authStore();
   const navigate = useNavigate();
-
   const { questionId } = useParams<{ questionId: string }>();
-  const [questionData, setQuestionData] = useState<QuestionDetail>();
 
+  const [questionData, setQuestionData] = useState<QuestionDetail | null>(null); // 질문 값이 없을 경우를 대비
   const [formattedText, setFormattedText] = useState<string>("");
   const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -64,6 +64,7 @@ export default function QuestionDetailPage() {
           Authorization: `Bearer ${authToken}`,
         },
       });
+
       console.log("API Response:", response.data);
       setQuestionData(response.data.data);
     } catch (error) {
@@ -114,7 +115,7 @@ export default function QuestionDetailPage() {
                 {questionData?.voteCount}평
               </div>
               <div className="questionStats statsList">
-                {questionData?.answerList} 답변
+                {questionData?.answerCount} 답변
               </div>
               <div className="questionStats statsList">
                 {questionData?.viewCount} 열람
@@ -162,63 +163,58 @@ export default function QuestionDetailPage() {
           </div>
         </div>
       </article>
+      {/* 답변 */}
       <article className="closed_container2">
-        <h1 className="subTitle">1 답변</h1>
-      </article>
-      <article className="closed_container3">
-        <div className="section3_1">
-          <button className="answerBtn answer_likeBtn">▲</button>
-          <div>8</div>
-          <button className="answerBtn answer_disLikeBtn">▼</button>
-          <div className="resolve_bookMark answer_bookMark">🕮</div>
-        </div>
-        <div className="section3_2">
-          <div className="part3_1">
-            <div className="area1">
-              <div className="profileStats statsList">
-                <img
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-                />
-              </div>
-              <div className="profileStats statsList">
-                이기혁님 <span>485</span>
-              </div>
+        <h1 className="subTitle">{questionData?.answerCount} 답변</h1>
+        {/* 답변 리스트 map */}
+        {questionData?.answerList.map((answer) => (
+          <div className="closed_container3" key={answer.answerId}>
+            <div className="section3_1">
+              <button className="answerBtn answer_likeBtn">▲</button>
+              <div>{answer.voteCount}</div>
+              <button className="answerBtn answer_disLikeBtn">▼</button>
+              <div className="resolve_bookMark answer_bookMark">🕮</div>
             </div>
-            <div className="area2">
-              <div className="profileStats statsList">2024-06-04 16:09:30</div>
+            <div className="section3_2">
+              <div className="part3_1">
+                <div className="area1">
+                  <div className="profileStats statsList">
+                    <img
+                      src="https://picsum.photos/200/300?grayscale"
+                      alt=""
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                  <div className="profileStats statsList">
+                    {answer.author.memberName}{" "}
+                    <span>{answer.author.memberIdx}</span>
+                  </div>
+                </div>
+                <div className="area2">
+                  <div className="profileStats statsList">
+                    {new Date(answer.createdAt).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+              <div className="part3_2">
+                <div className="section4_body">{answer.answerContent}</div>
+              </div>
             </div>
           </div>
-          <div className="part3_2">
-            <div className="section4_body">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-              qui tempora nisi vero nobis minima illum. Ducimus minima beatae
-              doloribus culpa officiis! Corrupti, asperiores! Voluptate quas
-              atque ratione eum voluptas.
-            </div>
-          </div>
-        </div>
+        ))}
       </article>
       <article className="closed_container4">
-        <h1 className="subTitle">내 답변</h1>
-        <div className="richEditorText_container">
-          <div>
-            <textarea
-              ref={textAreaRef}
-              value={textAreaInputValue}
-              onChange={(e) => setTextAreaInputValue(e.target.value)}
-              style={{ width: "100%", height: "200px" }}
-            />
-            <div
-              className="here"
-              dangerouslySetInnerHTML={{ __html: formattedText }}
-            />
-          </div>
-        </div>
-        <div className="closedBtn_container">
-          <button className="closedBtn">답변 하기</button>
-        </div>
+        {/* answerList.length가 0보다 크면 true, 그렇지 않으면 false를 반환 */}
+        {questionId && (
+          <Answer
+            questionId={questionId}
+            existingAnswer={!!questionData?.answerList.length}
+          />
+        )}
       </article>
     </section>
   );

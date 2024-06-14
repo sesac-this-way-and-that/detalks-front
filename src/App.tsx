@@ -21,10 +21,10 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route
+        <Route
           path="/oauth2/google/redirect/header"
           element={<GoogleAccount />}
-        /> */}
+        />
         <Route path="/findPassword" element={<FindPassword />} />
         <Route path="/mypage/:userId" element={<Mypage />} />
         <Route path="/user/:userId" element={<Mypage />} />
