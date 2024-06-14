@@ -1,4 +1,4 @@
-export interface DiscussionInformation {
+export interface QuestionInformation {
   answerList: any[];
   author: {
     memberIdx: number;
@@ -17,7 +17,7 @@ export interface DiscussionInformation {
   voteCount: number;
 }
 
-export interface DiscussionDetail {
+export interface QuestionDetail {
   questionId: number;
   questionTitle: string;
   questionContent: string;

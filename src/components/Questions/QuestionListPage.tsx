@@ -1,41 +1,25 @@
 import { useEffect, useState } from "react";
-import "../../styles/discussionPage.scss";
+import "../../styles/questionListPage.scss";
 import axios from "axios";
-import { DiscussionInformation } from "../../types/discussion";
+import { QuestionInformation } from "../../types/question";
 import { Link, useNavigate } from "react-router-dom";
+import authStore from "../../store/authStore";
 
-export default function Discussion() {
+export default function QuestionListPage() {
   const navigate = useNavigate();
-  // const DEFAULT_DISCUSSIONINFO: DiscussionInformation = {
-  //   answerList: [],
-  //   author: {
-  //     memberIdx: 0,
-  //     memberName: "",
-  //   },
-  //   bookmarkState: false,
-  //   createdAt: new Date(),
-  //   isSolved: false,
-  //   modifiedAt: new Date(),
-  //   questionContent: "",
-  //   questionId: 0,
-  //   questionState: false,
-  //   questionTitle: "",
-  //   tagNameList: [],
-  //   viewCount: 0,
-  //   voteCount: 0,
-  // };
+  const { authToken } = authStore();
 
-  const [discussionList, setDiscussionList] = useState<DiscussionInformation[]>(
+  const [discussionList, setDiscussionList] = useState<QuestionInformation[]>(
     []
   );
 
   const handleIinformation = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/questions`;
-    const token = localStorage.getItem("authToken");
+
     try {
       const response = await axios.get(url, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
         },
       });
       setDiscussionList(response.data.data.content);
@@ -82,7 +66,7 @@ export default function Discussion() {
               <div
                 className="post_content"
                 onClick={() => {
-                  navigate(`/closed/${discussion.questionId}`);
+                  navigate(`/question/${discussion.questionId}`);
                 }}
               >
                 {discussion.questionContent}

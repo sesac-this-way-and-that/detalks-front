@@ -163,6 +163,11 @@
           -webkit-box-orient: initial;
           overflow: visible;
           margin-bottom: 0;
+          cursor: pointer;
+        }
+        .post_content:hover {
+          color: hsl(210, 80%, 23%);
+          font-weight: bold;
         }
       }
       .post_userDetails {

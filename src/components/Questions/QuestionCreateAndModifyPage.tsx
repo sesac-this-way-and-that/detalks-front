@@ -1,8 +1,12 @@
-import "../../styles/applicationFormPage.scss";
+import "../../styles/questionCreateAndModifyPage.scss";
 import React, { useState, useRef, useEffect, SyntheticEvent } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import authStore from "../../store/authStore";
 
-export default function ApplicationFormPage() {
+export default function QuestionCreateAndModifyPage() {
+  const navigate = useNavigate();
+  const { authToken } = authStore();
   const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
   const [formattedText, setFormattedText] = useState<string>("");
   const [tagInptValue, setTagInputValue] = useState<string>("");
@@ -61,8 +65,6 @@ export default function ApplicationFormPage() {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_SERVER}/questions`;
-    const token = localStorage.getItem("authToken");
-
     // if (!url || !token) {
     //   alert("Please fill out all fields before submitting.");
     //   return;
@@ -81,7 +83,7 @@ export default function ApplicationFormPage() {
     try {
       const response = await axios.post(url, questionData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
       });
@@ -191,7 +193,13 @@ export default function ApplicationFormPage() {
       </article>
       <article className="application_container2">
         <div className="applicationBtn_container">
-          <button className="appBtn" onClick={handleSubmit}>
+          <button
+            className="appBtn"
+            onClick={(e) => {
+              handleSubmit(e);
+              navigate(`/questions`);
+            }}
+          >
             질문 등록하기
           </button>
         </div>
