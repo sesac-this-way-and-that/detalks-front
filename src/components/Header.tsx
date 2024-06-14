@@ -119,7 +119,7 @@ export default function Header() {
               <></>
             )}
             <li>
-              <Link to="/board">질의응답</Link>
+              <Link to="/questions">질의응답</Link>
             </li>
             {isAuthenticated ? (
               <>
