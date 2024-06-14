@@ -1,0 +1,185 @@
+.application_wrapper {
+  padding: 24px 16px;
+}
+.application_wrapper .headerTitle {
+  font-size: 30px;
+  margin-bottom: 50px;
+}
+.application_wrapper .application_container1 .subTitle_container,
+.application_wrapper .application_container1 .applicationForm_container,
+.application_wrapper .application_container1 .attempt_container,
+.application_wrapper .application_container1 .tag_container {
+  border: 1px solid hsl(210, 9%, 75%);
+  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.application_wrapper .application_container1 .subTitle_container .subTitle,
+.application_wrapper .application_container1 .applicationForm_container .subTitle,
+.application_wrapper .application_container1 .attempt_container .subTitle,
+.application_wrapper .application_container1 .tag_container .subTitle {
+  font-size: 20px;
+  margin-bottom: 1px;
+}
+.application_wrapper .application_container1 .subTitle_container .descriptionTitle,
+.application_wrapper .application_container1 .applicationForm_container .descriptionTitle,
+.application_wrapper .application_container1 .attempt_container .descriptionTitle,
+.application_wrapper .application_container1 .tag_container .descriptionTitle {
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.application_wrapper .application_container1 .subTitle_container .subTitle_input,
+.application_wrapper .application_container1 .applicationForm_container .subTitle_input,
+.application_wrapper .application_container1 .attempt_container .subTitle_input,
+.application_wrapper .application_container1 .tag_container .subTitle_input {
+  border: 1px solid hsl(210, 9%, 75%);
+  border-radius: 5px;
+  padding: 1px;
+}
+.application_wrapper .application_container1 .subTitle_container .subTitle_input input,
+.application_wrapper .application_container1 .applicationForm_container .subTitle_input input,
+.application_wrapper .application_container1 .attempt_container .subTitle_input input,
+.application_wrapper .application_container1 .tag_container .subTitle_input input {
+  border-radius: 5px;
+  border: none;
+  width: 100%;
+  height: 30px;
+  padding: 7px 9px;
+}
+.application_wrapper .application_container1 .subTitle_container .subTitle_input input:focus,
+.application_wrapper .application_container1 .applicationForm_container .subTitle_input input:focus,
+.application_wrapper .application_container1 .attempt_container .subTitle_input input:focus,
+.application_wrapper .application_container1 .tag_container .subTitle_input input:focus {
+  outline: 1px solid blue;
+}
+.application_wrapper .application_container1 .richEditorText_container {
+  background-color: #ffffff;
+  border: 1px solid hsl(210, 9%, 75%);
+  border-radius: 5px;
+  padding: 6px 10px 2px 10px;
+}
+.application_wrapper .application_container1 .richEditorText_container button {
+  width: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  border: none;
+  background-color: #ffffff;
+  outline: none;
+  color: #020929;
+}
+.application_wrapper .application_container1 .richEditorText_container select {
+  border: 1px solid #020929;
+  border-radius: 3px;
+}
+.application_wrapper .application_container1 .richEditorText_container .options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+}
+.application_wrapper .application_container1 .richEditorText_container .input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.application_wrapper .application_container1 .richEditorText_container .input-wrapper input[type=color] {
+  appearance: none;
+  background-color: transparent;
+  width: 34px;
+  height: 22px;
+  border: none;
+  cursor: pointer;
+}
+.application_wrapper .application_container1 .richEditorText_container .input-wrapper label {
+  white-space: nowrap;
+  font-size: 13px;
+}
+.application_wrapper .application_container1 .richEditorText_container .input-wrapper input[type=color]::-webkit-color-swatch {
+  border-radius: 15px;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+.application_wrapper .application_container1 .richEditorText_container .input-wrapper input[type=color]::-moz-color-swatch {
+  border-radius: 15px;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #020929;
+}
+.application_wrapper .application_container1 .richEditorText_container #text-input {
+  height: 30vh;
+  overflow-y: auto;
+}
+.application_wrapper .application_container1 .richEditorText_container #text-input a {
+  cursor: pointer;
+}
+.application_wrapper .application_container1 .richEditorText_container .active {
+  background-color: #e0e9ff;
+}
+.application_wrapper .application_container1 .richEditorText_container img {
+  width: 200px;
+  height: 200px;
+}
+.application_wrapper .application_container1 .tag_container .subTitle {
+  margin-bottom: 1px;
+}
+.application_wrapper .application_container1 .tag_container .tag_input {
+  border: 1px solid hsl(210, 9%, 75%);
+  border-radius: 5px;
+  padding: 1px;
+  margin-bottom: 6px;
+}
+.application_wrapper .application_container1 .tag_container .tag_input input {
+  border-radius: 5px;
+  border: none;
+  width: 100%;
+  height: 30px;
+  padding: 7px 9px;
+}
+.application_wrapper .application_container1 .tag_container .tag_input input:focus {
+  outline: 1px solid blue;
+}
+.application_wrapper .application_container1 .application_footer .application_lang {
+  display: inline-block;
+  padding: 2px;
+  margin-bottom: 5px;
+}
+.application_wrapper .application_container1 .application_footer .application_lang .application_lang_type {
+  display: inline-block;
+  border-radius: 5px;
+  background-color: hsl(210, 8%, 95%);
+  padding: 2px 5px 2px 5px;
+  font-size: 14px;
+  margin-right: 2px;
+}
+.application_wrapper .application_container1 .application_footer .application_lang .application_lang_type:last-child {
+  margin-right: 0;
+}
+.application_wrapper .application_container2 .applicationBtn_container {
+  border: 1px solid hsl(210, 9%, 75%);
+  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.application_wrapper .application_container2 .applicationBtn_container .appBtn {
+  border: none;
+  color: #ffffff;
+  background-color: #1b75d0;
+  width: auto;
+  padding: 10px;
+}
+
+@media screen and (min-width: 738px) {
+  .application_wrapper .headerTitle,
+  .application_wrapper .application_container1,
+  .application_wrapper .application_container2 {
+    width: 98%;
+    margin: 0 auto;
+  }
+  .application_wrapper .application_container1 .richEditorText_container .options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow-y: hidden;
+  }
+}
