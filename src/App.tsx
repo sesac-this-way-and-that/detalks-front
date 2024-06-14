@@ -31,7 +31,14 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/questions" element={<QuestionListPage />} />
         <Route path="/question/:questionId" element={<QuestionDetailPage />} />
-        <Route path="/question" element={<QuestionCreateAndModifyPage />} />
+        <Route
+          path="/question/create"
+          element={<QuestionCreateAndModifyPage />}
+        />
+        <Route
+          path="/question/update/:questionId"
+          element={<QuestionCreateAndModifyPage />}
+        />
         {/* <Route
           path="/question/create/:questionId"
           element={<Question type="create" />}

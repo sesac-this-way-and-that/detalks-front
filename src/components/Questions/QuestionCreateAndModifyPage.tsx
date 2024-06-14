@@ -1,12 +1,14 @@
-import "../../styles/questionCreateAndModifyPage.scss";
 import React, { useState, useRef, useEffect, SyntheticEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import authStore from "../../store/authStore";
+import "../../styles/questionCreateAndModifyPage.scss";
 
 export default function QuestionCreateAndModifyPage() {
   const navigate = useNavigate();
   const { authToken } = authStore();
+  const { questionId } = useParams<{ questionId: string }>();
+
   const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
   const [formattedText, setFormattedText] = useState<string>("");
   const [tagInptValue, setTagInputValue] = useState<string>("");
@@ -14,7 +16,29 @@ export default function QuestionCreateAndModifyPage() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [applicationContent, setApplicationContent] = useState<string>("");
-  const [attemptContent, setAttemptContent] = useState("");
+
+  useEffect(() => {
+    if (questionId) {
+      const fetchQuestionData = async () => {
+        const url = `http://localhost:8080/api/questions/${questionId}`;
+        try {
+          const response = await axios.get(url, {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          });
+          const questionData = response.data.data;
+          setApplicationContent(questionData.questionTitle);
+          setTextAreaInputValue(questionData.questionContent);
+          setTagOutputValue(questionData.tags.map((tag: any) => tag.tagName));
+        } catch (error) {
+          console.error("Error fetching question data:", error);
+        }
+      };
+
+      fetchQuestionData();
+    }
+  }, [questionId, authToken]);
 
   useEffect(() => {
     const formatTextToHTML = (text: string) => {
@@ -29,12 +53,10 @@ export default function QuestionCreateAndModifyPage() {
         const before = text.slice(lastIndex, start);
         const code = match[1];
 
-        // Add the text before the code block
         if (before) {
           parts.push(before.replace(/\n/g, "<br>"));
         }
 
-        // Add the code block with highlighting and preserve line breaks within the code block
         parts.push(
           `<span style="background-color: lightgray; font-family: monospace; white-space: pre-wrap; display: inline-block;">${code.replace(
             /\n/g,
@@ -45,7 +67,6 @@ export default function QuestionCreateAndModifyPage() {
         lastIndex = end;
       }
 
-      // Add the remaining text after the last code block
       if (lastIndex < text.length) {
         parts.push(text.slice(lastIndex).replace(/\n/g, "<br>"));
       }
@@ -56,41 +77,33 @@ export default function QuestionCreateAndModifyPage() {
     setFormattedText(formatTextToHTML(textAreaInputValue));
   }, [textAreaInputValue]);
 
-  const attemptHandleContentChange = (
-    event: React.ChangeEvent<HTMLDivElement>
-  ) => {
-    setAttemptContent(event.target.innerText);
-  };
-
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const url = `${process.env.REACT_APP_API_SERVER}/questions`;
-    // if (!url || !token) {
-    //   alert("Please fill out all fields before submitting.");
-    //   return;
-    // }
+    const url = questionId
+      ? `http://localhost:8080/api/questions/${questionId}`
+      : `http://localhost:8080/api/questions`;
+
+    const method = questionId ? "PATCH" : "POST";
 
     const questionData = {
       questionTitle: applicationContent,
       questionContent: textAreaInputValue,
       tagNames: tagOutputvalue,
-      // tagNames: tagInptValue
-      //   .split(",")
-      //   .map((tag) => tag.trim())
-      //   .filter((tag) => tag),
     };
 
     try {
-      const response = await axios.post(url, questionData, {
+      const response = await axios({
+        method,
+        url,
+        data: questionData,
         headers: {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
       });
+
       console.log("response: ", response.data);
-      setApplicationContent("");
-      setTextAreaInputValue("");
-      setTagInputValue("");
+      navigate(`/questions`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.message);
@@ -102,7 +115,7 @@ export default function QuestionCreateAndModifyPage() {
 
   return (
     <section className="application_wrapper">
-      <h1 className="headerTitle">질문을 작성해주세요</h1>
+      <h1 className="headerTitle">{questionId ? "질문 수정" : "질문 작성"}</h1>
       <article className="application_container1">
         <div className="subTitle_container">
           <h1 className="subTitle">제목</h1>
@@ -119,12 +132,6 @@ export default function QuestionCreateAndModifyPage() {
             />
           </div>
         </div>
-        {/* <div className="applicationForm_container">
-          <h1 className="subTitle">문제의 세부 사항은 무엇입니까?</h1>
-          <h6 className="descriptionTitle">
-            문제를 제목에 넣은 내용과 연관지어 작성해주세요.(단 최소 20자)
-          </h6>
-        </div> */}
         <div className="attempt_container">
           <h1 className="subTitle">무엇을 시도하셨고 무엇을 기대하셨습니까?</h1>
           <h6 className="descriptionTitle">
@@ -193,14 +200,8 @@ export default function QuestionCreateAndModifyPage() {
       </article>
       <article className="application_container2">
         <div className="applicationBtn_container">
-          <button
-            className="appBtn"
-            onClick={(e) => {
-              handleSubmit(e);
-              navigate(`/questions`);
-            }}
-          >
-            질문 등록하기
+          <button className="appBtn" onClick={handleSubmit}>
+            {questionId ? "질문 수정하기" : "질문 등록하기"}
           </button>
         </div>
       </article>
