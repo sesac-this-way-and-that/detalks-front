@@ -12,6 +12,7 @@ import GoogleAccount from "./components/UserAuth/GoogleAccount";
 import QuestionCreateAndModifyPage from "./components/Questions/QuestionCreateAndModifyPage";
 import QuestionListPage from "./components/Questions/QuestionListPage";
 import QuestionDetailPage from "./components/Questions/QuestionDetailPage";
+import SocialAccount from "./components/UserAuth/SocialAccount";
 
 function App() {
   return (
@@ -21,10 +22,11 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route
+        <Route
           path="/oauth2/google/redirect/header"
           element={<GoogleAccount />}
-        /> */}
+        />
+
         <Route path="/findPassword" element={<FindPassword />} />
         <Route path="/mypage/:userId" element={<Mypage />} />
         <Route path="/user/:userId" element={<Mypage />} />

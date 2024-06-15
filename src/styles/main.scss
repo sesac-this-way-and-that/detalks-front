@@ -39,7 +39,6 @@ body {
   .main-img {
     overflow: hidden;
     display: flex;
-    // justify-content: center;
     align-items: flex-start;
     justify-content: center;
     img {
@@ -49,7 +48,7 @@ body {
   }
 }
 .visible {
-  opacity: 1; /* 초기 투명도를 설정합니다. */
+  opacity: 1;
   transition: opacity 2s ease;
 }
 .main-container-wave {
