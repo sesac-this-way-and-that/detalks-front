@@ -1,15 +1,68 @@
-import { userInfo } from "os";
+import { useEffect, useRef } from "react";
 import { useInfoStore } from "../store";
 import Header from "./Header";
 import { Link } from "react-router-dom";
+import questions from "../assets/questions.png";
+import questionDetail from "../assets/questionDetail.png";
+import mypage from "../assets/mypage.png";
 
 export default function Main() {
   const userData = useInfoStore((state) => state.userInfo);
+
+  useEffect(() => {
+    const mainImgs = document.querySelectorAll(".main-img");
+
+    mainImgs.forEach((mainImg) => {
+      const img = mainImg.querySelector("img");
+      if (img) {
+        mainImg.addEventListener("mouseover", () => {
+          const main = mainImg as HTMLElement;
+          const imgHeight = img.offsetHeight;
+          const mainImgHeight = main.offsetHeight;
+          img.style.transform = `translateY(-${imgHeight - mainImgHeight}px)`;
+        });
+        mainImg.addEventListener("mouseout", () => {
+          img.style.transform = "translateY(0)";
+        });
+      } 
+    });
+  }, []);
+
+  const containerRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5, // 요소가 50% 이상 보일 때 감지
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLDivElement;
+          target.classList.add("visible"); // 진입하면 클래스 추가
+        } else {
+          const target = entry.target as HTMLDivElement;
+          target.classList.remove("visible"); // 벗어나면 클래스 제거
+        }
+      });
+    }, options);
+
+    containerRefs.current.forEach((containerRef) => {
+      if (containerRef) {
+        observer.observe(containerRef);
+      }
+    });
+
+    return () => {
+      observer.disconnect(); // 컴포넌트가 언마운트될 때 옵저버 해제
+    };
+  }, []);
+
+
   return (
     <section className="main-section">
-      {/* <article className="wave">
-        <Wave></Wave>
-      </article> */}
       <article className="main-container-wave">
         <div className="wave-box">
           <div className="wave one"></div>
@@ -39,9 +92,9 @@ export default function Main() {
         </div>
       </article>
       <article>
-        <div className="main-container contents">
+        <div ref={(el) => (containerRefs.current[0] = el)} className="main-container contents">
           <div className="main-img">
-            <img src="" alt="" />
+            <img src={questions} alt="" />
           </div>
           <div className="main-content">
             <p>"다른 사람들은 어떻게 해결했을까?"</p>
@@ -57,7 +110,7 @@ export default function Main() {
         </div>
       </article>
       <article>
-        <div className="main-container contents">
+        <div ref={(el) => (containerRefs.current[1] = el)} className="main-container contents">
           <div className="main-content">
             <p>"아무리 찾아도 제가 필요한 부분이 없어요."</p>
             <p>직접 모르는 문제 공유 가능</p>
@@ -69,14 +122,14 @@ export default function Main() {
             </p>
           </div>
           <div className="main-img">
-            <img src="" alt="" />
+            <img src={questionDetail} alt="" />
           </div>
         </div>
       </article>
       <article>
-        <div className="main-container contents">
+        <div ref={(el) => (containerRefs.current[2] = el)} className="main-container contents">
           <div className="main-img">
-            <img src="" alt="" />
+            <img src={mypage} alt="" />
           </div>
           <div className="main-content">
             <p>"전에 궁금했던거 다시 보고 싶어요."</p>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cancel from "../../assets/cancel.png";
+import { useInfoStore } from "../../store";
 interface WithdrawUserProps {
   onHide: () => void;
 }
@@ -11,7 +12,7 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   const [password, setPassword] = useState("");
   const [reason, setReason] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(true);
-
+  const userData = useInfoStore((state) => state.userInfo);
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
@@ -98,16 +99,20 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
       </p>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              autoComplete="current-password"
-            />
-          </div>
+          {userData?.social == "NONE" ? (
+            <div className="form-group">
+              <label htmlFor="password">비밀번호</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                autoComplete="current-password"
+              />
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="form-group">
             <label htmlFor="reason">탈퇴 사유</label>
             <input

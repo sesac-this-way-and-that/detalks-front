@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useInfoStore } from "../store";
 import authStore from "../store/authStore";
+import logo from "../assets/logo.png";
 
 export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,7 +22,6 @@ export default function Header() {
       getInfo();
       setIsAuthenticated(true);
     }
-    console.log("하핳2");
   }, [getInfo, getToken]);
 
   const nav = useNavigate();
@@ -32,7 +32,7 @@ export default function Header() {
     let newLocation = prevLocation;
     if (prevLocation.includes("mypage")) {
       newLocation = prevLocation.replace("mypage", "user");
-    }
+    } 
     removeToken();
     setIsAuthenticated(false);
     window.location.href = newLocation;
@@ -71,13 +71,8 @@ export default function Header() {
       <div className="headerContainer container">
         <div className="headerLogoContainer">
           <Link to="/">
-            <img
-              className="headerLogo"
-              src="https://picsum.photos/seed/picsum/200/300"
-              alt="Logo"
-              style={{ width: "100px", height: "50px" }}
-            />
-            <span>Detalks</span>
+            <img className="headerLogo" src={logo} alt="Logo" />
+            <p>Detalks</p>
           </Link>
         </div>
         <div className="headerNavigation">

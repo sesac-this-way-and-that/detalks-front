@@ -6,6 +6,12 @@
   font-weight: normal;
   font-style: normal;
 }
+
+$desktop: 1500px;
+$notebook: 1200px;
+$tablet: 768px;
+$mobile: 480px;
+
 button {
   font-family: "S-CoreDream-3Light";
 }
@@ -22,13 +28,18 @@ button {
     height: 180px;
   }
 }
-section {
+.mypage-section {
   width: 900px;
+  // width: 100%;
+  // border: 1px solid red;
   color: rgb(26, 26, 26);
   padding-top: 50px;
   .title {
+    width: 100%;
     color: $main-color;
     font-size: 30px;
+    text-align: left;
+    // border: 1px solid red;
   }
   article {
     width: 100%;
@@ -427,6 +438,149 @@ section {
           height: 100%;
           background: rgba(0, 0, 0, 0.5);
           z-index: 999;
+        }
+      }
+    }
+  }
+}
+
+// 패드
+@media (min-width: $tablet) and (max-width: $notebook) {
+  .mypage-section {
+    width: 700px;
+
+    .mypage-profile {
+      .profile-content {
+        width: 70%;
+      }
+    }
+    .mypage-tab {
+      .mypage-components-container {
+        .mypage-profile-container {
+          .mypage-profile-ability {
+            width: 200px;
+            .box {
+              div {
+                width: 80px;
+              }
+            }
+          }
+          .mypage-profile-about {
+            width: 430px;
+          }
+        }
+        .mypage-profile-top {
+          ul {
+            align-items: center;
+            li {
+              // border: 1px solid blue;
+
+              &:nth-child(3) {
+                width: 330px;
+                color: $deep-blue-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 핸드폰
+@media (max-width: $tablet) {
+  .mypage-section {
+    width: 380px;
+
+    .mypage-profile {
+      .profile-content {
+        width: 67%;
+        height: 110px;
+        .profile-summary {
+          font-size: 13px;
+          height: 25%;
+        }
+        .profile-tag {
+          span {
+            font-size: 10px;
+            padding: 2px 7px;
+          }
+        }
+      }
+      .profile-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 110px;
+        height: 110px;
+        border: 1px solid rgb(231, 231, 231);
+        border-radius: 5px;
+        overflow: hidden;
+        img {
+          height: 110px;
+        }
+      }
+    }
+    .mypage-tab {
+      .mypage-components-container {
+        .mypage-profile-container {
+          flex-direction: column;
+          .mypage-profile-ability {
+            width: 100%;
+            flex-wrap: nowrap;
+            .box {
+              height: 100px;
+              margin-bottom: 25px;
+              div {
+                width: 75px;
+              }
+            }
+          }
+          .mypage-profile-about {
+            width: 100%;
+          }
+        }
+        .mypage-profile-top {
+          ul {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100px;
+            li {
+              // border: 1px solid blue;
+              text-align: center;
+              &:first-child {
+                position: absolute;
+                top: 10px;
+                left: 40px;
+                font-size: 14px;
+              }
+              &:nth-child(2) {
+                position: absolute;
+                top: 26px;
+                left: -25px;
+                span {
+                  font-size: 7px;
+                }
+              }
+              &:nth-child(3) {
+                position: absolute;
+                width: 220px;
+                top: 10px;
+                right: 20px;
+                text-align: left;
+                font-size: 14px;
+              }
+              &:last-child {
+                position: absolute;
+                bottom: 7px;
+                right: 20px;
+              }
+            }
+          }
+        }
+        .pagination {
+          width: 100%;
         }
       }
     }
