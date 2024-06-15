@@ -67,8 +67,12 @@ const Mypage: React.FC = () => {
   //   getInfo();
   // }, [userData]);
   return (
-    <section>
-      <h2 className="title">마이페이지</h2>
+    <section className="mypage-section">
+      {userId && parseInt(userId, 10) === userInfo.idx ? (
+        <h2 className="title">마이페이지</h2>
+      ) : (
+        <h2 className="title">{userInfo.name} 님의 페이지</h2>
+      )}
       <article className="mypage-profile">
         <div className="profile-img">
           <img
