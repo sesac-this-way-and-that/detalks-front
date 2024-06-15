@@ -22,13 +22,9 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route
-          path="/oauth2/google/redirect/header"
-          element={<GoogleAccount />}
-        /> */}
         <Route
           path="/oauth2/google/redirect/header"
-          element={<SocialAccount />}
+          element={<GoogleAccount />}
         />
 
         <Route path="/findPassword" element={<FindPassword />} />
