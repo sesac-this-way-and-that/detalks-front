@@ -19,6 +19,7 @@ type UserInfo = {
   updated?: string;
   qcount?: number;
   acount?: number;
+  tags?: string[];
 };
 /*
 "idx": 1,

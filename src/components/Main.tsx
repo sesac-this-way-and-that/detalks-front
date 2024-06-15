@@ -24,7 +24,7 @@ export default function Main() {
         mainImg.addEventListener("mouseout", () => {
           img.style.transform = "translateY(0)";
         });
-      } 
+      }
     });
   }, []);
 
@@ -42,9 +42,6 @@ export default function Main() {
         if (entry.isIntersecting) {
           const target = entry.target as HTMLDivElement;
           target.classList.add("visible"); // 진입하면 클래스 추가
-        } else {
-          const target = entry.target as HTMLDivElement;
-          target.classList.remove("visible"); // 벗어나면 클래스 제거
         }
       });
     }, options);
@@ -59,7 +56,6 @@ export default function Main() {
       observer.disconnect(); // 컴포넌트가 언마운트될 때 옵저버 해제
     };
   }, []);
-
 
   return (
     <section className="main-section">
@@ -92,7 +88,10 @@ export default function Main() {
         </div>
       </article>
       <article>
-        <div ref={(el) => (containerRefs.current[0] = el)} className="main-container contents">
+        <div
+          ref={(el) => (containerRefs.current[0] = el)}
+          className="main-container contents"
+        >
           <div className="main-img">
             <img src={questions} alt="" />
           </div>
@@ -110,7 +109,10 @@ export default function Main() {
         </div>
       </article>
       <article>
-        <div ref={(el) => (containerRefs.current[1] = el)} className="main-container contents">
+        <div
+          ref={(el) => (containerRefs.current[1] = el)}
+          className="main-container contents"
+        >
           <div className="main-content">
             <p>"아무리 찾아도 제가 필요한 부분이 없어요."</p>
             <p>직접 모르는 문제 공유 가능</p>
@@ -127,7 +129,10 @@ export default function Main() {
         </div>
       </article>
       <article>
-        <div ref={(el) => (containerRefs.current[2] = el)} className="main-container contents">
+        <div
+          ref={(el) => (containerRefs.current[2] = el)}
+          className="main-container contents"
+        >
           <div className="main-img">
             <img src={mypage} alt="" />
           </div>

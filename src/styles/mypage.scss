@@ -12,6 +12,22 @@ $notebook: 1200px;
 $tablet: 768px;
 $mobile: 480px;
 
+.color1 {
+  background-color: rgb(136, 136, 219);
+}
+.color2 {
+  background-color: pink;
+}
+.color3 {
+  background-color: rgb(200, 122, 200);
+}
+.color4 {
+  background-color: rgb(140, 213, 140);
+}
+.color5 {
+  background-color: rgb(230, 183, 96);
+}
+
 button {
   font-family: "S-CoreDream-3Light";
 }
@@ -66,10 +82,10 @@ button {
       .profile-tag {
         span {
           color: rgb(67, 67, 67);
-          background-color: #fdcc51;
           padding: 2px 18px;
           border-radius: 10px;
           margin-right: 10px;
+          font-weight: bold;
           box-shadow: 1px 1px 1px rgb(195, 195, 195);
         }
       }
@@ -167,6 +183,9 @@ button {
             &:first-child {
               color: rgb(67, 67, 67);
               font-weight: bold;
+              .is-solved {
+                color: $yellow-color;
+              }
             }
             &:nth-child(2) {
               width: 80px;
@@ -177,6 +196,10 @@ button {
                 border-radius: 15px;
                 padding: 0 10px;
                 font-size: 10px;
+              }
+              .is-selected {
+                color: $main-color;
+                border: 1px solid $main-color;
               }
             }
             &:nth-child(3) {
@@ -212,6 +235,9 @@ button {
                 cursor: pointer;
               }
             }
+            .active-filter {
+              color: $main-color;
+            }
           }
         }
         .mypost-filter-2 {
@@ -224,6 +250,18 @@ button {
             justify-content: space-evenly;
             align-items: center;
             li {
+              cursor: pointer;
+
+              padding: 3.5px 6px;
+              &:hover {
+                border: 1px solid rgb(207, 207, 207);
+                background-color: rgb(231, 231, 231);
+                margin-top: 2px;
+                border-radius: 5px;
+                padding: 1px 4px;
+              }
+            }
+            .active-sort {
               border: 1px solid rgb(207, 207, 207);
               background-color: rgb(231, 231, 231);
               margin-top: 2px;
