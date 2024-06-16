@@ -221,10 +221,10 @@ const EditProfile: React.FC<EditProfileProps> = ({
           </button>
           <button
             type="button"
-            className="cancel-btn"
+            className={userData?.isDeleted ? "recover-btn" : "cancel-btn"}
             onClick={handleOpenWithdrawModal}
           >
-            회원 탈퇴
+            {userData?.isDeleted ? "회원 복구" : "회원 탈퇴"}
           </button>
         </div>
       </form>

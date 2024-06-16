@@ -391,8 +391,16 @@ button {
             display: flex;
             flex-direction: column;
             align-items: center;
-
+            .recover-title {
+              margin-top: 20px;
+              text-align: center;
+              font-size: 20px;
+              margin-bottom: 3px;
+              color: $main-color;
+              font-weight: bold;
+            }
             .title {
+              text-align: center;
               font-size: 20px;
               margin-bottom: 3px;
               color: rgb(186, 0, 0);
@@ -403,7 +411,7 @@ button {
               margin-bottom: 15px;
             }
             .smalltitle {
-              font-size: 15px;
+              font-size: 13px;
               margin-bottom: 10px;
               font-weight: bold;
             }
@@ -441,6 +449,21 @@ button {
                 &:hover {
                   box-shadow: none;
                   background-color: rgb(186, 0, 0);
+                  color: white;
+                  font-weight: bold;
+                }
+              }
+              .recover-btn {
+                margin-top: 10px;
+                border: 1px solid rgb(231, 231, 231);
+                width: 100%;
+                border-radius: 5px;
+                height: 30px;
+                box-shadow: 1px 1px 1px rgb(207, 207, 207);
+                cursor: pointer;
+                &:hover {
+                  box-shadow: none;
+                  background-color: $main-color;
                   color: white;
                   font-weight: bold;
                 }
