@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useInfoStore } from "../../store";
 import authStore from "../../store/authStore";
+import { useParams } from "react-router-dom";
 
 interface Question {
   id: number;
@@ -22,6 +23,7 @@ const MyPosts: React.FC = () => {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const getToken = authStore((state) => state.authToken);
+  const { userId } = useParams<{ userId: string }>();
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -29,11 +31,20 @@ const MyPosts: React.FC = () => {
 
   const fetchQuestions = async () => {
     try {
-      let apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/recent`;
+      let apiUrl;
+      if (userData?.idx) {
+        apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/recent`;
+      } else {
+        apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userId}/activities/recent`;
+      }
 
       // Adjust API URL based on sort criteria
       if (sortBy === "평점순") {
-        apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+        if (userData?.idx) {
+          apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+        } else {
+          apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userId}/activities/top-votes`;
+        }
       }
 
       const response = await axios.get(apiUrl);
@@ -201,13 +212,17 @@ const MyPosts: React.FC = () => {
             >
               답변
             </li>
-            <li
-              className={filterBy === "북마크" ? "active-filter" : ""}
+          </ul>
+          {getToken && (
+            <div
+              className={
+                filterBy === "북마크" ? "active-filter bookmark" : "bookmark"
+              }
               onClick={() => handleFilterChange("북마크")}
             >
               북마크
-            </li>
-          </ul>
+            </div>
+          )}
         </div>
         <div className="mypost-filter-2">
           <ul>

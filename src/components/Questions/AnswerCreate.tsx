@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import authStore from "../../store/authStore";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // jwt-decode import 추가
+// import { jwtDecode } from "jwt-decode"; // jwt-decode import 추가
 import { AnswerDetail, QuestionDetail } from "../../types/question";
 
 interface AnswerProps {
