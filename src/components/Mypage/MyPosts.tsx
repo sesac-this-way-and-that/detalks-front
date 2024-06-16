@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useInfoStore } from "../../store";
+import authStore from "../../store/authStore";
 
 interface Question {
   id: number;
@@ -20,6 +21,7 @@ const MyPosts: React.FC = () => {
   const userData = useInfoStore((state) => state.userInfo);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const getToken = authStore((state) => state.authToken);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -47,6 +49,34 @@ const MyPosts: React.FC = () => {
       console.error("API 호출 중 오류 발생:", error);
     }
   };
+
+  const bookmarkQuestions = async () => {
+    try {
+      const apiUrl = `${process.env.REACT_APP_API_SERVER}/bookmarks?sortBy=voteCount`;
+      const token = getToken;
+
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { data } = response.data;
+      console.log(data);
+      setAllQuestions(data.content);
+    } catch (error) {
+      console.error("북마크 API 호출 중 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (filterBy === "북마크") {
+      bookmarkQuestions();
+    } else {
+      fetchQuestions();
+    }
+  }, [sortBy, filterBy, userData?.idx]);
+
   useEffect(() => {
     fetchQuestions();
   }, [sortBy, userData?.idx]);
@@ -170,6 +200,12 @@ const MyPosts: React.FC = () => {
               onClick={() => handleFilterChange("답변")}
             >
               답변
+            </li>
+            <li
+              className={filterBy === "북마크" ? "active-filter" : ""}
+              onClick={() => handleFilterChange("북마크")}
+            >
+              북마크
             </li>
           </ul>
         </div>

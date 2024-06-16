@@ -46,7 +46,7 @@ const Mypage: React.FC = () => {
       getInfo();
     } else {
       axios
-        .get(`${process.env.REACT_APP_API_SERVER}/member/${userId}`)
+        .get(`${process.env.REACT_APP_API_SERVER}/member/idx/${userId}`)
         .then((response) => {
           const data = response.data.data;
           setUserInfo({
