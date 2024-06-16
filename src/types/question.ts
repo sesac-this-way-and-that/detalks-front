@@ -18,7 +18,7 @@ export interface QuestionInformation {
 }
 
 export interface QuestionDetail {
-  questionId: number;
+  questionId: string;
   questionTitle: string;
   questionContent: string;
   createdAt: Date;
@@ -31,7 +31,23 @@ export interface QuestionDetail {
     memberIdx: number;
     memberName: string;
   };
-  answerList: string[];
+  answerList: AnswerDetail[];
+  answerCount: number;
   tagNameList: string[];
   bookmarkState: boolean;
+  questionRep: number;
+}
+
+  export interface AnswerDetail {
+    answerId: string;
+    answerContent: string;
+    createdAt: Date;
+    modifiedAt: Date;
+    answerState: boolean;
+    voteCount: number;
+    isSelected: boolean;
+    author: {
+      memberIdx: number;
+      memberName: string;
+    };
 }

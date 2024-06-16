@@ -26,7 +26,6 @@ function App() {
           path="/oauth2/google/redirect/header"
           element={<GoogleAccount />}
         />
-
         <Route path="/findPassword" element={<FindPassword />} />
         <Route path="/mypage/:userId" element={<Mypage />} />
         <Route path="/user/:userId" element={<Mypage />} />
