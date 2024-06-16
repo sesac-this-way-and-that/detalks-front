@@ -43,7 +43,15 @@ export default function QuestionListPage() {
   return (
     <section className="discussion_wrapper">
       <article className="discussion_container_1">
-        <h1 className="title">질의 응답</h1>
+        <div className="question_header">
+          <h1 className="headerTitle">질의 응답</h1>
+          <button
+            className="question_askQBtn"
+            onClick={() => navigate(`/question/create`)}
+          >
+            질문 하기
+          </button>
+        </div>
         <div className="subfilter_sort_box">
           <div className="flex_item item1">100 질문</div>
           <ul className="flex_item item2">

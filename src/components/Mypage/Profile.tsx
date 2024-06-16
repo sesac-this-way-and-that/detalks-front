@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useInfoStore } from "../../store";
 
 interface ProfileProps {
   userInfo: {
@@ -12,44 +14,34 @@ interface ProfileProps {
   };
 }
 
+interface Question {
+  id: number;
+  titleOrContent: string;
+  isQuestion: boolean;
+  createdAt: string;
+  voteCount: number;
+  isSolved: boolean;
+  isSelected: boolean;
+}
+
 const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
-  const questions = [
-    {
-      id: 1,
-      type: "Q",
-      rating: 1,
-      title: "백엔드 작업하다가 403에러가 나와요",
-      date: "2024-06-04 18:11:55",
-    },
-    {
-      id: 2,
-      type: "Q",
-      rating: 2,
-      title: "프론트엔드에서 CORS 문제를 해결하는 방법?",
-      date: "2024-06-05 09:23:44",
-    },
-    {
-      id: 3,
-      type: "Q",
-      rating: 5,
-      title: "React에서 상태 관리를 어떻게 해야 할까요?",
-      date: "2024-06-05 10:30:21",
-    },
-    {
-      id: 4,
-      type: "Q",
-      rating: 3,
-      title: "TypeScript 타입 정의 질문",
-      date: "2024-06-05 11:11:11",
-    },
-    {
-      id: 5,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-  ];
+  const [topQuestions, setTopQuestions] = useState<Question[]>([]);
+  const userData = useInfoStore((state) => state.userInfo);
+  useEffect(() => {
+    const apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        const { data } = response.data;
+        console.log(response);
+        console.log(data);
+        setTopQuestions(data.slice(0, 5));
+      })
+      .catch((error) => {
+        console.error("API 호출 중 오류 발생:", error);
+      });
+  }, [userData?.idx]);
 
   return (
     <>
@@ -85,20 +77,45 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
       <div className="mypage-profile-top">
         <h3>Top 5</h3>
         <div className="box">
-          {questions.map((question) => (
-            <ul key={question.id}>
+          {topQuestions.length > 0 ? (
+            <>
+              {topQuestions.map((question) => (
+                <ul key={question.id}>
+                  <li>
+                    {question.isSelected ? (
+                      <span className="is-solved">
+                        {question.isQuestion ? <>Q</> : <>A</>}
+                      </span>
+                    ) : (
+                      <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                    )}
+                  </li>
+                  <li>
+                    {question.isSelected ? (
+                      <span className="is-selected">
+                        {question.voteCount} 평점
+                      </span>
+                    ) : (
+                      <span>{question.voteCount} 평점</span>
+                    )}
+                  </li>
+                  <li>
+                    <span>{question.titleOrContent}</span>
+                  </li>
+                  <li>{question.createdAt}</li>
+                </ul>
+              ))}
+            </>
+          ) : (
+            <ul>
+              <li></li>
+              <li></li>
               <li>
-                <span>{question.type}</span>
+                <span>작성하신 질문이 없습니다.</span>
               </li>
-              <li>
-                <span>{question.rating} 평점</span>
-              </li>
-              <li>
-                <span>{question.title}</span>
-              </li>
-              <li>{question.date}</li>
+              <li></li>
             </ul>
-          ))}
+          )}
         </div>
       </div>
     </>

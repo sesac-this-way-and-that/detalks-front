@@ -1,5 +1,9 @@
 .discussion_wrapper {
+  position: relative;
+  border: 1px solid black;
+  width: 100%;
   padding: 24px 16px;
+  margin: 80px;
   .discussion_container_1 {
     position: relative;
     margin-bottom: 10px;
@@ -12,10 +16,28 @@
       background-color: hsl(210, 8%, 85%);
       content: "";
     }
+    .question_header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      .headerTitle {
+        font-size: 30px;
+      }
+
+      .question_askQBtn {
+        border: none;
+        border-radius: 5px;
+        color: #ffffff;
+        background-color: #1b75d0;
+        padding: 10px;
+        cursor: pointer;
+      }
+    }
     .title {
       font-size: 30px;
       margin-bottom: 12px;
     }
+
     .subfilter_sort_box {
       display: inline-block;
       padding-bottom: 10px;
