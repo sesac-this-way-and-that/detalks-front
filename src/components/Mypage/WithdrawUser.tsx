@@ -24,7 +24,7 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!password) {
+    if (userData?.social == "NONE" && !password) {
       return alert("비밀번호를 입력해주세요.");
     }
 
