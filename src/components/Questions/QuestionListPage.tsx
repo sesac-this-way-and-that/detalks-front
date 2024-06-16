@@ -228,7 +228,7 @@ export default function QuestionListPage() {
   };
 
   return (
-    <section>
+    <section className="qna-list-page">
       <article className="qna-header">
         <h2 className="title">질의응답</h2>
         <div className="select-orderby-type">

@@ -183,13 +183,15 @@
 //     }
 //   }
 // }
-div {
-  border: 1px solid gray;
-}
-img {
-  width: 50px;
-}
-button {
-  border: 1px solid;
-  border-radius: 1px;
+.qna-list-page {
+  div {
+    border: 1px solid gray;
+  }
+  img {
+    width: 50px;
+  }
+  button {
+    border: 1px solid;
+    border-radius: 1px;
+  }
 }
