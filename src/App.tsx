@@ -17,7 +17,7 @@ import SocialAccount from "./components/UserAuth/SocialAccount";
 function App() {
   return (
     <>
-      <Header></Header>
+      <Header />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<LoginPage />} />
@@ -46,7 +46,7 @@ function App() {
           element={<Question type="create" />}
         /> */}
       </Routes>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }
