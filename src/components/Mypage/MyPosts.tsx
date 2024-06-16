@@ -1,109 +1,23 @@
-// src/components/MyPosts.tsx
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useInfoStore } from "../../store";
 
-import React, { useState } from "react";
+interface Question {
+  id: number;
+  titleOrContent: string;
+  isQuestion: boolean;
+  createdAt: string;
+  voteCount: number;
+  isSolved: boolean;
+  isSelected: boolean;
+}
 
 const MyPosts: React.FC = () => {
-  const questions = [
-    {
-      id: 1,
-      type: "Q",
-      rating: 1,
-      title: "백엔드 작업하다가 403에러가 나와요",
-      date: "2024-06-04 18:11:55",
-    },
-    {
-      id: 2,
-      type: "Q",
-      rating: 2,
-      title: "프론트엔드에서 CORS 문제를 해결하는 방법?",
-      date: "2024-06-05 09:23:44",
-    },
-    {
-      id: 3,
-      type: "Q",
-      rating: 5,
-      title: "React에서 상태 관리를 어떻게 해야 할까요?",
-      date: "2024-06-05 10:30:21",
-    },
-    {
-      id: 4,
-      type: "Q",
-      rating: 3,
-      title: "TypeScript 타입 정의 질문",
-      date: "2024-06-05 11:11:11",
-    },
-    {
-      id: 5,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 6,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 7,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 8,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 9,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 10,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 11,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 12,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 13,
-      type: "A",
-      rating: 1,
-      title: "Node.js에서 비동기 처리",
-      date: "2024-06-05 12:00:00",
-    },
-    {
-      id: 14,
-      type: "A",
-      rating: 4,
-      title: "GraphQL을 사용한 데이터 페칭",
-      date: "2024-06-05 13:45:30",
-    },
-  ];
-
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([]);
+  const [sortBy, setSortBy] = useState<string>("최신순");
+  const [filterBy, setFilterBy] = useState<string>("전체");
+  const userData = useInfoStore((state) => state.userInfo);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -111,18 +25,60 @@ const MyPosts: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const fetchQuestions = async () => {
+    try {
+      let apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/recent`;
+
+      // Adjust API URL based on sort criteria
+      if (sortBy === "평점순") {
+        apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+      }
+
+      const response = await axios.get(apiUrl);
+      let { data } = response.data;
+      if (sortBy === "채택 없는 글") {
+        data = data.filter(
+          (question: Question) =>
+            question.isSelected === null || question.isSelected === false
+        );
+      }
+      setAllQuestions(data);
+    } catch (error) {
+      console.error("API 호출 중 오류 발생:", error);
+    }
+  };
+  useEffect(() => {
+    fetchQuestions();
+  }, [sortBy, userData?.idx]);
+
+  useEffect(() => {
+    filterQuestions();
+  }, [allQuestions, filterBy]);
+
+  const filterQuestions = () => {
+    let filteredData = [...allQuestions];
+
+    switch (filterBy) {
+      case "질문":
+        filteredData = filteredData.filter((question) => question.isQuestion);
+        break;
+      case "답변":
+        filteredData = filteredData.filter((question) => !question.isQuestion);
+        break;
+      default:
+        break;
+    }
+    console.log(filteredData);
+    setFilteredQuestions(filteredData);
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = questions.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(questions.length / itemsPerPage);
-  const pageNumbers = [];
-
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  const currentItems = allQuestions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(allQuestions.length / itemsPerPage);
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const renderPageNumbers = () => {
-    const pages = [];
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
@@ -131,6 +87,7 @@ const MyPosts: React.FC = () => {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
 
+    const pages = [];
     if (startPage > 1) {
       pages.push(
         <button
@@ -176,40 +133,109 @@ const MyPosts: React.FC = () => {
     return pages;
   };
 
+  const handleSortChange = (criteria: string) => {
+    if (criteria !== sortBy) {
+      setSortBy(criteria);
+      setCurrentPage(1);
+    }
+  };
+
+  const handleFilterChange = (criteria: string) => {
+    if (criteria !== filterBy) {
+      setFilterBy(criteria);
+      setCurrentPage(1);
+    }
+  };
+
   return (
     <>
       <h3>내 활동</h3>
       <div className="mypost-filter-container">
         <div className="mypost-filter-1">
           <ul>
-            <li>전체</li>
-            <li>질문</li>
-            <li>답변</li>
+            <li
+              className={filterBy === "전체" ? "active-filter" : ""}
+              onClick={() => handleFilterChange("전체")}
+            >
+              전체
+            </li>
+            <li
+              className={filterBy === "질문" ? "active-filter" : ""}
+              onClick={() => handleFilterChange("질문")}
+            >
+              질문
+            </li>
+            <li
+              className={filterBy === "답변" ? "active-filter" : ""}
+              onClick={() => handleFilterChange("답변")}
+            >
+              답변
+            </li>
           </ul>
         </div>
         <div className="mypost-filter-2">
           <ul>
-            <li>최신순</li>
-            <li>평점순</li>
-            <li>채택 없는 글</li>
+            <li
+              className={sortBy === "최신순" ? "active-sort" : ""}
+              onClick={() => handleSortChange("최신순")}
+            >
+              최신순
+            </li>
+            <li
+              className={sortBy === "평점순" ? "active-sort" : ""}
+              onClick={() => handleSortChange("평점순")}
+            >
+              평점순
+            </li>
+            <li
+              className={sortBy === "채택 없는 글" ? "active-sort" : ""}
+              onClick={() => handleSortChange("채택 없는 글")}
+            >
+              채택 없는 글
+            </li>
           </ul>
         </div>
       </div>
       <div className="mypage-profile-top">
-        {currentItems.map((question) => (
-          <ul key={question.id}>
+        {filteredQuestions.length > 0 ? (
+          <>
+            {currentItems.map((question) => (
+              <ul key={question.id}>
+                <li>
+                  {question.isSelected ? (
+                    <span className="is-solved">
+                      {question.isQuestion ? <>Q</> : <>A</>}
+                    </span>
+                  ) : (
+                    <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                  )}
+                </li>
+                <li>
+                  {question.isSelected ? (
+                    <span className="is-selected">
+                      {question.voteCount} 평점
+                    </span>
+                  ) : (
+                    <span>{question.voteCount} 평점</span>
+                  )}
+                </li>
+                <li>
+                  <span>{question.titleOrContent}</span>
+                </li>
+                <li>{question.createdAt}</li>
+              </ul>
+            ))}
+          </>
+        ) : (
+          <ul>
+            <li></li>
+            <li></li>
             <li>
-              <span>{question.type}</span>
+              <span>작성하신 질문이 없습니다.</span>
             </li>
-            <li>
-              <span>{question.rating} 평점</span>
-            </li>
-            <li>
-              <span>{question.title}</span>
-            </li>
-            <li>{question.date}</li>
+            <li></li>
           </ul>
-        ))}
+        )}
       </div>
       <div className="pagination">
         <button

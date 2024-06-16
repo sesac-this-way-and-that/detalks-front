@@ -44,7 +44,6 @@ const Mypage: React.FC = () => {
     if (isCurrentUser) {
       getInfo();
     } else {
-      console.log("하하");
       axios
         .get(`${process.env.REACT_APP_API_SERVER}/member/${userId}`)
         .then((response) => {
@@ -63,12 +62,20 @@ const Mypage: React.FC = () => {
         });
     }
   }, [userId, getInfo, isCurrentUser]);
-  // useEffect(() => {
-  //   getInfo();
-  // }, [userData]);
+
+  const getRandomColorClass = () => {
+    const colors = ["color1", "color2", "color3", "color4", "color5"]; // Define your color classes
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  };
+
   return (
-    <section>
-      <h2 className="title">마이페이지</h2>
+    <section className="mypage-section">
+      {userId && parseInt(userId, 10) === userInfo.idx ? (
+        <h2 className="title">마이페이지</h2>
+      ) : (
+        <h2 className="title">{userInfo.name} 님의 페이지</h2>
+      )}
       <article className="mypage-profile">
         <div className="profile-img">
           <img
@@ -82,8 +89,15 @@ const Mypage: React.FC = () => {
           </p>
           <p className="profile-summary">{userInfo.summary}</p>
           <div className="profile-tag">
-            <span>java</span>
-            <span>javascript</span>
+            {userData && userData.tags && userData.tags.length > 0 ? (
+              <>
+                {userData.tags.map((tag) => (
+                  <span className={getRandomColorClass()}>{tag}</span>
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </article>

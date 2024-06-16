@@ -3,7 +3,6 @@ import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
 import { useInfoStore } from "../../store";
-import { getCipherInfo } from "crypto";
 
 interface EditProfileProps {
   userInfo: {
@@ -43,11 +42,13 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [about, setAbout] = useState(userInfo.about);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const getInfo = useInfoStore((state) => state.getInfo);
+  const userData = useInfoStore((state) => state.userInfo);
+
   useEffect(() => {
     setName(userInfo.name);
     setSummary(userInfo.summary);
     setAbout(userInfo.about);
-    setImageUrl(userInfo.img);
+    setImageUrl(process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img);
   }, [userInfo]);
 
   const handleOpenPasswordModal = () => {
@@ -152,8 +153,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
         {userInfo.img && (
           <div onClick={handleImageClick} className="profile-img">
             <img
-              src={process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img}
-              alt="프로필 사진"
+              // src={process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img}
+              src={imageUrl}
+              alt={imageUrl}
               style={{ width: "180px", cursor: "pointer" }}
             />
           </div>
@@ -196,18 +198,23 @@ const EditProfile: React.FC<EditProfileProps> = ({
             onChange={(e) => setAbout(e.target.value)}
           />
         </div>
-        <div className="form-group">
-          <h3>
-            <label htmlFor="">비밀번호 수정</label>
-          </h3>
-          <button
-            type="button"
-            onClick={handleOpenPasswordModal}
-            className="modify-pwd-btn"
-          >
-            비밀번호 수정하기
-          </button>
-        </div>
+        {userData?.social == "NONE" ? (
+          <div className="form-group">
+            <h3>
+              <label htmlFor="">비밀번호 수정</label>
+            </h3>
+            <button
+              type="button"
+              onClick={handleOpenPasswordModal}
+              className="modify-pwd-btn"
+            >
+              비밀번호 수정하기
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className="form-btns">
           <button type="submit" className="submit-btn">
             내 정보 수정

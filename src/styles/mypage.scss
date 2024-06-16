@@ -6,6 +6,28 @@
   font-weight: normal;
   font-style: normal;
 }
+
+$desktop: 1500px;
+$notebook: 1200px;
+$tablet: 768px;
+$mobile: 480px;
+
+.color1 {
+  background-color: rgb(136, 136, 219);
+}
+.color2 {
+  background-color: pink;
+}
+.color3 {
+  background-color: rgb(200, 122, 200);
+}
+.color4 {
+  background-color: rgb(140, 213, 140);
+}
+.color5 {
+  background-color: rgb(230, 183, 96);
+}
+
 button {
   font-family: "S-CoreDream-3Light";
 }
@@ -22,13 +44,18 @@ button {
     height: 180px;
   }
 }
-section {
+.mypage-section {
   width: 900px;
+  // width: 100%;
+  // border: 1px solid red;
   color: rgb(26, 26, 26);
   padding-top: 50px;
   .title {
+    width: 100%;
     color: $main-color;
     font-size: 30px;
+    text-align: left;
+    // border: 1px solid red;
   }
   article {
     width: 100%;
@@ -55,10 +82,10 @@ section {
       .profile-tag {
         span {
           color: rgb(67, 67, 67);
-          background-color: #fdcc51;
           padding: 2px 18px;
           border-radius: 10px;
           margin-right: 10px;
+          font-weight: bold;
           box-shadow: 1px 1px 1px rgb(195, 195, 195);
         }
       }
@@ -156,6 +183,9 @@ section {
             &:first-child {
               color: rgb(67, 67, 67);
               font-weight: bold;
+              .is-solved {
+                color: $yellow-color;
+              }
             }
             &:nth-child(2) {
               width: 80px;
@@ -166,6 +196,10 @@ section {
                 border-radius: 15px;
                 padding: 0 10px;
                 font-size: 10px;
+              }
+              .is-selected {
+                color: $main-color;
+                border: 1px solid $main-color;
               }
             }
             &:nth-child(3) {
@@ -201,6 +235,9 @@ section {
                 cursor: pointer;
               }
             }
+            .active-filter {
+              color: $main-color;
+            }
           }
         }
         .mypost-filter-2 {
@@ -213,6 +250,18 @@ section {
             justify-content: space-evenly;
             align-items: center;
             li {
+              cursor: pointer;
+
+              padding: 3.5px 6px;
+              &:hover {
+                border: 1px solid rgb(207, 207, 207);
+                background-color: rgb(231, 231, 231);
+                margin-top: 2px;
+                border-radius: 5px;
+                padding: 1px 4px;
+              }
+            }
+            .active-sort {
               border: 1px solid rgb(207, 207, 207);
               background-color: rgb(231, 231, 231);
               margin-top: 2px;
@@ -427,6 +476,149 @@ section {
           height: 100%;
           background: rgba(0, 0, 0, 0.5);
           z-index: 999;
+        }
+      }
+    }
+  }
+}
+
+// 패드
+@media (min-width: $tablet) and (max-width: $notebook) {
+  .mypage-section {
+    width: 700px;
+
+    .mypage-profile {
+      .profile-content {
+        width: 70%;
+      }
+    }
+    .mypage-tab {
+      .mypage-components-container {
+        .mypage-profile-container {
+          .mypage-profile-ability {
+            width: 200px;
+            .box {
+              div {
+                width: 80px;
+              }
+            }
+          }
+          .mypage-profile-about {
+            width: 430px;
+          }
+        }
+        .mypage-profile-top {
+          ul {
+            align-items: center;
+            li {
+              // border: 1px solid blue;
+
+              &:nth-child(3) {
+                width: 330px;
+                color: $deep-blue-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 핸드폰
+@media (max-width: $tablet) {
+  .mypage-section {
+    width: 380px;
+
+    .mypage-profile {
+      .profile-content {
+        width: 67%;
+        height: 110px;
+        .profile-summary {
+          font-size: 13px;
+          height: 25%;
+        }
+        .profile-tag {
+          span {
+            font-size: 10px;
+            padding: 2px 7px;
+          }
+        }
+      }
+      .profile-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 110px;
+        height: 110px;
+        border: 1px solid rgb(231, 231, 231);
+        border-radius: 5px;
+        overflow: hidden;
+        img {
+          height: 110px;
+        }
+      }
+    }
+    .mypage-tab {
+      .mypage-components-container {
+        .mypage-profile-container {
+          flex-direction: column;
+          .mypage-profile-ability {
+            width: 100%;
+            flex-wrap: nowrap;
+            .box {
+              height: 100px;
+              margin-bottom: 25px;
+              div {
+                width: 75px;
+              }
+            }
+          }
+          .mypage-profile-about {
+            width: 100%;
+          }
+        }
+        .mypage-profile-top {
+          ul {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100px;
+            li {
+              // border: 1px solid blue;
+              text-align: center;
+              &:first-child {
+                position: absolute;
+                top: 10px;
+                left: 40px;
+                font-size: 14px;
+              }
+              &:nth-child(2) {
+                position: absolute;
+                top: 26px;
+                left: -25px;
+                span {
+                  font-size: 7px;
+                }
+              }
+              &:nth-child(3) {
+                position: absolute;
+                width: 220px;
+                top: 10px;
+                right: 20px;
+                text-align: left;
+                font-size: 14px;
+              }
+              &:last-child {
+                position: absolute;
+                bottom: 7px;
+                right: 20px;
+              }
+            }
+          }
+        }
+        .pagination {
+          width: 100%;
         }
       }
     }

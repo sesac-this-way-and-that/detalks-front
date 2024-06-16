@@ -3,7 +3,7 @@
 
 export default function SocialAccount(props: any) {
   const onGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = `${process.env.REACT_APP_GOOGLE_OAUTH_API_SERVER}`;
   };
   return (
     <article className="socialContainer">

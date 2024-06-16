@@ -30,20 +30,38 @@ body {
     border-bottom: 3px solid rgb(215, 215, 215);
   }
 }
+
 .main-container {
   width: 100%;
   margin: 0 auto;
-}
 
+  opacity: 0;
+  .main-img {
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    img {
+      width: 180%;
+      transition: transform 3s ease-in-out;
+    }
+  }
+}
+.visible {
+  opacity: 1;
+  transition: opacity 2s ease;
+}
 .main-container-wave {
   position: relative;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
+
   .wave-box {
     opacity: 0.8;
   }
   .first {
     position: relative;
+    opacity: 1;
   }
   .wave {
     width: 800px;
@@ -156,7 +174,7 @@ body {
   article {
     .main-container {
       max-width: 1140px;
-      //   border: 1px solid red;
+      // border: 1px solid red;
       min-height: 1000px;
     }
     .contents {
