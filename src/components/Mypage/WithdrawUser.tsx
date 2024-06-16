@@ -122,19 +122,22 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
       </p>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          {!userData?.isDeleted ||
-            (userData?.social == "NONE" && (
-              <div className="form-group">
-                <label htmlFor="password">비밀번호</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  autoComplete="current-password"
-                />
-              </div>
-            ))}
+          {!userData?.isDeleted && (
+            <>
+              {userData?.social == "NONE" && (
+                <div className="form-group">
+                  <label htmlFor="password">비밀번호</label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    autoComplete="current-password"
+                  />
+                </div>
+              )}
+            </>
+          )}
           {!userData?.isDeleted && (
             <div className="form-group">
               <label htmlFor="reason">사유</label>
