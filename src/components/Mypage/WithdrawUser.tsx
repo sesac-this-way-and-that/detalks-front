@@ -38,7 +38,10 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      const url =
+        userData?.social == "NONE" || userData?.isDeleted
+          ? `${process.env.REACT_APP_API_SERVER}/member/auth`
+          : `${process.env.REACT_APP_API_SERVER}/member/auth/social`;
       const method = userData?.isDeleted ? "post" : "delete";
 
       const formData = new URLSearchParams();
@@ -119,17 +122,21 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
       </p>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          {!userData?.isDeleted && userData?.social == "NONE" && (
-            <div className="form-group">
-              <label htmlFor="password">비밀번호</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                autoComplete="current-password"
-              />
-            </div>
+          {!userData?.isDeleted && (
+            <>
+              {userData?.social == "NONE" && (
+                <div className="form-group">
+                  <label htmlFor="password">비밀번호</label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    autoComplete="current-password"
+                  />
+                </div>
+              )}
+            </>
           )}
           {!userData?.isDeleted && (
             <div className="form-group">
@@ -142,7 +149,10 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
               />
             </div>
           )}
-          <button type="submit" className={userData?.isDeleted ? "recover-btn" : "withdraw-btn"}>
+          <button
+            type="submit"
+            className={userData?.isDeleted ? "recover-btn" : "withdraw-btn"}
+          >
             {userData?.isDeleted ? "회원 복구" : "회원 탈퇴"}
           </button>
         </form>
