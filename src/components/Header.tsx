@@ -32,7 +32,7 @@ export default function Header() {
     let newLocation = prevLocation;
     if (prevLocation.includes("mypage")) {
       newLocation = prevLocation.replace("mypage", "user");
-    } 
+    }
     removeToken();
     setIsAuthenticated(false);
     window.location.href = newLocation;
@@ -92,7 +92,7 @@ export default function Header() {
           <ul className="headerMenu">
             {getToken ? (
               <li className="myname-mobile">
-                <Link to="/mypage">
+                <Link to={"/mypage/" + userData?.idx}>
                   <div className="profile-img">
                     <img
                       src={

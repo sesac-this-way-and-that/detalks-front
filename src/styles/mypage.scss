@@ -143,18 +143,24 @@ button {
           width: 300px;
           .box {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             height: 200px;
             div {
               width: 134px;
-              text-align: center;
-              p {
+              div {
                 // border: 1px solid red;
+                // width: 134px;
+                text-align: center;
                 &:first-child {
-                  font-size: 20px;
-                  font-weight: bold;
-                  color: $deep-blue-color;
+                  margin-bottom: 20px;
+                }
+                p {
+                  // border: 1px solid red;
+                  &:first-child {
+                    font-size: 20px;
+                    font-weight: bold;
+                    color: $deep-blue-color;
+                  }
                 }
               }
             }
@@ -227,8 +233,9 @@ button {
           }
         }
         .mypost-filter-1 {
-          width: 130px;
+          display: flex;
           ul {
+            width: 120px;
             justify-content: space-between;
             li {
               &:hover {
@@ -239,6 +246,10 @@ button {
             .active-filter {
               color: $main-color;
             }
+          }
+          .bookmark {
+            margin-left: 15px;
+            cursor: pointer;
           }
         }
         .mypost-filter-2 {
@@ -570,13 +581,98 @@ button {
             .box {
               height: 100px;
               margin-bottom: 25px;
-              div {
-                width: 75px;
+              .box1 {
+                display: flex;
+                width: 150px;
+                align-items: center;
+                margin-bottom: 0;
+                div {
+                  &:first-child {
+                    margin: 0;
+                  }
+                }
+              }
+              .box2 {
+                align-items: center;
+                display: flex;
+                // border: 1px solid red;
+                width: 150px;
+                div {
+                  &:first-child {
+                    margin: 0;
+                  }
+                }
               }
             }
           }
           .mypage-profile-about {
             width: 100%;
+          }
+        }
+        .mypost-filter-container {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+          div {
+            ul {
+              display: flex;
+            }
+          }
+          .mypost-filter-1 {
+            align-items: center;
+            ul {
+              justify-content: space-between;
+              align-items: center;
+              // border: 1px solid red;
+              margin-top: 3px;
+              width: 100px;
+              li {
+                font-size: 14px;
+                &:hover {
+                  color: $main-color;
+                  cursor: pointer;
+                }
+              }
+              .active-filter {
+                color: $main-color;
+              }
+            }
+            .bookmark {
+              margin: 4px 0 0 8px;
+              // border: 1px solid red;
+              font-size: 14px;
+            }
+          }
+          .mypost-filter-2 {
+            width: 160px;
+            height: 27px;
+            border: 1px solid rgb(231, 231, 231);
+            border-radius: 5px;
+            font-size: 10px;
+            margin-top: 4px;
+            ul {
+              justify-content: space-evenly;
+              align-items: center;
+              li {
+                cursor: pointer;
+
+                padding: 3.5px 6px;
+                &:hover {
+                  border: 1px solid rgb(207, 207, 207);
+                  background-color: rgb(231, 231, 231);
+                  margin-top: 2px;
+                  border-radius: 5px;
+                  padding: 1px 4px;
+                }
+              }
+              .active-sort {
+                border: 1px solid rgb(207, 207, 207);
+                background-color: rgb(231, 231, 231);
+                margin-top: 2px;
+                border-radius: 5px;
+                padding: 1px 4px;
+              }
+            }
           }
         }
         .mypage-profile-top {

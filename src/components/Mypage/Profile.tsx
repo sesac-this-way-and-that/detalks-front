@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useInfoStore } from "../../store";
+import { useParams } from "react-router-dom";
 
 interface ProfileProps {
   userInfo: {
@@ -27,8 +28,15 @@ interface Question {
 const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
   const [topQuestions, setTopQuestions] = useState<Question[]>([]);
   const userData = useInfoStore((state) => state.userInfo);
+  const { userId } = useParams<{ userId: string }>();
+
   useEffect(() => {
-    const apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+    let apiUrl;
+    if (userData?.idx) {
+      apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
+    } else {
+      apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userId}/activities/top-votes`;
+    }
 
     axios
       .get(apiUrl)
@@ -49,21 +57,25 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
         <div className="mypage-profile-ability">
           <h3>나의 능력치</h3>
           <div className="box">
-            <div>
-              <p>{userInfo.rep}</p>
-              <p>평가</p>
+            <div className="box1">
+              <div>
+                <p>{userInfo.rep}</p>
+                <p>평가</p>
+              </div>
+              <div>
+                <p>0</p>
+                <p>팔로워</p>
+              </div>
             </div>
-            <div>
-              <p>0</p>
-              <p>팔로워</p>
-            </div>
-            <div>
-              <p>{userInfo.qcount}</p>
-              <p>질문</p>
-            </div>
-            <div>
-              <p>{userInfo.acount}</p>
-              <p>답변</p>
+            <div className="box2">
+              <div>
+                <p>{userInfo.qcount}</p>
+                <p>질문</p>
+              </div>
+              <div>
+                <p>{userInfo.acount}</p>
+                <p>답변</p>
+              </div>
             </div>
           </div>
         </div>
