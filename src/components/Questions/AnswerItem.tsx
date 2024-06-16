@@ -7,7 +7,6 @@ import { useState, useMemo, useRef } from "react";
 import axios from "axios";
 
 import ReactQuillModule from "./ReactQuillModule";
-import dompurify from "dompurify";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import "../../styles/index.scss";
@@ -25,8 +24,8 @@ export default function AnswerItem({
   const userData = useInfoStore((state) => state.userInfo);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.answerContent);
-
   const QuillRef = useRef<ReactQuill>();
+  const [voteCount, setVoteCount] = useState<number>(0);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -108,12 +107,52 @@ export default function AnswerItem({
     []
   );
 
+  // 투표
+  const handleVoteIncrement = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer?.answerId}?voteState=true`;
+    try {
+      await axios.post(url, null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      console.log("Vote incremented successfully");
+      setVoteCount((prevCount) => prevCount + 1);
+    } catch (error) {
+      console.error("Error incrementing vote:", error);
+    }
+  };
+
+  const handleVoteDecrement = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer?.answerId}?voteState=false`;
+    try {
+      await axios.post(url, null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setVoteCount((prevCount) => prevCount - 1);
+    } catch (error) {
+      console.error("Error decrementing vote:", error);
+    }
+  };
+
   return (
     <div className="closed_container3" key={answer.answerId}>
       <div className="section3_1">
-        <button className="answerBtn answer_likeBtn">▲</button>
-        <div>{answer.voteCount}</div>
-        <button className="answerBtn answer_disLikeBtn">▼</button>
+        <button
+          className="answerBtn answer_likeBtn"
+          onClick={handleVoteIncrement}
+        >
+          ▲
+        </button>
+        <div>{voteCount}</div>
+        <button
+          className="answerBtn answer_disLikeBtn"
+          onClick={handleVoteDecrement}
+        >
+          ▼
+        </button>
         <div className="resolve_bookMark answer_bookMark">🕮</div>
       </div>
       <div className="section3_2">
@@ -142,11 +181,6 @@ export default function AnswerItem({
         </div>
         <div className="answerItem">
           <div className="part3_2">
-            {/* <textarea 
-              //   className="section4_body_edit"
-              //   value={editedContent}
-              //   onChange={(e) => setEditedContent(e.target.value)}
-              // />*/}
             {isEditing ? (
               <>
                 <div id="toolBar">

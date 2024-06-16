@@ -226,7 +226,7 @@ export default function QuestionDetailPage() {
     }
   };
 
-  // 답변
+  // --- 답변
   const handleEditAnswer = (answerId: string, content: string) => {
     navigate(`/answer/update/${answerId}`);
   };
