@@ -33,7 +33,13 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      let url;
+      console.log(userData?.social);
+      if (userData?.social == "NONE") {
+        url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      } else {
+        url = `${process.env.REACT_APP_API_SERVER}/member/auth/social`;
+      }
       console.log(token);
       const formData = new URLSearchParams();
       formData.append("pwd", password);
