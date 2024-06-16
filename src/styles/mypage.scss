@@ -13,19 +13,19 @@ $tablet: 768px;
 $mobile: 480px;
 
 .color1 {
-  background-color: rgb(136, 136, 219);
+  background-color: rgba(136, 136, 219, 0.5);
 }
 .color2 {
-  background-color: pink;
+  background-color: rgba(pink, 0.5);
 }
 .color3 {
-  background-color: rgb(200, 122, 200);
+  background-color: rgba(200, 122, 200, 0.5);
 }
 .color4 {
-  background-color: rgb(140, 213, 140);
+  background-color: rgba(140, 213, 140, 0.5);
 }
 .color5 {
-  background-color: rgb(230, 183, 96);
+  background-color: rgba(230, 183, 96, 0.5);
 }
 
 button {
@@ -86,6 +86,7 @@ button {
           border-radius: 10px;
           margin-right: 10px;
           font-weight: bold;
+          font-size: 14px;
           box-shadow: 1px 1px 1px rgb(195, 195, 195);
         }
       }
