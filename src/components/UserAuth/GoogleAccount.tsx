@@ -14,7 +14,7 @@ export default function GoogleAccount() {
 
   const redirectHandler = async () => {
     await axios
-      .get(`${process.env.REACT_APP_API_SERVER}/member/auth/header`, {
+      .get(`${process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT}`, {
         withCredentials: true,
       })
       .then((res) => {
