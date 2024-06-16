@@ -148,7 +148,7 @@ interface QnaListData {
 export default function QuestionListPage() {
   const location = useLocation();
   const { state } = location;
-  console.log(state.searchResults);
+  // console.log(state.searchResults);
   const navigate = useNavigate();
   const { authToken } = authStore();
 
