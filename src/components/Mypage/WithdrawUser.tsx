@@ -39,7 +39,7 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
     try {
       const token = localStorage.getItem("authToken");
       const url =
-        userData?.social == "NONE"
+        userData?.social == "NONE" || userData?.isDeleted
           ? `${process.env.REACT_APP_API_SERVER}/member/auth`
           : `${process.env.REACT_APP_API_SERVER}/member/auth/social`;
       const method = userData?.isDeleted ? "post" : "delete";
