@@ -2,19 +2,45 @@ import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import "../../styles/questionDetailPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { QuestionDetail } from "../../types/question";
+import { QuestionDetail, AnswerDetail } from "../../types/question";
 import authStore from "../../store/authStore";
-import Answer from "./Answer";
+import { jwtDecode } from "jwt-decode"; // jwt-decode import 추가
+import AnswerCreate from "./AnswerCreate";
+import AnswerItem from "./AnswerItem";
 
 export default function QuestionDetailPage() {
   const { authToken } = authStore();
+  const { questionId } = useParams<{ questionId?: string }>();
   const navigate = useNavigate();
-  const { questionId } = useParams<{ questionId: string }>();
 
-  const [questionData, setQuestionData] = useState<QuestionDetail | null>(null); // 질문 값이 없을 경우를 대비
+  const [questionData, setQuestionData] = useState<QuestionDetail | null>(null);
+  const [userMemberIdx, setUserMemberIdx] = useState<number | null>(null);
+  const [answerInputDisabled, setAnswerInputDisabled] =
+    useState<boolean>(false);
+
   const [formattedText, setFormattedText] = useState<string>("");
-  const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
+
+  useEffect(() => {
+    // 사용자 토큰에서 멤버 인덱스 추출
+    const getUserMemberIdx = (authToken: string): number | null => {
+      try {
+        const decodedToken: any = jwtDecode(authToken);
+        const memberIdx = decodedToken.idx;
+        return memberIdx;
+      } catch (error) {
+        console.error("토큰 디코딩 에러:", error);
+        return null;
+      }
+    };
+
+    // authToken이 존재할 때만 사용자 멤버 인덱스 설정
+    if (authToken) {
+      setUserMemberIdx(getUserMemberIdx(authToken));
+      console.log("member idx ~~~~~~ ", setUserMemberIdx);
+    }
+  }, [authToken]);
 
   useEffect(() => {
     const formatTextToHTML = (text: string) => {
@@ -56,31 +82,7 @@ export default function QuestionDetailPage() {
     setFormattedText(formatTextToHTML(textAreaInputValue));
   }, [textAreaInputValue]);
 
-  const handleSelectedQuesId = async () => {
-    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-
-      console.log("API Response:", response.data);
-      setQuestionData(response.data.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.message);
-      } else {
-        console.error("Unexpected error:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    handleSelectedQuesId();
-  }, []);
-  console.log("questionData: ", questionData);
-
+  // 코드 블럭
   const processQuestionContent = (content: string) => {
     // Regular expression to match code blocks
     const codeBlockRegex =
@@ -94,6 +96,124 @@ export default function QuestionDetailPage() {
   const processedContent = questionData?.questionContent
     ? processQuestionContent(questionData.questionContent)
     : "";
+
+  // 질문 조회
+  useEffect(() => {
+    const handleSelectedQuesId = async () => {
+      if (!questionId) return;
+
+      const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        console.log("API Response:", response.data);
+        setQuestionData(response.data.data);
+        checkIfUserAnswered(response.data.data.answerList);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Axios error:", error.message);
+        } else {
+          console.error("Unexpected error:", error);
+        }
+      }
+    };
+
+    handleSelectedQuesId(); // 초기 렌더링 시 한 번 호출
+  }, [questionId, authToken]);
+  console.log("questionData: ", questionData);
+
+  // 사용자가 이미 답변을 작성했는지 확인
+  const checkIfUserAnswered = (answerList: AnswerDetail[]) => {
+    if (!userMemberIdx || !answerList) return;
+
+    const userAnswer = answerList.find(
+      (answer) => answer.author.memberIdx === userMemberIdx
+    );
+    if (userAnswer) {
+      setAnswerInputDisabled(true);
+    } else {
+      setAnswerInputDisabled(false);
+    }
+  };
+
+  // 답변 수정 처리
+  const handleEdit = async (answerId: string, content: string) => {
+    if (!authToken) {
+      alert("로그인 후 답변을 수정할 수 있습니다.");
+      return;
+    }
+
+    const url = `${process.env.REACT_APP_API_SERVER}/questions/answers/${answerId}`;
+    const data = {
+      answerContent: content,
+    };
+
+    try {
+      const response = await axios.patch(url, data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      console.log("답변 수정:", response.data);
+      alert("답변이 성공적으로 수정되었습니다.");
+
+      // 수정된 답변을 questionData에 반영
+      if (questionData) {
+        const updatedAnswerList = questionData.answerList.map((answer) =>
+          answer.answerId === answerId
+            ? { ...answer, answerContent: content }
+            : answer
+        );
+        setQuestionData({
+          ...questionData,
+          answerList: updatedAnswerList,
+        });
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios 에러:", error.message);
+      } else {
+        console.error("예상치 못한 에러:", error);
+      }
+    }
+  };
+
+  // 답변 삭제 처리
+  const handleDelete = async (answerId: string) => {
+    if (!window.confirm("정말로 이 답변을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    const url = `${process.env.REACT_APP_API_SERVER}/questions/answers/${answerId}`;
+
+    try {
+      const response = await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      console.log("답변 삭제:", response.data);
+      alert("답변이 성공적으로 삭제되었습니다.");
+
+      // 답변 삭제 후 질문 데이터 업데이트
+      if (questionData) {
+        const updatedAnswerList = questionData.answerList.filter(
+          (answer) => answer.answerId !== answerId
+        );
+        setQuestionData({
+          ...questionData,
+          answerList: updatedAnswerList,
+        });
+      }
+    } catch (error) {
+      console.error("답변 삭제 에러:", error);
+    }
+  };
 
   return (
     <section>
@@ -168,53 +288,30 @@ export default function QuestionDetailPage() {
         <h1 className="subTitle">{questionData?.answerCount} 답변</h1>
         {/* 답변 리스트 map */}
         {questionData?.answerList.map((answer) => (
-          <div className="closed_container3" key={answer.answerId}>
-            <div className="section3_1">
-              <button className="answerBtn answer_likeBtn">▲</button>
-              <div>{answer.voteCount}</div>
-              <button className="answerBtn answer_disLikeBtn">▼</button>
-              <div className="resolve_bookMark answer_bookMark">🕮</div>
-            </div>
-            <div className="section3_2">
-              <div className="part3_1">
-                <div className="area1">
-                  <div className="profileStats statsList">
-                    <img
-                      src="https://picsum.photos/200/300?grayscale"
-                      alt=""
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </div>
-                  <div className="profileStats statsList">
-                    {answer.author.memberName}{" "}
-                    <span>{answer.author.memberIdx}</span>
-                  </div>
-                </div>
-                <div className="area2">
-                  <div className="profileStats statsList">
-                    {new Date(answer.createdAt).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-              <div className="part3_2">
-                <div className="section4_body">{answer.answerContent}</div>
-              </div>
-            </div>
-          </div>
+          <AnswerItem
+            key={answer.answerId}
+            answer={answer}
+            userMemberIdx={userMemberIdx}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </article>
+
       <article className="closed_container4">
-        {/* answerList.length가 0보다 크면 true, 그렇지 않으면 false를 반환 */}
-        {questionId && (
-          <Answer
-            questionId={questionId}
-            existingAnswer={!!questionData?.answerList.length}
-          />
-        )}
+        <div>
+          {/* 사용자가 이미 답변을 작성했을 경우 입력 비활성화 */}
+          {questionId ? (
+            <AnswerCreate
+              questionId={questionId}
+              answerList={questionData?.answerList}
+              userMemberIdx={userMemberIdx}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              answerInputDisabled={answerInputDisabled}
+            />
+          ) : null}
+        </div>
       </article>
     </section>
   );

@@ -17,6 +17,7 @@ export default function QuestionCreateAndModifyPage() {
 
   const [applicationContent, setApplicationContent] = useState<string>("");
 
+  // axios
   useEffect(() => {
     if (questionId) {
       const fetchQuestionData = async () => {
@@ -40,6 +41,7 @@ export default function QuestionCreateAndModifyPage() {
     }
   }, [questionId, authToken]);
 
+  // X
   useEffect(() => {
     const formatTextToHTML = (text: string) => {
       const regex = /`([^`]*)`/g;

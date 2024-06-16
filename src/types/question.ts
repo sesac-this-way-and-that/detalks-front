@@ -39,7 +39,7 @@ export interface QuestionDetail {
 }
 
   export interface AnswerDetail {
-    answerId: number;
+    answerId: string;
     answerContent: string;
     createdAt: Date;
     modifiedAt: Date;
