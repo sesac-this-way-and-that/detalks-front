@@ -25,6 +25,8 @@ const Mypage: React.FC = () => {
     rep: userData?.rep || 0,
   });
 
+  const [tagColors, setTagColors] = useState<string[]>([]);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -38,8 +40,7 @@ const Mypage: React.FC = () => {
   };
 
   const isCurrentUser = userId == loggedInUserId;
-  // console.log(isCurrentUser + userId + loggedInUserId);
-  console.log(userData);
+
   useEffect(() => {
     if (isCurrentUser) {
       getInfo();
@@ -48,7 +49,6 @@ const Mypage: React.FC = () => {
         .get(`${process.env.REACT_APP_API_SERVER}/member/${userId}`)
         .then((response) => {
           const data = response.data.data;
-          console.log(data);
           setUserInfo({
             idx: data.idx,
             name: data.name || "default-name",
@@ -61,10 +61,15 @@ const Mypage: React.FC = () => {
           });
         });
     }
+
+    // Set random colors for tags on first render
+    if (userData && userData.tags) {
+      setTagColors(userData.tags.map(() => getRandomColorClass()));
+    }
   }, [userId, getInfo, isCurrentUser]);
 
   const getRandomColorClass = () => {
-    const colors = ["color1", "color2", "color3", "color4", "color5"]; // Define your color classes
+    const colors = ["color1", "color2", "color3", "color4", "color5"];
     const randomIndex = Math.floor(Math.random() * colors.length);
     return colors[randomIndex];
   };
@@ -91,8 +96,10 @@ const Mypage: React.FC = () => {
           <div className="profile-tag">
             {userData && userData.tags && userData.tags.length > 0 ? (
               <>
-                {userData.tags.map((tag) => (
-                  <span className={getRandomColorClass()}>{tag}</span>
+                {userData.tags.map((tag, index) => (
+                  <span key={index} className={tagColors[index]}>
+                    {tag}
+                  </span>
                 ))}
               </>
             ) : (
