@@ -8,6 +8,7 @@ import SocialAccount from "./SocialAccount";
 import axios from "axios";
 import VerificationInput from "./VerificationInput";
 import { useEffect, useState } from "react";
+import authStore from "../../store/authStore";
 
 export default function RegisterPage() {
   const nav = useNavigate();
@@ -21,10 +22,11 @@ export default function RegisterPage() {
     setPwd,
     setVerificationCode,
   } = accountStore();
+  const { authToken } = authStore();
 
   // 로그인 토큰이 있는 유저가 페이지 진입 시 메인페이지로 이동
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
+    if (authToken) {
       alert("이미 로그인된 상태입니다. 메인 페이지로 이동합니다.");
       nav("/");
     }
@@ -61,13 +63,18 @@ export default function RegisterPage() {
   const submitFunc = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const url = `${process.env.REACT_APP_API_SERVER}/member/signup`;
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("name", name);
-    formData.append("pwd", pwd);
-    console.log(formData);
+    const userData = {
+      email: email,
+      name: name,
+      pwd: pwd,
+    };
+    // const formData = new FormData();
+    // formData.append("email", email);
+    // formData.append("name", name);
+    // formData.append("pwd", pwd);
+    console.log(userData);
     axios
-      .post(url, formData)
+      .post(url, userData)
       .then((res) => {
         alert("회원가입 성공");
         console.log("then res.data: ", res.data);
@@ -78,7 +85,7 @@ export default function RegisterPage() {
         nav("/login", { replace: true });
       })
       .catch((err) => {
-        alert(err.data.msg);
+        console.log(err.response.data.msg);
         console.log("err: ", err);
       });
   };
