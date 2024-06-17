@@ -83,8 +83,8 @@ export default function QuestionCreateAndModifyPage() {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const url = questionId
-      ? `http://localhost:8080/api/questions/${questionId}`
-      : `http://localhost:8080/api/questions`;
+      ? `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`
+      : `${process.env.REACT_APP_API_SERVER}/questions`;
 
     const method = questionId ? "PATCH" : "POST";
 
