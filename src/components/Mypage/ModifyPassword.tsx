@@ -58,7 +58,7 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
       const url = `${process.env.REACT_APP_API_SERVER}/member/auth/password`;
 
       const data = {
-        pwd: passwords.confirmPassword,
+        pwd: passwords.currentPassword,
         changePwd: passwords.newPassword,
       };
 
