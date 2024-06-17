@@ -107,10 +107,10 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
                     <li>
                       {question.isSelected ? (
                         <span className="is-selected">
-                          {question.voteCount} 평점
+                          {question.voteCount} 투표
                         </span>
                       ) : (
-                        <span>{question.voteCount} 평점</span>
+                        <span>{question.voteCount} 투</span>
                       )}
                     </li>
                     <li>
