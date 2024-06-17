@@ -41,6 +41,7 @@ $mobile: 480px;
       a {
         display: flex;
         // border: 1px solid red;
+        color: $main-color;
         .headerLogo {
           width: 30px;
         }
@@ -134,7 +135,7 @@ $mobile: 480px;
             text-decoration: none;
             display: block;
             padding: 20px 25px;
-            font-size: 17px;
+            font-size: 15px;
             line-height: 1;
             transition: 0.3s;
             // border: 1px solid black;
