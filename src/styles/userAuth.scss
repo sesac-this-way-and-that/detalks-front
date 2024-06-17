@@ -3,8 +3,8 @@
 $validmsg-pass-color: #0000e6;
 $validmsg-fail-color: #e60000;
 
-section {
-  width: 600px;
+.register-page {
+  width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,22 +16,78 @@ section {
   article {
     width: 100%;
   }
-}
-
-button {
-  font-family: "S-CoreDream-3Light";
-  border: 0;
-  border-radius: 10px;
-  font-weight: bold;
-  &:hover {
-    cursor: pointer;
+  button {
+    font-family: "S-CoreDream-3Light";
+    border: 0;
+    border-radius: 10px;
+    font-weight: bold;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  a {
+    color: $deep-blue-color;
+    font-weight: bold;
+    padding: 0 20px;
   }
 }
 
-a {
-  color: $deep-blue-color;
-  font-weight: bold;
-  padding: 10px;
+.login-page {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    color: $main-color;
+    font-size: 30px;
+    margin: 30px;
+  }
+  article {
+    width: 100%;
+  }
+  button {
+    font-family: "S-CoreDream-3Light";
+    border: 0;
+    border-radius: 10px;
+    font-weight: bold;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  a {
+    color: $deep-blue-color;
+    font-weight: bold;
+    padding: 0 20px;
+  }
+}
+
+.findPw-page {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    color: $main-color;
+    font-size: 30px;
+    margin: 30px;
+  }
+  article {
+    width: 100%;
+  }
+  button {
+    font-family: "S-CoreDream-3Light";
+    border: 0;
+    border-radius: 10px;
+    font-weight: bold;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  a {
+    color: $deep-blue-color;
+    font-weight: bold;
+    padding: 0 20px;
+  }
 }
 
 .validmsg-pass {
@@ -43,8 +99,8 @@ a {
 }
 
 .accountInputForm {
-  margin: 20px;
-  padding: 10px;
+  margin: 30px;
+  padding: 30px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,6 +168,9 @@ a {
   button {
     &:disabled {
       background-color: #bbb;
+      &:hover {
+        cursor: default;
+      }
     }
   }
 }

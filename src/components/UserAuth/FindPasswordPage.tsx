@@ -38,7 +38,7 @@ export default function FindPasswordPage() {
 
   const submitFunc = () => {};
   return (
-    <section>
+    <section className="findPw-page">
       <h2 className="title">{accessText}</h2>
       <article className="accountInputForm">
         <div className="logo"></div>

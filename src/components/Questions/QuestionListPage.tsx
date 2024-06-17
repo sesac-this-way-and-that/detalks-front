@@ -153,10 +153,13 @@ export default function QuestionListPage() {
   const { authToken } = authStore();
 
   const [qnaListData, setQnaListData] = useState<QnaListData>();
-  const [spage, setSPage] = useState<number>(1);
+  const [noQuestion, setNoQuestion] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [spage, setSPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>("createdAt");
-  const [filterBy, setFilterBy] = useState<string>("");
+  // const [sortDESC, setSortDESC] = useState<boolean>(true);
+  const [filterByAnswer, setFilterByAnswer] = useState<boolean>(false);
 
   useEffect(() => {
     if (state && state.searchResults) {
@@ -164,13 +167,15 @@ export default function QuestionListPage() {
     } else {
       getQuestionList(spage);
     }
-  }, [spage, state]);
+  }, [spage, state, sortBy, filterByAnswer]);
 
   const getQuestionList = async (spage: number) => {
+    setLoading(true);
     try {
+      if (!filterByAnswer) {
+      }
       const response = await axios.get(
-        // `${process.env.REACT_APP_API_SERVER}/questions?page=${spage}`,
-        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&size=1&page=${spage}`,
+        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -181,16 +186,46 @@ export default function QuestionListPage() {
 
       console.log("response: ", response.data);
 
+      // if (sortDESC) {
+      //   setQnaList(listData.content);
+      // } else {
+      //   setQnaList(listData.content.reverse());
+      // }
+      setNoQuestion(false);
       setQnaListData(listData);
       setTotalPages(listData.totalPages);
     } catch (error) {
+      // if (error.response.data.status === 404) {
+      setNoQuestion(true);
+      // }
       console.error("error: ", error);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
-  // 페이지네이션 로직
+  // 정렬 기능
+
+  const orderByNew = () => {
+    // if (sortBy === "createdAt") {
+    //   setSortDESC(!sortDESC);
+    // }
+    setSortBy("createdAt");
+    setSPage(0);
+  };
+  const orderByVote = () => {
+    // if (sortBy === "voteCount") {
+    //   setSortDESC(!sortDESC);
+    // }
+    setSortBy("voteCount");
+    setSPage(0);
+  };
+  const filterNoAnswer = () => {
+    console.log(filterByAnswer);
+    setFilterByAnswer(!filterByAnswer);
+  };
+
+  // 페이지네이션 기능
 
   // 0부터 시작하도록 서버에서 들어오는 페이지 수를 1부터 시작하도록 변환
   const cpage = spage + 1;
@@ -209,23 +244,32 @@ export default function QuestionListPage() {
     } else {
       setSPage(selectPage - 1);
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  console.log(qnaListData?.content[0].questionTitle);
+  // 페이지 버튼 표시
   const pagesRenderer = () => {
     const pages = [];
-    if (totalPages < endPagePerTen) {
-      for (let i = startPagePerTen; i <= totalPages; i++) {
+    if (totalPages > endPagePerTen) {
+      for (let i = startPagePerTen; i <= endPagePerTen; i++) {
         pages.push(
-          <button key={i} onClick={() => changePage(i)}>
+          <button
+            key={i}
+            onClick={() => changePage(i)}
+            className={i == cpage ? "page-button currentPage" : "page-button"}
+          >
             {i}
           </button>
         );
       }
     } else {
-      for (let i = startPagePerTen; i <= endPagePerTen; i++) {
+      for (let i = startPagePerTen; i <= totalPages; i++) {
         pages.push(
-          <button key={i} onClick={() => changePage(i)}>
+          <button
+            key={i}
+            onClick={() => changePage(i)}
+            className={i == cpage ? "page-button currentPage" : "page-button"}
+          >
             {i}
           </button>
         );
@@ -238,27 +282,33 @@ export default function QuestionListPage() {
     <section className="qna-list-page">
       <article className="qna-header">
         <h2 className="title">질의응답</h2>
+        <button
+          className="qna-write-question"
+          onClick={() => navigate(`/question/create`)}
+        >
+          질문하기
+        </button>
         <div className="select-orderby-type">
-          <button
-            type="button"
-            className="orderby-new"
-            onClick={() => setSortBy("createdAt")}
-          >
+          <button type="button" className="orderby-new" onClick={orderByNew}>
             최신순
           </button>
-          <button
-            type="button"
-            className="orderby-vote"
-            onClick={() => setSortBy("voteCount")}
-          >
+          <button type="button" className="orderby-vote" onClick={orderByVote}>
             평점순
           </button>
-          <button type="button" className="filter-noanswer">
+          <button
+            type="button"
+            className="filter-noanswer"
+            onClick={filterNoAnswer}
+          >
             답변없는 질문
           </button>
         </div>
       </article>
       <article className="qna-list-container">
+        {loading ? <div className="qna-loading">로딩중 입니다...</div> : null}
+        {noQuestion ? (
+          <div className="qna-no-question">질문글이 없습니다.</div>
+        ) : null}
         {qnaListData?.content.map((qnaData) => {
           return (
             <div
@@ -317,21 +367,26 @@ export default function QuestionListPage() {
             </div>
           );
         })}
-        <p>총 페이지 수: {qnaListData?.totalPages}</p>
-        <p>현재 페이지: {qnaListData?.number}</p>
       </article>
       <article className="qna-footer">
-        <div className="qna-total">총 {qnaListData?.totalElements} 질문</div>
+        <div className="qna-total">
+          총 {noQuestion ? 0 : qnaListData?.totalElements} 질문
+        </div>
         <div className="pages-button">
           {startPagePerTen === 1 ? null : (
-            <button type="button" onClick={() => changePage(1)}>
-              맨 처음 페이지
+            <button
+              type="button"
+              onClick={() => changePage(1)}
+              className="page-button"
+            >
+              1
             </button>
           )}
           {startPagePerTen === 1 ? null : (
             <button
               type="button"
-              onClick={() => changePage(startPagePerTen - 1 - cpage)}
+              onClick={() => changePage(cpage - 10)}
+              className="page-button"
             >
               이전
             </button>
@@ -340,14 +395,19 @@ export default function QuestionListPage() {
           {totalPages <= endPagePerTen ? null : (
             <button
               type="button"
-              onClick={() => changePage(endPagePerTen + cpage)}
+              onClick={() => changePage(cpage + 10)}
+              className="page-button"
             >
               다음
             </button>
           )}
           {totalPages <= endPagePerTen ? null : (
-            <button type="button" onClick={() => changePage(totalPages)}>
-              맨 끝 페이지
+            <button
+              type="button"
+              onClick={() => changePage(totalPages)}
+              className="page-button"
+            >
+              {totalPages}
             </button>
           )}
         </div>
