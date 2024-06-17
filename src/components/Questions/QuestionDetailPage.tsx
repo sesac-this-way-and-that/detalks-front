@@ -6,7 +6,8 @@ import { QuestionDetail } from "../../types/question";
 import authStore from "../../store/authStore";
 import { useInfoStore } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkRagular } from "@fortawesome/free-regular-svg-icons";
 
 import AnswerItem from "./AnswerItem";
 import AnswerCreate from "./AnswerCreate";
@@ -146,7 +147,7 @@ export default function QuestionDetailPage() {
         },
       });
       console.log("Question deleted successfully");
-      navigate("/questions"); // Redirect to the homepage or any other page after deletion
+      navigate("/questions");
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -166,9 +167,53 @@ export default function QuestionDetailPage() {
     ? processQuestionContent(questionData.questionContent)
     : "";
 
+  // const { userId } = useParams<{ userId: string }>();
+  const [userDetail, setUserDetail] = useState({
+    idx: userData?.idx,
+    name: userData?.name || "default-name",
+    summary: userData?.summary || "한 줄 소개가 없습니다.",
+    about: userData?.about || "자기소개가 없습니다.",
+    img: userData?.img || "default.jpg",
+    qcount: userData?.qcount || 0,
+    acount: userData?.acount || 0,
+    rep: userData?.rep || 0,
+  });
+  // const [userRep, setUserRep] = useState<number>(0);
+  const handleUserRep = async () => {
+    console.log(
+      "questionData?.author.memberIdx, ",
+      questionData?.author.memberIdx
+    );
+    if (!questionData?.author.memberIdx) return;
+
+    const url = `${process.env.REACT_APP_API_SERVER}/member/idx/${questionData?.author.memberIdx}`;
+
+    try {
+      const response = await axios.get(url);
+      const { data } = response.data;
+      console.log("handleUserRep: ", data);
+      setUserDetail({
+        idx: data.idx,
+        name: data.name || "default-name",
+        summary: data.summary || "한 줄 소개가 없습니다.",
+        about: data.about || "자기소개가 없습니다.",
+        img: data.img || "default.jpg",
+        qcount: data?.qcount || 0,
+        acount: data?.acount || 0,
+        rep: data?.rep || 0,
+      });
+      console.log(userDetail.rep);
+    } catch (error) {
+      console.error("Error updating bookmark:", error);
+    }
+  };
+  // console.log("userDetail: ", userDetail);
   useEffect(() => {
     handleSelectedQuesId();
   }, []);
+  useEffect(() => {
+    handleUserRep();
+  }, [questionData]);
 
   const handleBookMark = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/bookmarks/${questionData?.questionId}`;
@@ -278,7 +323,7 @@ export default function QuestionDetailPage() {
           <div className="question_section2">
             <div className="section2_1">
               <div className="questionStats statsList">
-                {voteCount}평 {/* Display vote count */}
+                {userDetail.rep}평 {/* Display vote count */}
               </div>
               <div className="questionStats statsList">
                 {/* {questionData?.answerList} 답변 */}
@@ -313,7 +358,7 @@ export default function QuestionDetailPage() {
               >
                 ▲
               </button>
-              <div>{Math.max(voteCount, 0)}</div>
+              <div>{voteCount}</div>
               <button
                 className="answerBtn answer_disLikeBtn"
                 onClick={handleVoteDecrement}
@@ -323,7 +368,7 @@ export default function QuestionDetailPage() {
               </button>
               <div className="resolve_bookMark" onClick={toggleBookmark}>
                 {isBookMarked ? (
-                  <FontAwesomeIcon icon={faFlag} />
+                  <FontAwesomeIcon icon={faBookmarkRagular} />
                 ) : (
                   <FontAwesomeIcon icon={faBookmark} />
                 )}
