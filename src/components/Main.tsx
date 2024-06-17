@@ -103,7 +103,9 @@ export default function Main() {
               답변하여 개발자들이 쉽고 빠르게 문제를 해결할 수 있습니다.
             </p>
             <p>
-              <button>질의응답 페이지 보기</button>
+              <button>
+                <Link to={"/questions"}>질의응답 페이지 보기</Link>
+              </button>
             </p>
           </div>
         </div>
