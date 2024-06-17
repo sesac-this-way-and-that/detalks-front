@@ -21,7 +21,7 @@ export default function QuestionCreateAndModifyPage() {
   useEffect(() => {
     if (questionId) {
       const fetchQuestionData = async () => {
-        const url = `http://localhost:8080/api/questions/${questionId}`;
+        const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
         try {
           const response = await axios.get(url, {
             headers: {
@@ -29,9 +29,10 @@ export default function QuestionCreateAndModifyPage() {
             },
           });
           const questionData = response.data.data;
+          console.log("what: ", questionData);
           setApplicationContent(questionData.questionTitle);
           setTextAreaInputValue(questionData.questionContent);
-          setTagOutputValue(questionData.tags.map((tag: any) => tag.tagName));
+          setTagOutputValue(questionData.tagNameList);
         } catch (error) {
           console.error("Error fetching question data:", error);
         }
