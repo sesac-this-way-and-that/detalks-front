@@ -62,7 +62,7 @@ export default function LoginPage() {
     removeAuthToken();
   };
   return (
-    <section>
+    <section className="login-page">
       <h2 className="title">{accessText}</h2>
       <article className="accountInputForm">
         <form onSubmit={submitFunc} className="inputContainer">

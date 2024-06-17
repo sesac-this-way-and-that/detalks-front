@@ -83,7 +83,7 @@ export default function RegisterPage() {
       });
   };
   return (
-    <section>
+    <section className="register-page">
       <h2 className="title">{accessText}</h2>
       {beforeSendMail ? (
         <>
