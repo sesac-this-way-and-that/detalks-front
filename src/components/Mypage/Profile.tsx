@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useInfoStore } from "../../store";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface ProfileProps {
   userInfo: {
@@ -21,6 +21,7 @@ interface Question {
   isQuestion: boolean;
   createdAt: string;
   voteCount: number;
+  questionId: number;
   isSolved: boolean;
   isSelected: boolean;
 }
@@ -92,30 +93,32 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
           {topQuestions.length > 0 ? (
             <>
               {topQuestions.map((question) => (
-                <ul key={question.id}>
-                  <li>
-                    {question.isSelected ? (
-                      <span className="is-solved">
-                        {question.isQuestion ? <>Q</> : <>A</>}
-                      </span>
-                    ) : (
-                      <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
-                    )}
-                  </li>
-                  <li>
-                    {question.isSelected ? (
-                      <span className="is-selected">
-                        {question.voteCount} 평점
-                      </span>
-                    ) : (
-                      <span>{question.voteCount} 평점</span>
-                    )}
-                  </li>
-                  <li>
-                    <span>{question.titleOrContent}</span>
-                  </li>
-                  <li>{question.createdAt}</li>
-                </ul>
+                <Link to={`/question/${question.questionId}`} key={question.id}>
+                  <ul>
+                    <li>
+                      {question.isSelected ? (
+                        <span className="is-solved">
+                          {question.isQuestion ? <>Q</> : <>A</>}
+                        </span>
+                      ) : (
+                        <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                      )}
+                    </li>
+                    <li>
+                      {question.isSelected ? (
+                        <span className="is-selected">
+                          {question.voteCount} 평점
+                        </span>
+                      ) : (
+                        <span>{question.voteCount} 평점</span>
+                      )}
+                    </li>
+                    <li>
+                      <span>{question.titleOrContent}</span>
+                    </li>
+                    <li>{question.createdAt}</li>
+                  </ul>
+                </Link>
               ))}
             </>
           ) : (

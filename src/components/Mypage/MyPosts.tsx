@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useInfoStore } from "../../store";
 import authStore from "../../store/authStore";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 interface Question {
   id: number;
@@ -10,6 +10,7 @@ interface Question {
   isQuestion: boolean;
   createdAt: string;
   voteCount: number;
+  questionId: number;
   isSolved: boolean;
   isSelected: boolean;
 }
@@ -108,7 +109,10 @@ const MyPosts: React.FC = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredQuestions.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredQuestions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
   const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -241,45 +245,49 @@ const MyPosts: React.FC = () => {
         </div>
       </div>
       <div className="mypage-profile-top">
-        {filteredQuestions.length > 0 ? (
-          <>
-            {currentItems.map((question) => (
-              <ul key={question.id}>
-                <li>
-                  {question.isSelected ? (
-                    <span className="is-solved">
-                      {question.isQuestion ? <>Q</> : <>A</>}
-                    </span>
-                  ) : (
-                    <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
-                  )}
-                </li>
-                <li>
-                  {question.isSelected ? (
-                    <span className="is-selected">
-                      {question.voteCount} 평점
-                    </span>
-                  ) : (
-                    <span>{question.voteCount} 평점</span>
-                  )}
-                </li>
-                <li>
-                  <span>{question.titleOrContent}</span>
-                </li>
-                <li>{question.createdAt}</li>
-              </ul>
-            ))}
-          </>
-        ) : (
-          <ul>
-            <li></li>
-            <li></li>
-            <li>
-              <span>작성하신 질문이 없습니다.</span>
-            </li>
-            <li></li>
-          </ul>
-        )}
+        <div className="box">
+          {filteredQuestions.length > 0 ? (
+            <>
+              {currentItems.map((question) => (
+                <Link to={`/question/${question.questionId}`} key={question.id}>
+                  <ul>
+                    <li>
+                      {question.isSelected ? (
+                        <span className="is-solved">
+                          {question.isQuestion ? <>Q</> : <>A</>}
+                        </span>
+                      ) : (
+                        <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                      )}
+                    </li>
+                    <li>
+                      {question.isSelected ? (
+                        <span className="is-selected">
+                          {question.voteCount} 평점
+                        </span>
+                      ) : (
+                        <span>{question.voteCount} 평점</span>
+                      )}
+                    </li>
+                    <li>
+                      <span>{question.titleOrContent}</span>
+                    </li>
+                    <li>{question.createdAt}</li>
+                  </ul>
+                </Link>
+              ))}
+            </>
+          ) : (
+            <ul>
+              <li></li>
+              <li></li>
+              <li>
+                <span>작성하신 질문이 없습니다.</span>
+              </li>
+              <li></li>
+            </ul>
+          )}
+        </div>
       </div>
       <div className="pagination">
         <button
