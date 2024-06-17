@@ -85,26 +85,27 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
       const formData = new FormData();
 
-      if (selectedFile) {
-        formData.append("img", selectedFile);
-      }
-
       const response1 = await axios.patch(url1, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      })
-      
-      const response2 = await axios.patch(url2, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
       });
 
+      if (selectedFile) {
+        formData.append("img", selectedFile);
+
+        const response2 = await axios.patch(url2, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        console.log(response2.data);
+      }
+
       console.log(response1.data);
-      console.log(response2.data);
 
       onUserInfoChange({
         idx: userInfo.idx,
