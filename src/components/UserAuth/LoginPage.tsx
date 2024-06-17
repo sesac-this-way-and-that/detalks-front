@@ -11,17 +11,16 @@ import { useInfoStore } from "../../store";
 
 export default function LoginPage() {
   const { email, pwd, setEmail, setPwd } = accountStore();
-  const { authToken, setAuthToken, removeAuthToken } = authStore();
+  const { authToken, setAuthToken } = authStore();
   const nav = useNavigate();
 
   // 로그인 토큰이 있는 유저가 페이지 진입 시 메인페이지로 이동
-  // !!!!!!!!!!!!! 토큰 기능 확인 위해 임시 주석 !!!!!!!!!!!!!!!!!!
-  // useEffect(() => {
-  //   if (authToken) {
-  //     alert("이미 로그인된 상태입니다. 메인 페이지로 이동합니다.");
-  //     nav("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (authToken) {
+      alert("이미 로그인된 상태입니다. 메인 페이지로 이동합니다.");
+      nav("/");
+    }
+  }, []);
 
   const accessType = "login";
   const accessText = "로그인";
@@ -35,11 +34,11 @@ export default function LoginPage() {
       pwd: pwd,
     };
     console.log("userdata: ", userData);
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("pwd", pwd);
+    // const formData = new FormData();
+    // formData.append("email", email);
+    // formData.append("pwd", pwd);
     axios
-      .post(url, formData)
+      .post(url, userData)
       .then((res) => {
         console.log("then res.data: ", res.data);
         localStorage.setItem("authToken", res.data.token);
@@ -54,12 +53,6 @@ export default function LoginPage() {
         console.log("err: ", err);
         alert("로그인 실패");
       });
-  };
-  const token = () => {
-    console.log(authToken);
-  };
-  const logout = () => {
-    removeAuthToken();
   };
   return (
     <section>
@@ -77,12 +70,6 @@ export default function LoginPage() {
         <span> | </span>
         <Link to="/findPassword">비밀번호 찾기</Link>
       </article>
-      <button type="button" onClick={token}>
-        토큰 체크
-      </button>
-      <button type="button" onClick={logout}>
-        로그아웃 체크
-      </button>
     </section>
   );
 }
