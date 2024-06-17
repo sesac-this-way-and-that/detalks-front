@@ -1,5 +1,11 @@
 import "../styles/header.scss";
-import { useState, useEffect, ChangeEvent, FormEvent, KeyboardEvent } from "react";
+import {
+  useState,
+  useEffect,
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -84,6 +90,7 @@ export default function Header(): JSX.Element {
       );
       console.log("Search Results:", response.data);
       nav("/questions", { state: { searchResults: response.data.data } });
+      setSearchQuery("");
     } catch (error) {
       console.error("Search Error:", error);
     }
