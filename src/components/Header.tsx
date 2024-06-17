@@ -1,5 +1,5 @@
 import "../styles/header.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent, KeyboardEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,14 +8,22 @@ import { useInfoStore } from "../store";
 import authStore from "../store/authStore";
 import logo from "../assets/logo.png";
 
-export default function Header() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const userData = useInfoStore((state) => state.userInfo);
+interface UserInfo {
+  idx: number;
+  name: string;
+  img: string;
+}
+
+export default function Header(): JSX.Element {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const userData = useInfoStore((state) => state.userInfo) as UserInfo | null;
   const getInfo = useInfoStore((state) => state.getInfo);
   const removeToken = authStore((state) => state.removeAuthToken);
-  // const history = useHistory();
   const getToken = authStore((state) => state.authToken);
+  const nav = useNavigate();
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const prevLocation = window.location.href;
   useEffect(() => {
     const token = getToken;
     if (token) {
@@ -24,45 +32,71 @@ export default function Header() {
     }
   }, [getInfo, getToken]);
 
-  const nav = useNavigate();
-  const prevLocation = window.location.href;
-
-  console.log(prevLocation);
   const handleLogout = () => {
     let newLocation = prevLocation;
     if (prevLocation.includes("mypage")) {
       newLocation = prevLocation.replace("mypage", "user");
-    } 
+    }
     removeToken();
     setIsAuthenticated(false);
     window.location.href = newLocation;
   };
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async () => {
+    let searchParams: Record<string, any> = {
+      sortBy: "voteCount",
+      page: 0,
+      size: 10,
+    };
+
+    if (searchQuery.startsWith("[tag]:")) {
+      searchParams = {
+        ...searchParams,
+        tag: searchQuery.replace("[tag]:", "").trim(),
+      };
+    } else if (searchQuery.startsWith("[title]:")) {
+      searchParams = {
+        ...searchParams,
+        title: searchQuery.replace("[title]:", "").trim(),
+      };
+    } else if (searchQuery.startsWith("[content]:")) {
+      searchParams = {
+        ...searchParams,
+        content: searchQuery.replace("[content]:", "").trim(),
+      };
+    } else if (searchQuery.startsWith("[name]:")) {
+      searchParams = {
+        ...searchParams,
+        name: searchQuery.replace("[name]:", "").trim(),
+      };
+    }
+
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/questions/search`,
+        `${process.env.REACT_APP_API_SERVER}/questions/search`,
         {
-          params: {
-            content: searchQuery,
-            sortBy: "voteCount",
-            page: 0,
-            size: 10,
-          },
+          params: searchParams,
         }
       );
       console.log("Search Results:", response.data);
-      // history.push({
-      //   pathname: "/search-results",
-      //   state: { results: response.data },
-      // });
+      nav("/questions", { state: { searchResults: response.data.data } });
     } catch (error) {
       console.error("Search Error:", error);
+    }
+  };
+
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSearch();
+  };
+
+  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -79,32 +113,36 @@ export default function Header() {
           <input type="checkbox" className="toggle-menu" />
           <div className="hamburger"></div>
 
-          <form className="searchInput" onSubmit={handleSearch}>
+          <form className="searchInput" onSubmit={handleFormSubmit}>
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchInputChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onKeyDown={handleInputKeyDown} // Listen for Enter key press
             />
             <button type="submit">
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </form>
+          {isFocused && (
+            <div className="searchTooltip">
+              <p>검색어 예시</p>
+              <p>[title]: title - 제목별 검색</p>
+              <p>[name]: username - 사용자 이름별 검색</p>
+              <p>[content]: content - 내용별 검색</p>
+              <p>[tag]: java - 태그별 검색</p>
+            </div>
+          )}
           <ul className="headerMenu">
             {getToken ? (
               <li className="myname-mobile">
-                <Link to="/mypage">
+                <Link to={`/mypage/${userData?.idx}`}>
                   <div className="profile-img">
                     <img
-                      src={
-                        process.env.REACT_APP_STATIC_SERVER +
-                        "/" +
-                        userData?.img
-                      }
-                      alt={
-                        process.env.REACT_APP_STATIC_SERVER +
-                        "/" +
-                        userData?.img
-                      }
+                      src={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
+                      alt={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
                     />
                   </div>
                   <span>{userData?.name} 님</span>
@@ -119,19 +157,11 @@ export default function Header() {
             {isAuthenticated ? (
               <>
                 <li className="myname">
-                  <Link to={"/mypage/" + userData?.idx}>
+                  <Link to={`/mypage/${userData?.idx}`}>
                     <div className="profile-img">
                       <img
-                        src={
-                          process.env.REACT_APP_STATIC_SERVER +
-                          "/" +
-                          userData?.img
-                        }
-                        alt={
-                          process.env.REACT_APP_STATIC_SERVER +
-                          "/" +
-                          userData?.img
-                        }
+                        src={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
+                        alt={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
                       />
                     </div>
                     <span>{userData?.name}</span> 님

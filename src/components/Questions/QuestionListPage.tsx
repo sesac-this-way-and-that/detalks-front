@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../styles/questionListPage.scss";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import authStore from "../../store/authStore";
 
 /* 
@@ -146,6 +146,9 @@ interface QnaListData {
 }
 
 export default function QuestionListPage() {
+  const location = useLocation();
+  const { state } = location;
+  // console.log(state.searchResults);
   const navigate = useNavigate();
   const { authToken } = authStore();
 
@@ -156,8 +159,12 @@ export default function QuestionListPage() {
   const [filterBy, setFilterBy] = useState<string>("");
 
   useEffect(() => {
-    getQuestionList(spage);
-  }, [spage]);
+    if (state && state.searchResults) {
+      setQnaListData(state.searchResults);
+    } else {
+      getQuestionList(spage);
+    }
+  }, [spage, state]);
 
   const getQuestionList = async (spage: number) => {
     try {

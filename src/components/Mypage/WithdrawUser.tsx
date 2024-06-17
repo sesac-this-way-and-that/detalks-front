@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cancel from "../../assets/cancel.png";
 import { useInfoStore } from "../../store";
+import authStore from "../../store/authStore";
+
 interface WithdrawUserProps {
   onHide: () => void;
 }
@@ -13,6 +15,8 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   const [reason, setReason] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const userData = useInfoStore((state) => state.userInfo);
+  const removeToken = authStore((state) => state.removeAuthToken);
+
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
@@ -24,23 +28,28 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!password) {
-      return alert("비밀번호를 입력해주세요.");
-    }
+    // 회원 탈퇴 요청 전 확인 메시지 출력
+    const confirmMessage = userData?.isDeleted
+      ? "정말로 회원 복구를 진행하시겠습니까?"
+      : "정말로 회원 탈퇴를 진행하시겠습니까?";
 
-    const confirm = window.confirm("정말로 회원탈퇴를 진행하시겠습니까?");
+    const confirm = window.confirm(confirmMessage);
     if (!confirm) return;
 
     try {
       const token = localStorage.getItem("authToken");
-      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
-      console.log(token);
+      const url =
+        userData?.social == "NONE" || userData?.isDeleted
+          ? `${process.env.REACT_APP_API_SERVER}/member/auth`
+          : `${process.env.REACT_APP_API_SERVER}/member/auth/social`;
+      const method = userData?.isDeleted ? "post" : "delete";
+
       const formData = new URLSearchParams();
       formData.append("pwd", password);
       formData.append("reason", reason);
 
       const response = await axios.request({
-        method: "delete",
+        method: method,
         url: url,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,18 +59,24 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
       });
 
       if (response.data.result) {
-        alert("회원탈퇴가 완료되었습니다.");
-        navigate("/");
+        if (userData?.isDeleted) {
+          alert("회원 복구가 완료되었습니다.");
+          window.location.href = "/mypage/" + userData.idx;
+        } else {
+          removeToken();
+          alert("회원 탈퇴가 완료되었습니다.");
+          window.location.href = "/";
+        }
       } else {
         alert(response.data.msg);
       }
     } catch (error) {
-      console.error("Error deleting account:", error);
+      console.error("Error processing withdrawal:", error);
       if (axios.isAxiosError(error) && error.response) {
         console.error("Response Error:", error.response.data);
-        alert(`Failed to delete account: ${error.response.data.message}`);
+        alert(`Failed to process withdrawal: ${error.response.data.message}`);
       } else {
-        alert("Failed to delete account");
+        alert("Failed to process withdrawal");
       }
     }
   };
@@ -92,43 +107,58 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
 
   return (
     <div ref={modalRef} className="modal-content">
-      <p className="title">정말로 탈퇴하시겠습니까?</p>
-      <p className="middletitle">30일 까지 정보를 유지한 뒤 삭제됩니다.</p>
+      <p className={userData?.isDeleted ? "recover-title" : "title"}>
+        {userData?.isDeleted
+          ? "정말로 회원 복구를 하시겠습니까?"
+          : "정말로 회원 탈퇴를 하시겠습니까?"}
+      </p>
+      <p className="middletitle">
+        {userData?.isDeleted ? "" : "30일 동안 정보를 유지한 뒤 삭제됩니다."}
+      </p>
       <p className="smalltitle">
-        회원탈퇴를 위해 비밀번호와 탈퇴 사유를 입력해주세요.
+        {userData?.isDeleted
+          ? "회원 정보를 복구 하시겠습니까?"
+          : "회원 탈퇴를 위해 비밀번호와 탈퇴 사유를 입력해주세요."}
       </p>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
-          {userData?.social == "NONE" ? (
+          {!userData?.isDeleted && (
+            <>
+              {userData?.social == "NONE" && (
+                <div className="form-group">
+                  <label htmlFor="password">비밀번호</label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    autoComplete="current-password"
+                  />
+                </div>
+              )}
+            </>
+          )}
+          {!userData?.isDeleted && (
             <div className="form-group">
-              <label htmlFor="password">비밀번호</label>
+              <label htmlFor="reason">사유</label>
               <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                autoComplete="current-password"
+                type="text"
+                id="reason"
+                value={reason}
+                onChange={handleReasonChange}
               />
             </div>
-          ) : (
-            <></>
           )}
-          <div className="form-group">
-            <label htmlFor="reason">탈퇴 사유</label>
-            <input
-              type="text"
-              id="reason"
-              value={reason}
-              onChange={handleReasonChange}
-            />
-          </div>
-          <button type="submit" className="withdraw-btn">
-            회원 탈퇴
+          <button
+            type="submit"
+            className={userData?.isDeleted ? "recover-btn" : "withdraw-btn"}
+          >
+            {userData?.isDeleted ? "회원 복구" : "회원 탈퇴"}
           </button>
         </form>
       </div>
       <button className="hide" onClick={onHide}>
-        <img src={cancel} alt="" />
+        <img src={cancel} alt="닫기" />
       </button>
     </div>
   );
