@@ -8,6 +8,9 @@ import { useInfoStore } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faFlag } from "@fortawesome/free-solid-svg-icons";
 
+import AnswerItem from "./AnswerItem";
+import AnswerCreate from "./AnswerCreate";
+
 export default function QuestionDetailPage() {
   const { authToken } = authStore();
   const navigate = useNavigate();
@@ -22,6 +25,8 @@ export default function QuestionDetailPage() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isBookMarked, setIsBookMarked] = useState<boolean>(false);
+
+  const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
 
   const handleVoteIncrement = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}?voteState=true`;
@@ -112,6 +117,12 @@ export default function QuestionDetailPage() {
         response.data.data.bookmarkState
       );
       setIsBookMarked(response.data.data.bookmarkState);
+
+      // [추가] 이미 답변된 질문인지 확인
+      const userAnswer = response.data.data.answerList.find(
+        (answer: any) => answer.author.memberIdx === userData?.idx
+      );
+      setHasUserAnswered(!!userAnswer);
     } catch (error) {
       console.error("Unexpected error:", error);
     }
@@ -215,6 +226,41 @@ export default function QuestionDetailPage() {
     }
   };
 
+  // --- 답변
+  const handleEditAnswer = (answerId: string, content: string) => {
+    navigate(`/answer/update/${answerId}`);
+  };
+
+  const handleDeleteAnswer = async (answerId: string) => {
+    const url = `${process.env.REACT_APP_API_SERVER}/answers/${answerId}`;
+    try {
+      await axios.delete(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      console.log("답변이 성공적으로 삭제되었습니다.");
+      handleSelectedQuesId();
+    } catch (error) {
+      console.error("에러 :", error);
+    }
+  };
+
+  // 답변 재 랜더링
+  const refreshAnswers = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setQuestionData(response.data.data);
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
   return (
     <section>
       <article className="closed_container1" key={questionData?.questionId}>
@@ -306,62 +352,21 @@ export default function QuestionDetailPage() {
         </div>
       </article>
       <article className="closed_container2">
-        <h1 className="subTitle">1 답변</h1>
+        <h1 className="subTitle">{questionData?.answerCount} 답변</h1>
       </article>
-      <article className="closed_container3">
-        <div className="section3_1">
-          <button className="answerBtn answer_likeBtn">▲</button>
-          <div>8</div>
-          <button className="answerBtn answer_disLikeBtn">▼</button>
-          <div className="resolve_bookMark answer_bookMark">🕮</div>
-        </div>
-        <div className="section3_2">
-          <div className="part3_1">
-            <div className="area1">
-              <div className="profileStats statsList">
-                <img
-                  src="https://picsum.photos/200/300?grayscale"
-                  alt=""
-                  style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-                />
-              </div>
-              <div className="profileStats statsList">
-                이기혁님 <span>485</span>
-              </div>
-            </div>
-            <div className="area2">
-              <div className="profileStats statsList">2024-06-04 16:09:30</div>
-            </div>
-          </div>
-          <div className="part3_2">
-            <div className="section4_body">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-              qui tempora nisi vero nobis minima illum. Ducimus minima beatae
-              doloribus culpa officiis! Corrupti, asperiores! Voluptate quas
-              atque ratione eum voluptas.
-            </div>
-          </div>
-        </div>
-      </article>
+      {/* 답변 리스트 map */}
+      {questionData?.answerList.map((answer) => (
+        <AnswerItem
+          key={answer.answerId}
+          answer={answer}
+          refreshAnswers={refreshAnswers}
+        />
+      ))}
       <article className="closed_container4">
-        <h1 className="subTitle">내 답변</h1>
-        <div className="richEditorText_container">
-          <div>
-            <textarea
-              ref={textAreaRef}
-              value={textAreaInputValue}
-              onChange={(e) => setTextAreaInputValue(e.target.value)}
-              style={{ width: "100%", height: "200px" }}
-            />
-            <div
-              className="here"
-              dangerouslySetInnerHTML={{ __html: formattedText }}
-            />
-          </div>
-        </div>
-        <div className="closedBtn_container">
-          <button className="closedBtn">답변 하기</button>
-        </div>
+        {/* 사용자가 이미 답변을 작성했을 경우 입력 비활성화 */}
+        {!hasUserAnswered && (
+          <AnswerCreate questionId={questionData?.questionId} />
+        )}
       </article>
     </section>
   );
