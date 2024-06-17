@@ -40,11 +40,7 @@ const MyPosts: React.FC = () => {
 
       // Adjust API URL based on sort criteria
       if (sortBy === "평점순") {
-        if (userData?.idx) {
-          apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userData?.idx}/activities/top-votes`;
-        } else {
-          apiUrl = `${process.env.REACT_APP_API_SERVER}/mypage/${userId}/activities/top-votes`;
-        }
+        apiUrl = apiUrl.replace("recent", "top-votes");
       }
 
       const response = await axios.get(apiUrl);
@@ -73,7 +69,6 @@ const MyPosts: React.FC = () => {
       });
 
       const { data } = response.data;
-      console.log(data);
       setAllQuestions(data.content);
     } catch (error) {
       console.error("북마크 API 호출 중 오류 발생:", error);
@@ -81,16 +76,15 @@ const MyPosts: React.FC = () => {
   };
 
   useEffect(() => {
-    if (filterBy === "북마크") {
-      bookmarkQuestions();
-    } else {
-      fetchQuestions();
-    }
-  }, [sortBy, filterBy, userData?.idx]);
-
-  useEffect(() => {
-    fetchQuestions();
-  }, [sortBy, userData?.idx]);
+    const loadQuestions = async () => {
+      if (filterBy === "북마크") {
+        await bookmarkQuestions();
+      } else {
+        await fetchQuestions();
+      }
+    };
+    loadQuestions();
+  }, [sortBy, filterBy, userData?.idx, userId]);
 
   useEffect(() => {
     filterQuestions();
@@ -109,14 +103,13 @@ const MyPosts: React.FC = () => {
       default:
         break;
     }
-    console.log(filteredData);
     setFilteredQuestions(filteredData);
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allQuestions.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(allQuestions.length / itemsPerPage);
+  const currentItems = filteredQuestions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const renderPageNumbers = () => {
@@ -158,7 +151,7 @@ const MyPosts: React.FC = () => {
 
     if (endPage < totalPages) {
       if (endPage <= totalPages - 1) {
-        pages.push(<span key="dots2">......</span>);
+        pages.push(<span key="dots2">...</span>);
       }
       pages.push(
         <button
