@@ -44,18 +44,19 @@ const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
           : `${process.env.REACT_APP_API_SERVER}/member/auth/social`;
       const method = userData?.isDeleted ? "post" : "delete";
 
-      const formData = new URLSearchParams();
-      formData.append("pwd", password);
-      formData.append("reason", reason);
+      const data = {
+        pwd: password,
+        reason: reason,
+      };
 
       const response = await axios.request({
         method: method,
         url: url,
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        data: formData.toString(),
+        data: data,
       });
 
       if (response.data.result) {

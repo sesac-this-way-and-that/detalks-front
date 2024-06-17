@@ -57,14 +57,15 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
       const token = localStorage.getItem("authToken");
       const url = `${process.env.REACT_APP_API_SERVER}/member/auth/password`;
 
-      const formData = new FormData();
-      formData.append("pwd", passwords.currentPassword);
-      formData.append("changePwd", passwords.newPassword);
+      const data = {
+        pwd: passwords.confirmPassword,
+        changePwd: passwords.newPassword,
+      };
 
-      const response = await axios.patch(url, formData, {
+      const response = await axios.patch(url, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
 

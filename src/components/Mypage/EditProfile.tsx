@@ -3,6 +3,7 @@ import axios from "axios";
 import ModifyPassword from "./ModifyPassword";
 import WithdrawUser from "./WithdrawUser";
 import { useInfoStore } from "../../store";
+import authStore from "../../store/authStore";
 
 interface EditProfileProps {
   userInfo: {
@@ -43,6 +44,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const getInfo = useInfoStore((state) => state.getInfo);
   const userData = useInfoStore((state) => state.userInfo);
+  const getToken = authStore((state) => state.authToken);
 
   useEffect(() => {
     setName(userInfo.name);
@@ -70,27 +72,39 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const token = localStorage.getItem("authToken"); // Assuming you store your token in localStorage
+      const token = getToken;
 
-      const url = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      const url1 = `${process.env.REACT_APP_API_SERVER}/member/auth`;
+      const url2 = `${process.env.REACT_APP_API_SERVER}/member/auth/profile`;
+
+      const data = {
+        name,
+        summary,
+        about,
+      };
 
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("summary", summary);
-      formData.append("about", about);
 
       if (selectedFile) {
         formData.append("img", selectedFile);
       }
 
-      const response = await axios.patch(url, formData, {
+      const response1 = await axios.patch(url1, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      
+      const response2 = await axios.patch(url2, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log("Response:", response.data); // Log the response
+      console.log(response1.data);
+      console.log(response2.data);
 
       onUserInfoChange({
         idx: userInfo.idx,
