@@ -30,6 +30,7 @@ export default function Header(): JSX.Element {
   const nav = useNavigate();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const prevLocation = window.location.href;
+
   useEffect(() => {
     const token = getToken;
     if (token) {
@@ -90,6 +91,7 @@ export default function Header(): JSX.Element {
       );
       console.log("Search Results:", response.data);
       nav("/questions", { state: { searchResults: response.data.data } });
+      setIsFocused(false);
       setSearchQuery("");
     } catch (error) {
       nav("/questions", { state: { searchResults: false } });
@@ -106,6 +108,21 @@ export default function Header(): JSX.Element {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleExampleClick = (example: string) => {
+    setSearchQuery(example);
+    setIsFocused(false);
+  };
+
+  const getDisplayName = (name: string) => {
+    return name.length > 5 ? name.slice(0, 5) + "..." : name;
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      setIsFocused(false);
+    }, 100);
   };
 
   return (
@@ -126,8 +143,8 @@ export default function Header(): JSX.Element {
               type="text"
               value={searchQuery}
               onChange={handleSearchInputChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onClick={() => setIsFocused(true)}
+              onBlur={handleBlur}
               onKeyDown={handleInputKeyDown} // Listen for Enter key press
             />
             <button type="submit">
@@ -135,12 +152,20 @@ export default function Header(): JSX.Element {
             </button>
           </form>
           {isFocused && (
-            <div className="searchTooltip">
+            <div className="searchTooltip" onMouseDown={(e) => e.preventDefault()}>
               <p>검색어 예시</p>
-              <p>[title]: title - 제목별 검색</p>
-              <p>[name]: username - 사용자 이름별 검색</p>
-              <p>[content]: content - 내용별 검색</p>
-              <p>[tag]: java - 태그별 검색</p>
+              <p onClick={() => handleExampleClick("[title]: ")}>
+                [title]: title - 제목별 검색
+              </p>
+              <p onClick={() => handleExampleClick("[name]: ")}>
+                [name]: username - 사용자 이름별 검색
+              </p>
+              <p onClick={() => handleExampleClick("[content]: ")}>
+                [content]: content - 내용별 검색
+              </p>
+              <p onClick={() => handleExampleClick("[tag]: ")}>
+                [tag]: java - 태그별 검색
+              </p>
             </div>
           )}
           <ul className="headerMenu">
@@ -153,7 +178,7 @@ export default function Header(): JSX.Element {
                       alt={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
                     />
                   </div>
-                  <span>{userData?.name} 님</span>
+                  <span>{getDisplayName(userData?.name || "")} 님</span>
                 </Link>
               </li>
             ) : (
@@ -172,7 +197,7 @@ export default function Header(): JSX.Element {
                         alt={`${process.env.REACT_APP_STATIC_SERVER}/${userData?.img}`}
                       />
                     </div>
-                    <span>{userData?.name}</span> 님
+                    <span>{getDisplayName(userData?.name || "")}</span> 님
                   </Link>
                 </li>
                 <li>
