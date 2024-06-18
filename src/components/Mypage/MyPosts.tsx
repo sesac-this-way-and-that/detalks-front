@@ -270,7 +270,11 @@ const MyPosts: React.FC = () => {
                       )}
                     </li>
                     <li>
-                      <span>{question.titleOrContent}</span>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: question.titleOrContent,
+                        }}
+                      />
                     </li>
                     <li>{question.createdAt}</li>
                   </ul>
