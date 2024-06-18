@@ -50,4 +50,12 @@ export interface QuestionDetail {
       memberIdx: number;
       memberName: string;
     };
+    answerVoteDtoList: AnswerVote[];
+    
+}
+
+export interface AnswerVote {
+  voteId: number;
+  voteState: boolean;
+  memberIdx: string; 
 }
