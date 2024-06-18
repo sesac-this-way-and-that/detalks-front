@@ -10,6 +10,7 @@ import ReactQuillModule from "./ReactQuillModule";
 import dompurify from "dompurify";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import "../../styles/answerCreate.scss";
 
 interface AnswerProps {
   questionId: string | undefined;
@@ -113,7 +114,7 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
         </div>
       </div>
       <div className="closedBtn_container">
-        <button type="submit" className="submitBtn" onClick={handleSubmit}>
+        <button type="submit" className="answerSubmitBtn" onClick={handleSubmit}>
           답변 제출
         </button>
       </div>

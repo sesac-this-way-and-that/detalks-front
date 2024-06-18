@@ -1,0 +1,33 @@
+.answer-container {
+  .richEditorText_container {
+    div {
+      .quill {
+        // border: 1px solid black;
+        height: 200px;
+      }
+    }
+  }
+  .closedBtn_container {
+    .answerSubmitBtn {
+      border: none;
+      border-radius: 5px;
+      color: #ffffff;
+      background-color: #1b75d0;
+      padding: 10px;
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (min-width: 592px) {
+  .answer-container {
+    .richEditorText_container {
+      div {
+        .quill {
+          // border: 1px solid black;
+          height: 300px;
+        }
+      }
+    }
+  }
+}
