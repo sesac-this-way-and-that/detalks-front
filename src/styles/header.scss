@@ -61,23 +61,33 @@ $mobile: 480px;
       align-items: center;
       // flex: 1;
       .searchTooltip {
+        cursor: pointer;
         position: absolute;
         background-color: white;
-        padding: 15px;
+        padding: 15px 0;
         width: 400px;
         top: 50px;
         border-radius: 5px;
         border: 2px solid rgb(231, 231, 231);
         box-shadow: 2px 2px 3px rgb(112, 112, 112);
+
         p {
-          margin-bottom: 5px;
+          padding: 2.5px 15px;
           color: rgb(54, 54, 54);
           &:first-child {
             font-weight: bold;
             color: black;
+            &:hover {
+              background-color: white;
+              color: black;
+            }
           }
           &:last-child {
             margin-bottom: 0;
+          }
+          &:hover {
+            background-color: $main-color;
+            color: white;
           }
         }
       }

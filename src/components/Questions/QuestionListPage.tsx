@@ -89,10 +89,6 @@ export default function QuestionListPage() {
   const pageQuery = searchParams.get("page");
   const sortByQuery = searchParams.get("sortBy");
 
-  //
-  const [noQuestion, setNoQuestion] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-
   // state 관련
   const [qnaListData, setQnaListData] = useState<QnaListData | null>();
   const [spage, setSPage] = useState<number>();

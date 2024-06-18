@@ -29,7 +29,6 @@ export default function QuestionDetailPage() {
   const [isSolved, setIsSolved] = useState<boolean>(false);
 
   const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
-
   const handleVoteIncrement = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}?voteState=true`;
     try {
@@ -107,21 +106,16 @@ export default function QuestionDetailPage() {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log("API Response:", response.data);
       setQuestionData(response.data.data);
+      setVoteCount(response.data.data.voteCount);
+      setIsBookMarked(response.data.data.bookmarkState);
+      setIsSolved(response.data.data.isSolved);
+
       console.log(
         "response.data.data.voteCount: ",
         response.data.data.voteCount
       );
-      setVoteCount(response.data.data.voteCount);
-      console.log(
-        "response.data.data.bookmarkState: ",
-        response.data.data.bookmarkState
-      );
-      setIsBookMarked(response.data.data.bookmarkState);
-      console.log("response.data.data.isSolved: ", response.data.data.isSolved);
 
-      setIsSolved(response.data.data.isSolved);
       // [추가] 이미 답변된 질문인지 확인
       const userAnswer = response.data.data.answerList.find(
         (answer: any) => answer.author.memberIdx === userData?.idx
@@ -349,10 +343,10 @@ export default function QuestionDetailPage() {
               </div>
               <div className="profileStats statsList">
                 {questionData?.author.memberName}
-                <span>{questionData?.viewCount}</span>
+                <span className="viewCountSpan">{questionData?.viewCount}</span>
               </div>
               <div className="profileStats statsList">
-                {questionData?.createdAt.toString()}
+                {questionData?.createdAt.toString().split("T").join(" ")}
               </div>
             </div>
           </div>
@@ -361,7 +355,10 @@ export default function QuestionDetailPage() {
               <button
                 className="answerBtn answer_likeBtn"
                 onClick={handleVoteIncrement}
-                disabled={userData?.name === questionData?.author.memberName}
+                disabled={
+                  userData?.name === questionData?.author.memberName ||
+                  voteCount >= 1
+                }
               >
                 ▲
               </button>
@@ -369,7 +366,10 @@ export default function QuestionDetailPage() {
               <button
                 className="answerBtn answer_disLikeBtn"
                 onClick={handleVoteDecrement}
-                disabled={userData?.name === questionData?.author.memberName}
+                disabled={
+                  userData?.name === questionData?.author.memberName ||
+                  voteCount <= 0
+                }
               >
                 ▼
               </button>
@@ -394,11 +394,13 @@ export default function QuestionDetailPage() {
                 )}
               </div>
             </div>
-            <div className="tagList">{questionData?.tagNameList}</div>
-            <div
-              className="section3_body"
-              dangerouslySetInnerHTML={{ __html: processedContent }}
-            ></div>
+            <div className="section3_content">
+              <div className="tagList">{questionData?.tagNameList}</div>
+              <div
+                className="section3_body"
+                dangerouslySetInnerHTML={{ __html: processedContent }}
+              ></div>
+            </div>
           </div>
           {userData?.name === questionData?.author.memberName && (
             <div className="question_section4">

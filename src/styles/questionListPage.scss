@@ -254,6 +254,36 @@ $mobile: 480px;
       }
     }
   }
+  .qna-footer {
+    .pages-button {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 10px;
+      .page-button {
+        width: 30px;
+        height: 30px;
+        margin: 5px;
+        font-weight: bold;
+        background-color: #ffffff;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .prev-button {
+        margin-right: 15px;
+      }
+      .next-button {
+        margin-left: 15px;
+      }
+      .currentPage {
+        background-color: #1b75d0;
+        color: #fff;
+      }
+    }
+  }
 }
 
 // 패드
@@ -307,6 +337,8 @@ $mobile: 480px;
               .qna-user-image {
                 width: 35px;
                 height: 35px;
+                width: 40px;
+                height: 40px;
               }
             }
             .qna-user-name {
