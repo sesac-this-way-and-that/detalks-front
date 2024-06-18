@@ -133,7 +133,7 @@ export default function QuestionListPage() {
       if (!filterByAnswer) {
       }
       const response = await axios.get(
-        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&size=1&page=${spage}`,
+        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
