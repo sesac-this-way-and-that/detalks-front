@@ -1,8 +1,13 @@
 import axios from "axios";
 import accountStore from "../../store/userStore";
 import { useRef, useState } from "react";
+import { AccountForm } from "./userInterface";
+import PwdInput from "./PwdInput";
 
-export default function VerificationInput() {
+export default function VerificationInput({
+  accessType,
+  accessText,
+}: AccountForm) {
   const { verificationCode, setVerificationCode } = accountStore();
   const [beforeVerification, setBeforeVerification] = useState<boolean>(true);
   const [code, setCode] = useState<string>("");
@@ -23,10 +28,19 @@ export default function VerificationInput() {
       setBeforeVerification(true);
     }
   };
+
   return (
     <>
       <label>
         <p>인증번호 입력</p>
+        <button
+          type="button"
+          className="inInputBtn"
+          onClick={checkVerification}
+          disabled={beforeVerification ? false : true}
+        >
+          인증번호 확인
+        </button>
         <input
           type="text"
           ref={codeRef}
@@ -34,25 +48,39 @@ export default function VerificationInput() {
           disabled={beforeVerification ? false : true}
         />
         <div>
-          <button
-            type="button"
-            className="inInputBtn"
-            onClick={checkVerification}
+          <span
+            className={`VerifyInputMsg ${
+              beforeVerification ? "validmsg-fail" : "validmsg-pass"
+            }`}
           >
-            인증번호 확인
-          </button>
-          <span id="VerifyInputMsg">{verifyMsg}</span>
+            {verifyMsg}
+          </span>
         </div>
       </label>
-      <>
+      {accessType === "register" ? (
         <button
           type="submit"
           className="registerSubmit"
           disabled={beforeVerification ? true : false}
         >
-          회원가입
+          {accessText}
         </button>
-      </>
+      ) : (
+        <>
+          {beforeVerification ? null : (
+            <>
+              <PwdInput accessType="findPw" />
+            </>
+          )}
+          <button
+            type="submit"
+            className="registerSubmit"
+            disabled={beforeVerification ? true : false}
+          >
+            비밀번호 재설정
+          </button>
+        </>
+      )}
     </>
   );
 }

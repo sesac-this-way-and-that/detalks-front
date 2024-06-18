@@ -1,6 +1,6 @@
 import SocialAccount from "./SocialAccount";
 import "../../styles/userAuth.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import EmailInput from "./EmailInput";
 import PwdInput from "./PwdInput";
 import accountStore from "../../store/userStore";
@@ -13,13 +13,24 @@ export default function LoginPage() {
   const { email, pwd, setEmail, setPwd } = accountStore();
   const { authToken, setAuthToken } = authStore();
   const nav = useNavigate();
+  const location = useLocation();
 
   // 로그인 토큰이 있는 유저가 페이지 진입 시 메인페이지로 이동
   useEffect(() => {
     if (authToken) {
-      alert("이미 로그인된 상태입니다. 메인 페이지로 이동합니다.");
+      if (location.state !== "toMainPage") {
+        alert("로그인된 상태입니다. 메인 페이지로 이동합니다.");
+      }
       nav("/");
     }
+  }, []);
+
+  // 언마운트 시 스토어 상태 초기화
+  useEffect(() => {
+    return () => {
+      setEmail("");
+      setPwd("");
+    };
   }, []);
 
   const accessType = "login";
@@ -44,18 +55,21 @@ export default function LoginPage() {
         localStorage.setItem("authToken", res.data.token);
         setAuthToken(localStorage.getItem("authToken"));
         getInfo();
-        alert("로그인 성공");
+        // alert("로그인 성공");
         setEmail("");
         setPwd("");
+        if (location.state === "toMainPage") {
+          nav("/");
+        }
         nav(-1);
       })
       .catch((err) => {
         console.log("err: ", err);
-        alert("로그인 실패");
+        alert("로그인에 실패했습니다.");
       });
   };
   return (
-    <section className="login-page">
+    <section className="user-auth-page">
       <h2 className="title">{accessText}</h2>
       <article className="accountInputForm">
         <form onSubmit={submitFunc} className="inputContainer">

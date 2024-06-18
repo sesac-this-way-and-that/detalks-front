@@ -17,19 +17,38 @@ export default function RegisterPage() {
     name,
     pwd,
     verificationCode,
+    emailValid,
+    nameValid,
+    pwdValid,
     setEmail,
     setName,
     setPwd,
     setVerificationCode,
+    setEmailValid,
+    setNameValid,
+    setPwdValid,
   } = accountStore();
   const { authToken } = authStore();
 
   // 로그인 토큰이 있는 유저가 페이지 진입 시 메인페이지로 이동
   useEffect(() => {
     if (authToken) {
-      alert("이미 로그인된 상태입니다. 메인 페이지로 이동합니다.");
+      alert("로그인된 상태입니다. 메인 페이지로 이동합니다.");
       nav("/");
     }
+  }, []);
+
+  // 언마운트 시 스토어 상태 초기화
+  useEffect(() => {
+    return () => {
+      setEmail("");
+      setName("");
+      setPwd("");
+      setVerificationCode("");
+      setEmailValid(false);
+      setNameValid(false);
+      setPwdValid(false);
+    };
   }, []);
 
   const [beforeSendMail, setBeforeSendMail] = useState<boolean>(true);
@@ -43,21 +62,28 @@ export default function RegisterPage() {
       email: email,
     };
     console.log("userdata: ", userData);
-    /* !!!!!!!!!!!!!!!!!테스트할 때 예외처리 우회용 주석!! 아무 메일 넣고 인증코드는 빈값으로 두기
-    axios
-      .post(url, userData)
-      .then((res) => {
-        console.log("then res.data: ", res.data);
-        setVerificationCode(res.data.slice(9));
-        console.log("code", verificationCode, "res", res.data.slice(9));
-        alert("이메일 전송 성공");
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        alert("이메일 전송 실패");
-      }); 
-      */
-    setBeforeSendMail(!beforeSendMail);
+    if (emailValid && nameValid && pwdValid) {
+      /* !!!!!!!!!!!!!!!!!테스트할 때 예외처리 우회용 주석!! 아무 메일 넣고 인증코드는 빈값으로 두기
+      axios
+        .post(url, userData)
+        .then((res) => {
+          console.log("then res.data: ", res.data);
+          setVerificationCode(res.data.slice(9));
+          console.log("code", verificationCode, "res", res.data.slice(9));
+          alert("입력한 이메일로 인증번호가 전송되었습니다.");
+        })
+        .catch((err) => {
+          console.log("err: ", err);
+          alert("이메일 전송에 실패했습니다.");
+        }); 
+        */
+      setBeforeSendMail(!beforeSendMail);
+      setEmailValid(false);
+      setNameValid(false);
+      setPwdValid(false);
+    } else {
+      alert("잘못된 입력값이 있습니다.");
+    }
   };
 
   const submitFunc = (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,15 +108,16 @@ export default function RegisterPage() {
         setName("");
         setPwd("");
         // 회원가입>로그인 상황에선 로그인 후 이전 페이지로 자동 이동하는 대신 메인페이지로 이동
-        nav("/login", { replace: true });
+        // nav("/login", { replace: true });
+        nav("/login", { state: "toMainPage" });
       })
       .catch((err) => {
-        console.log(err.response.data.msg);
         console.log("err: ", err);
+        alert(err.response.data.msg);
       });
   };
   return (
-    <section className="register-page">
+    <section className="user-auth-page">
       <h2 className="title">{accessText}</h2>
       {beforeSendMail ? (
         <>
@@ -107,14 +134,17 @@ export default function RegisterPage() {
           <SocialAccount accessText={accessText} />
           <article className="accountLink">
             <Link to="/login">로그인</Link>
-            <span> | </span>
+            <span>|</span>
             <Link to="/findPassword">비밀번호 찾기</Link>
           </article>
         </>
       ) : (
         <article className="accountInputForm">
           <form onSubmit={submitFunc} className="inputContainer">
-            <VerificationInput />
+            <VerificationInput
+              accessText={accessText}
+              accessType={accessType}
+            />
           </form>
         </article>
       )}
