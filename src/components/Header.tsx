@@ -92,7 +92,8 @@ export default function Header(): JSX.Element {
       nav("/questions", { state: { searchResults: response.data.data } });
       setSearchQuery("");
     } catch (error) {
-      console.error("Search Error:", error);
+      nav("/questions", { state: { searchResults: false } });
+      // console.error("Search Error:", error);
     }
   };
 
