@@ -1,8 +1,18 @@
-import React, { useState, useRef, useEffect, SyntheticEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  SyntheticEvent,
+  useMemo,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import authStore from "../../store/authStore";
 import "../../styles/questionCreateAndModifyPage.scss";
+
+import ReactQuill from "react-quill";
+import ReactQuillModule from "./ReactQuillModule";
+import hljs from "highlight.js";
 
 export default function QuestionCreateAndModifyPage() {
   const navigate = useNavigate();
@@ -16,7 +26,9 @@ export default function QuestionCreateAndModifyPage() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [applicationContent, setApplicationContent] = useState<string>("");
-
+  //answer-container
+  const QuillRef = useRef<ReactQuill>();
+  const [contents, setContents] = useState("");
   // axios
   useEffect(() => {
     if (questionId) {
@@ -44,6 +56,7 @@ export default function QuestionCreateAndModifyPage() {
 
   // X
   useEffect(() => {
+    console.log("Text area input value changed:", textAreaInputValue);
     const formatTextToHTML = (text: string) => {
       const regex = /`([^`]*)`/g;
       const parts: string[] = [];
@@ -87,14 +100,19 @@ export default function QuestionCreateAndModifyPage() {
       : `${process.env.REACT_APP_API_SERVER}/questions`;
 
     const method = questionId ? "PATCH" : "POST";
-
+    const newContent = contents
+      .replace(/<p>/g, "")
+      .replace(/<\/p>/g, "\n")
+      .replace(/<br>/g, "\n");
     const questionData = {
       questionTitle: applicationContent,
-      questionContent: textAreaInputValue,
+      // questionContent: textAreaInputValue,
+      questionContent: newContent,
       tagNames: tagOutputvalue,
     };
 
     try {
+      console.log("Submitting question data:", questionData);
       const response = await axios({
         method,
         url,
@@ -105,7 +123,7 @@ export default function QuestionCreateAndModifyPage() {
         },
       });
 
-      console.log("response: ", response.data);
+      console.log("Response data:", response.data);
       navigate(`/questions`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -115,6 +133,43 @@ export default function QuestionCreateAndModifyPage() {
       }
     }
   };
+
+  // editor 설정
+  const formats: string[] = [
+    "header",
+    "size",
+    "font",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "color",
+    "background",
+    "align",
+    "script",
+    "code-block",
+    "clean",
+  ];
+  hljs.configure({
+    languages: ["javascript", "ruby", "python", "java", "cpp", "kotlin", "sql"],
+  });
+  const modules: {} = useMemo(
+    () => ({
+      toolbar: {
+        container: "#toolBar",
+      },
+      syntax: {
+        highlight: (text: string) => hljs.highlightAuto(text).value,
+      },
+    }),
+    []
+  );
 
   return (
     <section className="application_wrapper">
@@ -141,18 +196,26 @@ export default function QuestionCreateAndModifyPage() {
             무엇을 시도했는지. 무엇이 일어날 것이라고 예상했는지. 그리고 실제로
             어떤 결과가 나타났는지 설명하세요.(단 최소 20자)
           </h6>
-          <div className="richEditorText_container">
-            <div>
-              <textarea
-                ref={textAreaRef}
-                value={textAreaInputValue}
-                onChange={(e) => setTextAreaInputValue(e.target.value)}
-                style={{ width: "100%", height: "200px" }}
-              />
-              <div
-                className="here"
-                dangerouslySetInnerHTML={{ __html: formattedText }}
-              />
+          <div className="question_container">
+            <div className="richEditorText_container">
+              <div>
+                <div id="toolBar">
+                  <ReactQuillModule />
+                </div>
+                <ReactQuill
+                  ref={(element) => {
+                    if (element !== null) {
+                      QuillRef.current = element;
+                    }
+                  }}
+                  value={questionId ? textAreaInputValue : contents}
+                  onChange={setContents}
+                  modules={modules}
+                  formats={formats}
+                  theme="snow"
+                  placeholder="내용을 입력해주세요."
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -182,18 +245,20 @@ export default function QuestionCreateAndModifyPage() {
             {tagOutputvalue.map((tag, i) => {
               return (
                 <div className="application_lang" key={i}>
-                  <div className="application_lang_type">{tag}</div>
-                  <div
-                    className="xBtnForTag"
-                    onClick={() => {
-                      setTagOutputValue((prevTags) => {
-                        const updatedTags = [...prevTags];
-                        updatedTags.splice(i, 1);
-                        return updatedTags;
-                      });
-                    }}
-                  >
-                    &times;
+                  <div className="application_lang_type">
+                    {tag}
+                    <div
+                      className="xBtnForTag"
+                      onClick={() => {
+                        setTagOutputValue((prevTags) => {
+                          const updatedTags = [...prevTags];
+                          updatedTags.splice(i, 1);
+                          return updatedTags;
+                        });
+                      }}
+                    >
+                      &times;
+                    </div>
                   </div>
                 </div>
               );

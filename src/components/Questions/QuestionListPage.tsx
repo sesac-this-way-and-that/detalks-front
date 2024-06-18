@@ -89,7 +89,6 @@ export default function QuestionListPage() {
   const pageQuery = searchParams.get("page");
   const sortByQuery = searchParams.get("sortBy");
 
-  //
   const [noQuestion, setNoQuestion] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
