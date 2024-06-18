@@ -6,7 +6,7 @@ import { QuestionDetail } from "../../types/question";
 import authStore from "../../store/authStore";
 import { useInfoStore } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRagular } from "@fortawesome/free-regular-svg-icons";
 
 import AnswerItem from "./AnswerItem";
@@ -26,6 +26,7 @@ export default function QuestionDetailPage() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isBookMarked, setIsBookMarked] = useState<boolean>(false);
+  const [isSolved, setIsSolved] = useState<boolean>(false);
 
   const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
 
@@ -118,11 +119,14 @@ export default function QuestionDetailPage() {
         response.data.data.bookmarkState
       );
       setIsBookMarked(response.data.data.bookmarkState);
+      console.log("response.data.data.isSolved: ", response.data.data.isSolved);
 
+      setIsSolved(response.data.data.isSolved);
       // [추가] 이미 답변된 질문인지 확인
       const userAnswer = response.data.data.answerList.find(
         (answer: any) => answer.author.memberIdx === userData?.idx
       );
+      console.log("response.data.data: ", response.data.data);
       setHasUserAnswered(!!userAnswer);
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -307,7 +311,7 @@ export default function QuestionDetailPage() {
   };
 
   return (
-    <section>
+    <section className="questionDetailpage_wrapper">
       <article className="closed_container1" key={questionData?.questionId}>
         <div className="closed_header">
           <h1 className="headerTitle">문제 해결</h1>
@@ -319,7 +323,10 @@ export default function QuestionDetailPage() {
           </button>
         </div>
         <div className="question_container">
-          <div className="question_section1">{questionData?.questionTitle}</div>
+          <div className="question_section1">
+            {questionData?.questionTitle}
+            {questionData?.answerList.length !== 0 ? "[해결]" : ""}
+          </div>
           <div className="question_section2">
             <div className="section2_1">
               <div className="questionStats statsList">
@@ -368,12 +375,26 @@ export default function QuestionDetailPage() {
               </button>
               <div className="resolve_bookMark" onClick={toggleBookmark}>
                 {isBookMarked ? (
-                  <FontAwesomeIcon icon={faBookmarkRagular} />
+                  <FontAwesomeIcon
+                    icon={faBookmarkRagular}
+                    style={{ color: "hsl(210,8%,68%)" }}
+                  />
                 ) : (
                   <FontAwesomeIcon icon={faBookmark} />
                 )}
               </div>
+              <div className="solvedMark">
+                {questionData?.answerList.length !== 0 ? (
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    style={{ color: "hsl(148, 70%, 31%)" }}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
+            <div className="tagList">{questionData?.tagNameList}</div>
             <div
               className="section3_body"
               dangerouslySetInnerHTML={{ __html: processedContent }}
