@@ -1,85 +1,15 @@
 import { useEffect, useState } from "react";
 import "../../styles/questionListPage.scss";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import authStore from "../../store/authStore";
-
-/* 
-{
-    "result": true,
-    "msg": "질문 리스트 조회 성공",
-    "data": {
-        "totalPages": 2, << 총 페이지 수
-        "totalElements": 11, << 총 게시글 수
-        "size": 10, << 페이지 당 글 수
-        "content": [
-            {
-                "questionId": 11,
-                "questionTitle": "졸려요 잘래요",
-                "questionContent": "하나만 더 만들어서 시험...",
-                "createdAt": "2024-06-14T18:56:02",
-                "modifiedAt": "2024-06-14T18:56:02",
-                "viewCount": 22,
-                "voteCount": 1,
-                "questionState": true,
-                "isSolved": false,
-                "author": {
-                    "memberIdx": 11,
-                    "memberName": "asdf"
-                },
-                "bookmarkState": false,
-                "answerCount": 1,
-                "answerList": [
-                    {
-                        "answerId": 5,
-                        "answerContent": "Example Answer 5",
-                        "createdAt": "2024-06-15T02:53:07",
-                        "modifiedAt": "2024-06-15T02:53:07",
-                        "answerState": true,
-                        "voteCount": 0,
-                        "isSelected": false,
-                        "author": {
-                            "memberIdx": 6,
-                            "memberName": "Member6"
-                        }
-                    }
-                ],
-                "tagNameList": [
-                    "Java",
-                    "react",
-                    "Kotlin"
-                ],
-                "questionRep": 0
-            }
-        ],
-        "number": 1, << 현재 페이지 인덱스
-        "sort": {
-            "empty": false,
-            "sorted": true,
-            "unsorted": false
-        },
-        "numberOfElements": 1,
-        "first": false, << 현재 페이지가 첫 페이지인가
-        "last": true, << 현재 페이지가 끝 페이지인가
-        "pageable": {
-            "pageNumber": 1,
-            "pageSize": 10,
-            "sort": {
-                "empty": false,
-                "sorted": true,
-                "unsorted": false
-            },
-            "offset": 10,
-            "paged": true,
-            "unpaged": false
-        },
-        "empty": false
-    },
-    "status": "200",
-    "errorType": null,
-    "token": null
-}
-*/
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface Question {
   questionId: number;
@@ -94,6 +24,8 @@ interface Question {
   author: {
     memberIdx: number;
     memberName: string;
+    memberRep: number;
+    memberImg: string;
   };
   bookmarkState: boolean;
   answerCount: number;
@@ -152,25 +84,51 @@ export default function QuestionListPage() {
   const navigate = useNavigate();
   const { authToken } = authStore();
 
-  const [qnaListData, setQnaListData] = useState<QnaListData>();
+  // query 관련
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageQuery = searchParams.get("page");
+  const sortByQuery = searchParams.get("sortBy");
+
+  //
   const [noQuestion, setNoQuestion] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  const [spage, setSPage] = useState<number>(0);
+
+  // state 관련
+  const [qnaListData, setQnaListData] = useState<QnaListData>();
+  const [spage, setSPage] = useState<number>();
+  // const [spage, setSPage] = useState<number>(Number(pageQuery) - 1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>("createdAt");
   // const [sortDESC, setSortDESC] = useState<boolean>(true);
   const [filterByAnswer, setFilterByAnswer] = useState<boolean>(false);
 
   useEffect(() => {
-    if (state && state.searchResults) {
-      setQnaListData(state.searchResults);
+    if (!pageQuery) setSPage(0);
+    else if (Number(pageQuery) > 0) setSPage(Number(pageQuery) - 1);
+    else if (Number(pageQuery) === totalPages) setSearchParams(pageQuery);
+    else setSPage(0);
+
+    if (!sortByQuery) setSortBy("createAt");
+    else setSortBy(sortByQuery);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    if (state /* && state.searchResults */) {
+      setLoading(false);
+      if (state.searchResults.numberOfElements !== 0) {
+        setNoQuestion(false);
+        setQnaListData(state.searchResults);
+        setTotalPages(state.searchResults.totalPages);
+      } else {
+        setNoQuestion(true);
+      }
     } else {
-      getQuestionList(spage);
+      getQuestionList(spage == null ? 0 : spage);
     }
   }, [spage, state, sortBy, filterByAnswer]);
 
   const getQuestionList = async (spage: number) => {
-    setLoading(true);
     try {
       if (!filterByAnswer) {
       }
@@ -194,10 +152,13 @@ export default function QuestionListPage() {
       setNoQuestion(false);
       setQnaListData(listData);
       setTotalPages(listData.totalPages);
-    } catch (error) {
-      // if (error.response.data.status === 404) {
-      setNoQuestion(true);
-      // }
+      setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        setNoQuestion(true);
+      } else {
+        console.log(error.response.data);
+      }
       console.error("error: ", error);
     } finally {
       setLoading(false);
@@ -211,14 +172,14 @@ export default function QuestionListPage() {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("createdAt");
-    setSPage(0);
+    // setSPage(0);
   };
   const orderByVote = () => {
     // if (sortBy === "voteCount") {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("voteCount");
-    setSPage(0);
+    // setSPage(0);
   };
   const filterNoAnswer = () => {
     console.log(filterByAnswer);
@@ -228,7 +189,7 @@ export default function QuestionListPage() {
   // 페이지네이션 기능
 
   // 0부터 시작하도록 서버에서 들어오는 페이지 수를 1부터 시작하도록 변환
-  const cpage = spage + 1;
+  let cpage = (spage == null ? 0 : spage) + 1;
 
   // 페이지 목록에 페이지가 10개씩 있을 때 현재 페이지에 대한 끝 번호
   // (현재 페이지가 1~10이면 10, 11~20이면 20)
@@ -241,6 +202,8 @@ export default function QuestionListPage() {
   const changePage = (selectPage: number) => {
     if (selectPage > totalPages) {
       setSPage(totalPages - 1);
+    } else if (selectPage < 1) {
+      setSPage(0);
     } else {
       setSPage(selectPage - 1);
     }
@@ -280,6 +243,10 @@ export default function QuestionListPage() {
 
   return (
     <section className="qna-list-page">
+      {/* <p>spage: {spage}</p>
+      <p>cpage: {cpage}</p>
+      <p>pageQuery: {pageQuery}</p>
+      <p>totalPages: {totalPages}</p> */}
       <article className="qna-header">
         <h2 className="title">질의응답</h2>
         <button
@@ -288,23 +255,39 @@ export default function QuestionListPage() {
         >
           질문하기
         </button>
-        <div className="select-orderby-type">
-          <button type="button" className="orderby-new" onClick={orderByNew}>
-            최신순
-          </button>
-          <button type="button" className="orderby-vote" onClick={orderByVote}>
-            평점순
-          </button>
-          <button
-            type="button"
-            className="filter-noanswer"
-            onClick={filterNoAnswer}
-          >
-            답변없는 질문
-          </button>
-        </div>
       </article>
       <article className="qna-list-container">
+        <div className="select-orderby-type">
+          <div className="orderby-box">
+            <button
+              type="button"
+              className={`order-btn ${
+                sortByQuery === "createdAt" ? "active-tap" : ""
+              }`}
+              onClick={orderByNew}
+            >
+              최신순
+            </button>
+            <button
+              type="button"
+              className={`order-btn ${
+                sortByQuery === "voteCount" ? "active-tap" : ""
+              }`}
+              onClick={orderByVote}
+            >
+              평점순
+            </button>
+            <button
+              type="button"
+              className={`order-btn ${
+                sortByQuery === "noAnswer" ? "active-tap" : ""
+              }`}
+              onClick={filterNoAnswer}
+            >
+              답변없는 질문
+            </button>
+          </div>
+        </div>
         {loading ? <div className="qna-loading">로딩중 입니다...</div> : null}
         {noQuestion ? (
           <div className="qna-no-question">질문글이 없습니다.</div>
@@ -320,46 +303,71 @@ export default function QuestionListPage() {
             >
               <div className="qna-container-side">
                 <ul className="qna-state">
-                  <li className="count-vote">{qnaData.voteCount} 평점</li>
-                  <li className="count-answer">
+                  <li className="state-count count-vote">
+                    {qnaData.voteCount} 투표
+                  </li>
+                  <li className="state-count count-answer">
                     {qnaData.answerList.length} 답변
                   </li>
-                  <li className="count-view">{qnaData.viewCount} 열람</li>
+                  <li className="state-count count-view">
+                    {qnaData.viewCount} 열람
+                  </li>
                 </ul>
               </div>
-              <div className="qna-summary">
-                <div className="qna-summary-title">{qnaData.questionTitle}</div>
+              <div className="qna-summary-container">
+                <div className="qna-summary">
+                  <div className="qna-summary-title">
+                    {qnaData.questionTitle}
+                  </div>
 
-                <div className="qna-summary-content">
-                  {qnaData.questionContent}
+                  <div className="qna-summary-content">
+                    {qnaData.questionContent}
+                  </div>
                 </div>
 
                 <div className="qna-container-bottom">
                   <div className="qna-tag-list">
-                    {qnaData.tagNameList.map((tagList, idx) => {
-                      return (
-                        <div className="qna-tag" key={idx}>
-                          {tagList}
-                        </div>
-                      );
-                    })}
+                    {qnaData.tagNameList.length < 5
+                      ? qnaData.tagNameList.map((tagList, idx) => {
+                          return (
+                            <div className="qna-tag" key={idx}>
+                              {tagList}
+                            </div>
+                          );
+                        })
+                      : // 태그 수가 4개보다 많으면 4개까지만 출력 후 ... 표시
+                        [...qnaData.tagNameList.slice(0, 5)].map(
+                          (tagList, idx) => {
+                            return (
+                              <div className="qna-tag" key={idx}>
+                                {idx !== 4 ? tagList : "..."}
+                              </div>
+                            );
+                          }
+                        )}
                   </div>
                   <div className="qna-user-info">
                     <div className="qna-user-image-container">
                       <img
                         className="qna-user-image"
                         src={
-                          process.env.REACT_APP_STATIC_SERVER + "/default2.png"
+                          process.env.REACT_APP_STATIC_SERVER +
+                          "/" +
+                          qnaData.author.memberImg
                         }
                         alt="프로필사진"
                       />
                     </div>
                     <div className="qna-user-name">
                       {qnaData.author.memberName}
-                      <span>{qnaData.author.memberIdx}</span>
+                    </div>
+                    <div className="qna-user-rep">
+                      {qnaData.author.memberRep}
                     </div>
                     <div className="qna-created-at">
-                      {qnaData.createdAt.toString()}
+                      {qnaData.createdAt.toString().split("T")[0]}
+                      {/* <br /> */}
+                      {/* {qnaData.createdAt.toString().split("T")[1]} */}
                     </div>
                   </div>
                 </div>
@@ -373,43 +381,51 @@ export default function QuestionListPage() {
           총 {noQuestion ? 0 : qnaListData?.totalElements} 질문
         </div>
         <div className="pages-button">
-          {startPagePerTen === 1 ? null : (
-            <button
-              type="button"
-              onClick={() => changePage(1)}
-              className="page-button"
-            >
-              1
-            </button>
-          )}
-          {startPagePerTen === 1 ? null : (
-            <button
-              type="button"
-              onClick={() => changePage(cpage - 10)}
-              className="page-button"
-            >
-              이전
-            </button>
-          )}
+          {/* {startPagePerTen === 1 ? null : ( */}
+          <button
+            type="button"
+            onClick={() => changePage(1)}
+            className={`page-button ${
+              startPagePerTen === 1 ? "visibility-hidden" : ""
+            }`}
+          >
+            <FontAwesomeIcon icon={faAngleDoubleLeft} />
+          </button>
+          {/* )} */}
+          {/* {startPagePerTen === 1 ? null : ( */}
+          <button
+            type="button"
+            onClick={() => changePage(Number(pageQuery) - 10)}
+            className={`page-button prev-button ${
+              startPagePerTen === 1 ? "visibility-hidden" : ""
+            }`}
+          >
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
+          {/* )} */}
           {pagesRenderer()}
-          {totalPages <= endPagePerTen ? null : (
-            <button
-              type="button"
-              onClick={() => changePage(cpage + 10)}
-              className="page-button"
-            >
-              다음
-            </button>
-          )}
-          {totalPages <= endPagePerTen ? null : (
-            <button
-              type="button"
-              onClick={() => changePage(totalPages)}
-              className="page-button"
-            >
-              {totalPages}
-            </button>
-          )}
+          {/* {totalPages <= endPagePerTen ? null : ( */}
+          <button
+            type="button"
+            onClick={() => changePage(Number(pageQuery) + 10)}
+            className={`page-button next-button ${
+              totalPages <= endPagePerTen ? "visibility-hidden" : ""
+            }`}
+          >
+            <FontAwesomeIcon icon={faAngleRight} />
+          </button>
+          {/* )} */}
+          {/* {totalPages <= endPagePerTen ? null : ( */}
+          <button
+            type="button"
+            onClick={() => changePage(totalPages)}
+            className={`page-button ${
+              totalPages <= endPagePerTen ? "visibility-hidden" : ""
+            }`}
+          >
+            <FontAwesomeIcon icon={faAngleDoubleRight} />
+          </button>
+          {/* )} */}
         </div>
       </article>
     </section>
