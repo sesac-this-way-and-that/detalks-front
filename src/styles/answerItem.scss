@@ -1,0 +1,40 @@
+.closed_container3 {
+  .section3_2 {
+    border: 1px solid black;
+    width: 100%;
+    .answerItem {
+      .part3_2 {
+        .section4_body {
+          .ql-syntax {
+            background-color: black;
+          }
+        }
+        #toolBar {
+          display: flex;
+          overflow: scroll;
+          .ql-formats {
+            display: flex;
+          }
+        }
+        .quill {
+          height: 220px;
+          .ql-snow {
+            .ql-editor {
+              .ql-syntax {
+                background-color: lightgray;
+                color: black;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 738px) {
+  #toolBar {
+    display: flex;
+    overflow: initial;
+  }
+}

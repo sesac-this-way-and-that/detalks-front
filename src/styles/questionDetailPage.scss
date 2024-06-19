@@ -4,18 +4,8 @@
     .closed_header {
       margin-bottom: 20px;
       display: flex;
-      justify-content: space-between;
       .headerTitle {
         font-size: 30px;
-      }
-
-      .closed_askQBtn {
-        border: none;
-        border-radius: 5px;
-        color: #ffffff;
-        background-color: #1b75d0;
-        padding: 10px;
-        cursor: pointer;
       }
     }
     .question_container {
@@ -60,7 +50,7 @@
 
       .question_section3 {
         display: flex;
-        margin-bottom: 5px;
+        margin-bottom: 20px;
         .section3_sideBar {
           padding: 0 16px 0 0;
           text-align: center;
@@ -86,10 +76,7 @@
           flex-direction: column;
           padding: 0px 12px;
           width: 100%;
-          .tagList {
-            margin-bottom: 10px;
-            font-size: 21px;
-          }
+
           .section3_body {
             height: 163px;
             text-overflow: ellipsis;
@@ -105,6 +92,19 @@
               background-color: hsl(210, 8%, 85%);
               // width: fit-content;
               font-size: 17px;
+            }
+          }
+          .tagList_container {
+            display: flex;
+            .tagList {
+              display: inline-block;
+              border-radius: 15px;
+              border: 1px solid #aaa;
+              background-color: #eee;
+              padding: 2px 13px;
+              font-size: 14px;
+              margin-right: 8px;
+              max-width: 95px;
             }
           }
         }

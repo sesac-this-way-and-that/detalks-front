@@ -7,19 +7,24 @@ import { useInfoStore } from "../../store";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ReactQuillModule from "./ReactQuillModule";
-import dompurify from "dompurify";
 import hljs from "highlight.js";
+import { useNavigate } from "react-router-dom";
 import "highlight.js/styles/github.css";
 import "../../styles/answerCreate.scss";
 
 interface AnswerProps {
   questionId: string | undefined;
+  refreshAnswers: () => void;
 }
 
-export default function AnswerCreate({ questionId }: AnswerProps) {
+export default function AnswerCreate({
+  questionId,
+  refreshAnswers,
+}: AnswerProps) {
   const { authToken } = authStore();
   const QuillRef = useRef<ReactQuill>();
   const [contents, setContents] = useState("");
+  const navigate = useNavigate();
 
   // editor 설정
   const formats: string[] = [
@@ -64,6 +69,7 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
 
     if (!authToken) {
       alert("답변을 제출하려면 로그인이 필요합니다.");
+      navigate("/login");
       return;
     }
 
@@ -81,6 +87,7 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
       console.log("답변 제출:", response.data);
       setContents("");
       alert("답변이 성공적으로 작성되었습니다.");
+      refreshAnswers();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios 에러:", error.message);
@@ -114,13 +121,14 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
         </div>
       </div>
       <div className="closedBtn_container">
-        <button type="submit" className="answerSubmitBtn" onClick={handleSubmit}>
+        <button
+          type="submit"
+          className="answerSubmitBtn"
+          onClick={handleSubmit}
+        >
           답변 제출
         </button>
       </div>
-      {/* {!!answerData && !isEditMode && (
-        <p>이미 이 질문에 대한 답변을 제출하셨습니다.</p>
-      )} */}
     </div>
   );
 }

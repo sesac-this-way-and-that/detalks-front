@@ -47,9 +47,10 @@ section {
 }
 
 // 코드 블럭
-.hljs {
-  display: block;
-  padding: 0.5em;
-  background: #f5f5f5;
-  color: #333;
+.ql-syntax {
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #e8e8e8;
+  color: #000000;
+  overflow: visible;
 }

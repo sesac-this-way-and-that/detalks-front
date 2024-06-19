@@ -1,4 +1,6 @@
 import { AnswerDetail, AnswerVote } from "../../types/question";
+import { QuestionDetail } from "../../types/question";
+import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useInfoStore } from "../../store";
@@ -10,25 +12,30 @@ import ReactQuillModule from "./ReactQuillModule";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import "../../styles/index.scss";
-import { userInfo } from "os";
 
 interface AnswerItemProps {
   answer: AnswerDetail;
-
   refreshAnswers: () => Promise<void>;
+  isQuestionAuthor: boolean;
+  handleSelectAnswer: (answerId: string) => Promise<void>;
 }
 
 export default function AnswerItem({
   answer,
   refreshAnswers,
+  isQuestionAuthor,
+  handleSelectAnswer,
 }: AnswerItemProps) {
   const { authToken } = authStore();
   const userData = useInfoStore((state) => state.userInfo);
+  const [questionData, setQuestionData] = useState<QuestionDetail>();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(answer.answerContent);
   const QuillRef = useRef<ReactQuill>();
+  const navigate = useNavigate();
   const [voteCount, setVoteCount] = useState<number>(answer.voteCount);
   const [voteState, setVoteState] = useState<null | boolean>(null); // null: no vote, true: like, false: dislike
+  const [selected, setSelected] = useState(answer.isSelected);
 
   // 수정
   const handleEdit = () => {
@@ -129,10 +136,20 @@ export default function AnswerItem({
 
   // 취소 있는 버전
   const handleVoteIncrement = async () => {
+    if (!authToken) {
+      alert("투표하려면 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
     if (voteState === true) {
       // 이미 좋아요를 누른 경우 취소
       const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
       try {
+        if (!authToken) {
+          alert("투표하려면 로그인이 필요합니다.");
+          navigate("/login");
+          return;
+        }
         await axios.delete(url, {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -167,6 +184,11 @@ export default function AnswerItem({
   };
 
   const handleVoteDecrement = async () => {
+    if (!authToken) {
+      alert("투표하려면 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
     if (voteState === false) {
       // 이미 싫어요를 누른 경우 취소
       const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
@@ -181,6 +203,7 @@ export default function AnswerItem({
         await refreshAnswers();
       } catch (error) {
         console.error("투표 취소 오류: ", error);
+        alert("투표 취소 오류");
       }
     } else {
       // 싫어요 추가
@@ -200,7 +223,24 @@ export default function AnswerItem({
         await refreshAnswers();
       } catch (error) {
         console.error("투표 취소 오류: ", error);
+        alert("투표 취소 오류");
       }
+    }
+  };
+
+  // 답변 채택
+  const handleClick = () => {
+    if (isQuestionAuthor && !selected) {
+      handleSelectAnswer(answer.answerId)
+        .then(() => {
+          setSelected(true);
+        })
+        .catch((error) => {
+          console.error("답변 채택 에러:", error);
+          alert("답변 채택에 실패했습니다. >>");
+        });
+    } else {
+      alert("이미 채택된 답변입니다.");
     }
   };
 
@@ -228,8 +268,8 @@ export default function AnswerItem({
           <div className="area1">
             <div className="profileStats statsList">
               <img
-                src={userData?.img}
-                alt=""
+                src={process.env.REACT_APP_STATIC_SERVER + "/" + userData?.img}
+                alt={userData?.img}
                 style={{
                   width: "20px",
                   height: "20px",
@@ -243,7 +283,7 @@ export default function AnswerItem({
           </div>
           <div className="area2">
             <div className="profileStats statsList">
-              {new Date(answer.createdAt).toLocaleString()}
+              {answer.createdAt.toString().split("T")[0]}
             </div>
           </div>
         </div>
@@ -273,6 +313,17 @@ export default function AnswerItem({
                 className="section4_body"
                 dangerouslySetInnerHTML={{ __html: answer.answerContent }}
               />
+            )}
+          </div>
+          <div>
+            {/* 채택 */}
+            {isQuestionAuthor && !selected && (
+              <button onClick={handleClick}>답변 채택</button>
+            )}
+            {selected && (
+              <div>
+                <span>채택됨</span>
+              </div>
             )}
           </div>
           <div className="answer_actions">
