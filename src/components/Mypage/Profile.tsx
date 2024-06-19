@@ -65,7 +65,7 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
               </div>
               <div>
                 <p>0</p>
-                <p>팔로워</p>
+                <p>북마크</p>
               </div>
             </div>
             <div className="box2">
@@ -110,7 +110,7 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
                           {question.voteCount} 투표
                         </span>
                       ) : (
-                        <span>{question.voteCount} 투</span>
+                        <span>{question.voteCount} 투표</span>
                       )}
                     </li>
                     <li>
