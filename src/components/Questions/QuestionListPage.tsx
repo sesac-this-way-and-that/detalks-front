@@ -9,6 +9,7 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Question {
@@ -302,19 +303,22 @@ export default function QuestionListPage() {
         ) : null}
         {qnaListData?.content.map((qnaData) => {
           return (
-            <div
-              className="qna-container"
-              key={qnaData.questionId}
-              onClick={() => {
-                navigate(`/question/${qnaData.questionId}`);
-              }}
-            >
+            <div className="qna-container">
               <div className="qna-container-side">
                 <ul className="qna-state">
                   <li className="state-count count-vote">
                     {qnaData.voteCount} 투표
                   </li>
                   <li className="state-count count-answer">
+                    {qnaData.answerList.length !== 0 && (
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        style={{
+                          color: "#0c7cc2",
+                          paddingTop: "3px",
+                        }}
+                      />
+                    )}
                     {qnaData.answerList.length} 답변
                   </li>
                   <li className="state-count count-view">
@@ -328,7 +332,13 @@ export default function QuestionListPage() {
                     {qnaData.questionTitle}
                   </div>
 
-                  <div className="qna-summary-content">
+                  <div
+                    className="qna-summary-content"
+                    key={qnaData.questionId}
+                    onClick={() => {
+                      navigate(`/question/${qnaData.questionId}`);
+                    }}
+                  >
                     {qnaData.questionContent}
                   </div>
                 </div>
