@@ -30,6 +30,7 @@ export default function QuestionDetailPage() {
   const [isAnswerVoted, setIsAnswerVoted] = useState<boolean>(false);
 
   const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
+
   const handleVoteIncrement = async () => {
     const url = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}?voteState=true`;
     try {
@@ -293,23 +294,53 @@ export default function QuestionDetailPage() {
     }
   };
 
-  // --- 답변
-  const handleEditAnswer = (answerId: string, content: string) => {
-    navigate(`/answer/update/${answerId}`);
-  };
-
-  const handleDeleteAnswer = async (answerId: string) => {
-    const url = `${process.env.REACT_APP_API_SERVER}/answers/${answerId}`;
+  // [답변]
+  // 답변 재 랜더링
+  const refreshAnswers = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
     try {
-      await axios.delete(url, {
+      const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log("답변이 성공적으로 삭제되었습니다.");
-      handleSelectedQuesId();
+
+      setQuestionData(response.data.data);
     } catch (error) {
-      console.error("에러 :", error);
+      console.error("Unexpected error:", error);
+    }
+  };
+
+  // 답변 채택
+  const handleSelectAnswer = async (answerId: string) => {
+    // try {
+    const response = await axios.patch(
+      `/api/questions/${questionData?.questionId}/${answerId}/select`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.data.result) {
+      if (questionData) {
+        const updatedQuestion: QuestionDetail = {
+          ...questionData,
+          answerList: questionData.answerList.map((answer) =>
+            answer.answerId === answerId
+              ? { ...answer, selected: true }
+              : answer
+          ),
+          isSolved: true,
+        };
+        setQuestionData(updatedQuestion);
+        alert("답변이 성공적으로 채택되었습니다.");
+        window.location.reload();
+      }
+    } else {
+      alert("답변 채택에 실패했습니다..");
+      window.location.reload();
     }
   };
 
@@ -436,6 +467,8 @@ export default function QuestionDetailPage() {
           key={answer.answerId}
           answer={answer}
           refreshAnswers={refreshAnswers}
+          isQuestionAuthor={userData?.idx === questionData.author.memberIdx}
+          handleSelectAnswer={handleSelectAnswer}
         />
       ))}
       <article className="closed_container4">

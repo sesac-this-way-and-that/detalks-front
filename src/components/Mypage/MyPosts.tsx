@@ -273,9 +273,11 @@ const MyPosts: React.FC = () => {
                       <span>{question.voteCount} 투표</span>
                     </li>
                     <li>
-                      <span>
-                        {getDisplayName(question.titleOrContent || "")}
-                      </span>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: question.titleOrContent,
+                        }}
+                      />
                     </li>
                     <li>{question.createdAt}</li>
                   </ul>
