@@ -8,8 +8,8 @@
 }
 
 // 변수
-$desktop: 1200px;
-$notebook: 992px;
+$desktop: 1500px;
+$notebook: 1200px;
 $tablet: 768px;
 $mobile: 480px;
 
@@ -246,7 +246,7 @@ $mobile: 480px;
     }
   }
 }
-@media (min-width: $desktop) {
+@media (min-width: $notebook) {
   .container {
     max-width: 1140px;
   }
@@ -433,13 +433,13 @@ $mobile: 480px;
 }
 
 // 노트북
-@media (min-width: $notebook) and (max-width: $desktop) {
+@media (min-width: $tablet) and (max-width: $notebook) {
   .container {
     max-width: 960px;
   }
 }
 
-@media screen and (max-width: $notebook) {
+@media screen and (max-width: $tablet) {
   .container {
     width: 100%;
   }
