@@ -91,7 +91,6 @@ export default function QuestionListPage() {
 
   const [noQuestion, setNoQuestion] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-
   // state 관련
   const [qnaListData, setQnaListData] = useState<QnaListData | null>();
   const [spage, setSPage] = useState<number>();
