@@ -322,11 +322,6 @@ export default function QuestionDetailPage() {
       alert("답변 채택에 실패했습니다..");
       window.location.reload();
     }
-    // } catch (error) {
-    //   console.error("답변 채택 에러:", error);
-    //   alert("답변 채택에 실패했습니다.");
-    //   throw new Error();
-    // }
   };
 
   return (
@@ -403,7 +398,7 @@ export default function QuestionDetailPage() {
                 )}
               </div>
               <div className="solvedMark">
-                {questionData?.answerList.length !== 0 ? (
+                {questionData?.isSolved ? (
                   <FontAwesomeIcon
                     icon={faCheck}
                     style={{ color: "hsl(148, 70%, 31%)" }}
