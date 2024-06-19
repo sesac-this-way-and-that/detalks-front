@@ -52,6 +52,10 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
       });
   }, [userData?.idx]);
 
+  const getDisplayName = (name: string) => {
+    return name.length > 20 ? name.slice(0, 20) + "..." : name;
+  };
+
   return (
     <>
       <div className="mypage-profile-container">
@@ -64,8 +68,8 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
                 <p>평가</p>
               </div>
               <div>
-                <p>0</p>
-                <p>팔로워</p>
+                <p>{userData?.bookmarkCount ? userData?.bookmarkCount : 0}</p>
+                <p>북마크</p>
               </div>
             </div>
             <div className="box2">
@@ -96,25 +100,25 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
                 <Link to={`/question/${question.questionId}`} key={question.id}>
                   <ul>
                     <li>
-                      {question.isSelected ? (
-                        <span className="is-solved">
-                          {question.isQuestion ? <>Q</> : <>A</>}
+                      {question.isQuestion ? (
+                        <span className={question.isSolved ? "is-solved" : ""}>
+                          Q
                         </span>
                       ) : (
-                        <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                        <span
+                          className={question.isSelected ? "is-selected" : ""}
+                        >
+                          A
+                        </span>
                       )}
                     </li>
                     <li>
-                      {question.isSelected ? (
-                        <span className="is-selected">
-                          {question.voteCount} 투표
-                        </span>
-                      ) : (
-                        <span>{question.voteCount} 투</span>
-                      )}
+                      <span>{question.voteCount} 투표</span>
                     </li>
                     <li>
-                      <span>{question.titleOrContent}</span>
+                      <span>
+                        {getDisplayName(question.titleOrContent || "")}
+                      </span>
                     </li>
                     <li>{question.createdAt}</li>
                   </ul>
