@@ -9,7 +9,7 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
-  faCheck,
+  faAward,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Question {
@@ -101,6 +101,7 @@ export default function QuestionListPage() {
   // const [sortDESC, setSortDESC] = useState<boolean>(true);
   const [filterByAnswer, setFilterByAnswer] = useState<boolean>(false);
 
+  // 마운트 시 작동
   useEffect(() => {
     if (!pageQuery) setSPage(0);
     else if (Number(pageQuery) > 0) setSPage(Number(pageQuery) - 1);
@@ -111,6 +112,7 @@ export default function QuestionListPage() {
     else setSortBy(sortByQuery);
   }, []);
 
+  // 마운트 & 업데이트 시 작동
   useEffect(() => {
     setLoading(true);
     if (state /* && state.searchResults */) {
@@ -128,37 +130,60 @@ export default function QuestionListPage() {
     }
   }, [spage, state, sortBy, filterByAnswer]);
 
+  // 언마운트 시 작동
+  useEffect(() => {
+    return () => {
+      // setNoQuestion(false);
+      // setFilterByAnswer(false);
+    };
+  }, []);
+
   const getQuestionList = async (spage: number) => {
     try {
       if (!filterByAnswer) {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        let listData = response.data.data;
+
+        console.log("response: ", response.data);
+
+        // if (sortDESC) {
+        //   setQnaList(listData.content);
+        // } else {
+        //   setQnaList(listData.content.reverse());
+        // }
+        setNoQuestion(false);
+        setQnaListData(listData);
+        setTotalPages(listData.totalPages);
+        setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
+      } else {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_SERVER}/questions/unAnswered?page=${spage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        let listData = response.data.data;
+
+        console.log("response: ", response.data);
+
+        setNoQuestion(false);
+        setQnaListData(listData);
+        setTotalPages(listData.totalPages);
+        setSearchParams({ page: `${spage + 1}` });
       }
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      let listData = response.data.data;
-
-      console.log("response: ", response.data);
-
-      // if (sortDESC) {
-      //   setQnaList(listData.content);
-      // } else {
-      //   setQnaList(listData.content.reverse());
-      // }
-      setNoQuestion(false);
-      setQnaListData(listData);
-      setTotalPages(listData.totalPages);
-      setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
     } catch (error: any) {
-      // if (error.response.status === 404) {
-      setNoQuestion(true);
-      // } else {
-      //   console.log(error.response.data);
-      // }
+      if (error.response.status === 404) {
+        setNoQuestion(true);
+      }
       console.error("error: ", error);
     } finally {
       setLoading(false);
@@ -172,18 +197,22 @@ export default function QuestionListPage() {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("createdAt");
-    // setSPage(0);
+    setFilterByAnswer(false);
+    setSPage(0);
   };
   const orderByVote = () => {
     // if (sortBy === "voteCount") {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("voteCount");
-    // setSPage(0);
+    setFilterByAnswer(false);
+    setSPage(0);
   };
   const filterNoAnswer = () => {
-    console.log(filterByAnswer);
+    // console.log(filterByAnswer);
     setFilterByAnswer(!filterByAnswer);
+    setSortBy("createdAt");
+    setSPage(0);
   };
 
   // 페이지네이션 기능
@@ -280,7 +309,7 @@ export default function QuestionListPage() {
             <button
               type="button"
               className={`order-btn ${
-                sortByQuery === "noAnswer" ? "active-tap" : ""
+                filterByAnswer === true ? "active-tap" : ""
               }`}
               onClick={filterNoAnswer}
             >
@@ -303,22 +332,44 @@ export default function QuestionListPage() {
         ) : null}
         {qnaListData?.content.map((qnaData) => {
           return (
-            <div className="qna-container">
+            <div
+              className="qna-container"
+              key={qnaData.questionId}
+              onClick={() => {
+                navigate(`/question/${qnaData.questionId}`);
+              }}
+            >
               <div className="qna-container-side">
                 <ul className="qna-state">
-                  <li className="state-count count-vote">
+                  <li
+                    className={`state-count count-vote ${
+                      qnaData.voteCount === 0
+                        ? "vote-zero"
+                        : qnaData.voteCount > 0
+                        ? "vote-plus"
+                        : "vote-minus"
+                    }`}
+                  >
                     {qnaData.voteCount} 투표
                   </li>
-                  <li className="state-count count-answer">
-                    {qnaData.answerList.length !== 0 && (
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        style={{
-                          color: "#0c7cc2",
-                          paddingTop: "3px",
-                        }}
-                      />
-                    )}
+                  {/* 답변이 없으면 회색 글씨, 답변이 있으면 파란색 글씨
+                   채택된 답변이 있으면 테두리와 아이콘 */}
+                  <li
+                    className={`state-count count-answer 
+                      ${
+                        qnaData.answerCount === 0
+                          ? ""
+                          : qnaData.isSolved
+                          ? "qna-solved"
+                          : "exist-answer"
+                      }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faAward}
+                      className={`award-icon ${
+                        qnaData.isSolved ? "qna-solved" : "display-none"
+                      }`}
+                    />
                     {qnaData.answerList.length} 답변
                   </li>
                   <li className="state-count count-view">
@@ -334,13 +385,10 @@ export default function QuestionListPage() {
 
                   <div
                     className="qna-summary-content"
-                    key={qnaData.questionId}
-                    onClick={() => {
-                      navigate(`/question/${qnaData.questionId}`);
+                    dangerouslySetInnerHTML={{
+                      __html: qnaData.questionContent, // html 태그가 있을 시 제거
                     }}
-                  >
-                    {qnaData.questionContent}
-                  </div>
+                  ></div>
                 </div>
 
                 <div className="qna-container-bottom">
@@ -373,7 +421,6 @@ export default function QuestionListPage() {
                           "/" +
                           qnaData.author.memberImg
                         }
-                        alt="프로필사진"
                       />
                     </div>
                     <div className="qna-user-name">
