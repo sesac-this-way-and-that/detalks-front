@@ -1,5 +1,5 @@
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faGithub } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 export default function SocialAccount(props: any) {
   const onGoogleLogin = () => {
@@ -8,12 +8,12 @@ export default function SocialAccount(props: any) {
   return (
     <article className="socialContainer">
       <button className="googleAccountBtn" onClick={onGoogleLogin}>
-        GOOGLE로 {props.accessText} 하기
+        <FontAwesomeIcon icon={faGoogle} />
+        &nbsp; GOOGLE로 {props.accessText} 하기
       </button>
-      <button className="githubAccountBtn">
-        {/* <FontAwesomeIcon icon={faGithub} />  */}
+      {/* <button className="githubAccountBtn">
         GITHUB로 {props.accessText} 하기
-      </button>
+      </button> */}
     </article>
   );
 }
