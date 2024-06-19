@@ -8,7 +8,7 @@ import {
   KeyboardEvent,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useInfoStore } from "../store";
@@ -262,6 +262,16 @@ export default function Header(): JSX.Element {
           </ul>
         </div>
       </div>
+      <button
+        className={`${
+          getToken && window.location.pathname !== "/question/create"
+            ? "qna-write-question"
+            : "qna-write-question-none"
+        }`}
+        onClick={() => nav(`/question/create`)}
+      >
+        <FontAwesomeIcon icon={faPen} />
+      </button>
     </section>
   );
 }

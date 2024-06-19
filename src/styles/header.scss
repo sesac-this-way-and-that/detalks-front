@@ -245,6 +245,26 @@ $mobile: 480px;
       }
     }
   }
+  .qna-write-question {
+    position: fixed;
+    bottom: 70px;
+    right: 15vw;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 0;
+    background-color: $main-color;
+    color: $block-color;
+    font-size: 30px;
+    box-shadow: 1px 1px 5px #888;
+    &:hover {
+      cursor: pointer;
+      background-color: #1f5683;
+    }
+    &-none {
+      display: none;
+    }
+  }
 }
 @media (min-width: $notebook) {
   .container {
@@ -437,6 +457,14 @@ $mobile: 480px;
   .container {
     max-width: 960px;
   }
+  .headerWrapper {
+    .qna-write-question {
+      bottom: 70px;
+      right: 10vw;
+      width: 70px;
+      height: 70px;
+    }
+  }
 }
 
 @media screen and (max-width: $tablet) {
@@ -543,6 +571,13 @@ $mobile: 480px;
           width: 65%;
         }
       }
+    }
+    .qna-write-question {
+      bottom: 60px;
+      right: 8vw;
+      width: 50px;
+      height: 50px;
+      font-size: 22px;
     }
   }
 }
