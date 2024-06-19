@@ -215,6 +215,52 @@ $mobile: 480px;
           }
         }
       }
+      .qna-loading {
+        margin: auto;
+        font-size: 25px;
+        color: #ddd;
+        text-align: center;
+      }
+      .qna-empty {
+        margin: auto;
+        font-size: 25px;
+        color: #aaa;
+        text-align: center;
+        span {
+          display: block;
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  .qna-footer {
+    .pages-button {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 10px;
+      .page-button {
+        width: 30px;
+        height: 30px;
+        margin: 5px;
+        font-weight: bold;
+        background-color: #ffffff;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .prev-button {
+        margin-right: 15px;
+      }
+      .next-button {
+        margin-left: 15px;
+      }
+      .currentPage {
+        background-color: #1b75d0;
+        color: #fff;
+      }
     }
   }
   .qna-footer {
@@ -253,12 +299,13 @@ $mobile: 480px;
 @media (min-width: $tablet) and (max-width: $notebook) {
   .qna-list-page {
     width: 700px;
+    padding-top: 80px;
     .qna-list-container {
       .qna-container {
         min-height: 200px;
         display: flex;
         flex-direction: column;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         padding: 10px 20px;
         .qna-container-side {
           width: 100%;
@@ -275,6 +322,14 @@ $mobile: 480px;
 
         .qna-summary-container {
           width: 100%;
+          .qna-summary {
+            .qna-summary-content {
+              display: block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+          }
           .qna-container-bottom {
             flex-direction: column;
             align-items: start;
@@ -288,13 +343,12 @@ $mobile: 480px;
             justify-content: start;
             font-size: 15px;
             .qna-user-image-container {
-              // border-radius: 50%;
-              // width: 30px;
-              // height: 30px;
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
               .qna-user-image {
-                // border-radius: 50%;
-                // width: 30px;
-                // height: 30px;
+                width: 35px;
+                height: 35px;
               }
             }
             .qna-user-name {
@@ -306,9 +360,9 @@ $mobile: 480px;
               margin: 0 5px;
             }
             .qna-created-at {
-              width: 100px;
+              width: auto;
               position: relative;
-              left: 240px;
+              left: 260px;
             }
           }
         }
@@ -329,11 +383,13 @@ $mobile: 480px;
 @media (max-width: $tablet) {
   .qna-list-page {
     width: 380px;
+    padding-top: 70px;
     .qna-list-container {
       .qna-container {
         min-height: 170px;
         display: flex;
         flex-direction: column;
+        margin-bottom: 5px;
         padding: 7px;
         border-radius: 15px;
         .qna-container-side {
@@ -364,11 +420,19 @@ $mobile: 480px;
             }
             .qna-summary-content {
               font-size: 14px;
+              display: block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
             }
           }
           .qna-container-bottom {
             flex-direction: column;
             align-items: start;
+            .qna-user-name {
+              width: 80px;
+              margin: 0 5px;
+            }
             .qna-tag-list {
               width: 100%;
               margin-bottom: 10px;
@@ -386,6 +450,12 @@ $mobile: 480px;
               position: relative;
               left: 50px;
             }
+          }
+        }
+        .qna-empty {
+          font-size: 20px;
+          span {
+            font-size: 15px;
           }
         }
       }
