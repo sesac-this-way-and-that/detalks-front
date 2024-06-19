@@ -2,13 +2,14 @@ import "../styles/header.scss";
 import {
   useState,
   useEffect,
+  useRef,
   ChangeEvent,
   FormEvent,
   KeyboardEvent,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useInfoStore } from "../store";
 import authStore from "../store/authStore";
@@ -28,6 +29,8 @@ export default function Header(): JSX.Element {
   const removeToken = authStore((state) => state.removeAuthToken);
   const getToken = authStore((state) => state.authToken);
   const nav = useNavigate();
+  const location = useLocation();
+  const sidebarRef = useRef<HTMLUListElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const prevLocation = window.location.href;
 
@@ -125,6 +128,43 @@ export default function Header(): JSX.Element {
     }, 100);
   };
 
+  const handleSidebarToggle = () => {
+    const checkbox = document.querySelector<HTMLInputElement>(".toggle-menu");
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // console.log(sidebarRef);
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        const checkbox =
+          document.querySelector<HTMLInputElement>(".toggle-menu");
+        // console.log(checkbox);
+        if (checkbox) {
+          checkbox.checked = false;
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkbox = document.querySelector<HTMLInputElement>(".toggle-menu");
+    if (checkbox) {
+      checkbox.checked = false;
+    }
+  }, [location]);
+
   return (
     <section className="headerWrapper">
       <div className="headerContainer container">
@@ -136,7 +176,7 @@ export default function Header(): JSX.Element {
         </div>
         <div className="headerNavigation">
           <input type="checkbox" className="toggle-menu" />
-          <div className="hamburger"></div>
+          <div className="hamburger" onClick={handleSidebarToggle}></div>
 
           <form className="searchInput" onSubmit={handleFormSubmit}>
             <input
@@ -152,7 +192,10 @@ export default function Header(): JSX.Element {
             </button>
           </form>
           {isFocused && (
-            <div className="searchTooltip" onMouseDown={(e) => e.preventDefault()}>
+            <div
+              className="searchTooltip"
+              onMouseDown={(e) => e.preventDefault()}
+            >
               <p>검색어 예시</p>
               <p onClick={() => handleExampleClick("[title]: ")}>
                 [title]: title - 제목별 검색
@@ -168,7 +211,7 @@ export default function Header(): JSX.Element {
               </p>
             </div>
           )}
-          <ul className="headerMenu">
+          <ul className="headerMenu" ref={sidebarRef}>
             {getToken ? (
               <li className="myname-mobile">
                 <Link to={`/mypage/${userData?.idx}`}>

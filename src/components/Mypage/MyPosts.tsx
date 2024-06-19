@@ -5,6 +5,7 @@ import authStore from "../../store/authStore";
 import { Link, useParams } from "react-router-dom";
 
 interface Question {
+  bookmarkId?: number;
   id: number;
   titleOrContent: string;
   isQuestion: boolean;
@@ -185,6 +186,10 @@ const MyPosts: React.FC = () => {
     }
   };
 
+  const getDisplayName = (name: string) => {
+    return name.length > 20 ? name.slice(0, 20) + "..." : name;
+  };
+
   return (
     <>
       <h3>내 활동</h3>
@@ -252,25 +257,25 @@ const MyPosts: React.FC = () => {
                 <Link to={`/question/${question.questionId}`} key={question.id}>
                   <ul>
                     <li>
-                      {question.isSelected ? (
-                        <span className="is-solved">
-                          {question.isQuestion ? <>Q</> : <>A</>}
+                      {question.isQuestion || question.bookmarkId ? (
+                        <span className={question.isSolved ? "is-solved" : ""}>
+                          Q
                         </span>
                       ) : (
-                        <span>{question.isQuestion ? <>Q</> : <>A</>}</span>
+                        <span
+                          className={question.isSelected ? "is-selected" : ""}
+                        >
+                          A
+                        </span>
                       )}
                     </li>
                     <li>
-                      {question.isSelected ? (
-                        <span className="is-selected">
-                          {question.voteCount} 투표
-                        </span>
-                      ) : (
-                        <span>{question.voteCount} 투표</span>
-                      )}
+                      <span>{question.voteCount} 투표</span>
                     </li>
                     <li>
-                      <span>{question.titleOrContent}</span>
+                      <span>
+                        {getDisplayName(question.titleOrContent || "")}
+                      </span>
                     </li>
                     <li>{question.createdAt}</li>
                   </ul>
