@@ -125,27 +125,6 @@ export default function QuestionDetailPage() {
     }
   };
 
-  // 답변 재 랜더링
-  const refreshAnswers = async () => {
-    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      setQuestionData(response.data.data);
-      // [추가] 이미 답변된 질문인지 확인
-      const userAnswer = response.data.data.answerList.find(
-        (answer: any) => answer.author.memberIdx === userData?.idx
-      );
-      console.log("response.data.data: ", response.data.data);
-      setHasUserAnswered(!!userAnswer);
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    }
-  };
-
   const handleDeleteQuestion = async () => {
     const urlVotes = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}`;
     try {
@@ -304,8 +283,13 @@ export default function QuestionDetailPage() {
           Authorization: `Bearer ${authToken}`,
         },
       });
-
       setQuestionData(response.data.data);
+      // [추가] 이미 답변된 질문인지 확인
+      const userAnswer = response.data.data.answerList.find(
+        (answer: any) => answer.author.memberIdx === userData?.idx
+      );
+      console.log("response.data.data: ", response.data.data);
+      setHasUserAnswered(!!userAnswer);
     } catch (error) {
       console.error("Unexpected error:", error);
     }
