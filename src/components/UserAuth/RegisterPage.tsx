@@ -82,7 +82,7 @@ export default function RegisterPage() {
       setNameValid(false);
       setPwdValid(false);
     } else {
-      alert("잘못된 입력값이 있습니다.");
+      alert("잘못된 입력값이 있습니다. 수정 후 다시 시도해주세요.");
     }
   };
 

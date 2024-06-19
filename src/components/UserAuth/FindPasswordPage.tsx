@@ -58,7 +58,6 @@ export default function FindPasswordPage() {
     } else {
       alert("올바른 이메일을 입력해주세요.");
     }
-    setBeforeSendMail(!beforeSendMail);
   };
 
   const submitFunc = (e: React.FormEvent<HTMLFormElement>) => {
