@@ -22,6 +22,7 @@ export default function QuestionCreateAndModifyPage() {
   const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
   const [formattedText, setFormattedText] = useState<string>("");
   const [tagInptValue, setTagInputValue] = useState<string>("");
+  const [reputationInputValue, setReputationInputValue] = useState<number>();
   const [tagOutputvalue, setTagOutputValue] = useState<string[]>([]);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -41,10 +42,11 @@ export default function QuestionCreateAndModifyPage() {
             },
           });
           const questionData = response.data.data;
-          console.log("what: ", questionData);
           setApplicationContent(questionData.questionTitle);
           setTextAreaInputValue(questionData.questionContent);
           setTagOutputValue(questionData.tagNameList);
+          setReputationInputValue(questionData.questionRep);
+          setContents(questionData.questionContent);
         } catch (error) {
           console.error("Error fetching question data:", error);
         }
@@ -95,6 +97,20 @@ export default function QuestionCreateAndModifyPage() {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    if (!applicationContent.trim()) {
+      alert("제목을 작성해주세요.");
+      return;
+    }
+    if (!contents.trim()) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+    if (tagOutputvalue.length === 0) {
+      alert("태그를 작성해주세요.");
+      return;
+    }
+
     const url = questionId
       ? `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`
       : `${process.env.REACT_APP_API_SERVER}/questions`;
@@ -109,6 +125,7 @@ export default function QuestionCreateAndModifyPage() {
       // questionContent: textAreaInputValue,
       questionContent: newContent,
       tagNames: tagOutputvalue,
+      questionRep: reputationInputValue,
     };
 
     try {
@@ -127,7 +144,8 @@ export default function QuestionCreateAndModifyPage() {
       navigate(`/questions`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.message);
+        alert(error.response?.data.errorType);
+        console.error("Axios error:", error);
       } else {
         console.error("Unexpected error:", error);
       }
@@ -263,6 +281,17 @@ export default function QuestionCreateAndModifyPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+        <div className="reputation_container">
+          <h1 className="subTitle">현상금 작성해주세요.</h1>
+          <div className="tag_input">
+            <input
+              type="number"
+              placeholder="현상금"
+              value={reputationInputValue}
+              onChange={(e) => setReputationInputValue(Number(e.target.value))}
+            />
           </div>
         </div>
       </article>
