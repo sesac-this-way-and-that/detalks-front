@@ -293,33 +293,40 @@ export default function QuestionDetailPage() {
 
   // 답변 채택
   const handleSelectAnswer = async (answerId: string) => {
-    try {
-      const response = await axios.post(
-        `/api/questions/${questionData?.questionId}/${answerId}/select`
-      );
-      if (response.data.result) {
-        if (questionData) {
-          const updatedQuestion: QuestionDetail = {
-            ...questionData,
-            answerList: questionData.answerList.map((answer) =>
-              answer.answerId === answerId
-                ? { ...answer, selected: true }
-                : answer
-            ),
-            isSolved: true,
-          };
-          setQuestionData(updatedQuestion);
-          alert("답변이 성공적으로 채택되었습니다.");
-          window.location.reload();
-        }
-      } else {
-        alert("답변 채택에 실패했습니다..");
+    // try {
+    const response = await axios.patch(
+      `/api/questions/${questionData?.questionId}/${answerId}/select`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.data.result) {
+      if (questionData) {
+        const updatedQuestion: QuestionDetail = {
+          ...questionData,
+          answerList: questionData.answerList.map((answer) =>
+            answer.answerId === answerId
+              ? { ...answer, selected: true }
+              : answer
+          ),
+          isSolved: true,
+        };
+        setQuestionData(updatedQuestion);
+        alert("답변이 성공적으로 채택되었습니다.");
         window.location.reload();
       }
-    } catch (error) {
-      console.error("답변 채택 에러:", error);
-      alert("답변 채택에 실패했습니다.");
+    } else {
+      alert("답변 채택에 실패했습니다..");
+      window.location.reload();
     }
+    // } catch (error) {
+    //   console.error("답변 채택 에러:", error);
+    //   alert("답변 채택에 실패했습니다.");
+    //   throw new Error();
+    // }
   };
 
   return (

@@ -7,7 +7,6 @@ import { useInfoStore } from "../../store";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import ReactQuillModule from "./ReactQuillModule";
-import dompurify from "dompurify";
 import hljs from "highlight.js";
 import { useNavigate } from "react-router-dom";
 import "highlight.js/styles/github.css";
@@ -125,9 +124,6 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
           답변 제출
         </button>
       </div>
-      {/* {!!answerData && !isEditMode && (
-        <p>이미 이 질문에 대한 답변을 제출하셨습니다.</p>
-      )} */}
     </div>
   );
 }

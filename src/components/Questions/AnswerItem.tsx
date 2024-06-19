@@ -145,7 +145,10 @@ export default function AnswerItem({
       // 이미 좋아요를 누른 경우 취소
       const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
       try {
-        if (authToken == null) {
+        if (!authToken) {
+          alert("투표하려면 로그인이 필요합니다.");
+          navigate("/login");
+          return;
         }
         await axios.delete(url, {
           headers: {
