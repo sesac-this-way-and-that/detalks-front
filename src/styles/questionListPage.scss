@@ -33,13 +33,18 @@ $mobile: 480px;
     .qna-write-question {
       border: none;
       border-radius: 5px;
-      color: #ffffff;
+      color: black;
       font-size: 17px;
-      background-color: $main-color;
-      padding: 5px;
-      width: 90px;
-      height: 45px;
-      cursor: pointer;
+      background-color: $block-color;
+      padding: 5px 15px;
+      box-shadow: 1px 1px 3px gray;
+      &:hover {
+        cursor: pointer;
+        color: $block-color;
+        background-color: $main-color;
+        box-shadow: none;
+        font-weight: bold;
+      }
     }
   }
 
@@ -102,8 +107,16 @@ $mobile: 480px;
             padding: 2px 5px;
             margin-bottom: 5px;
           }
-          .count-vote {
-            color: $main-color;
+          .count-vote.vote {
+            &-plus {
+              color: $main-color;
+            }
+            &-zero {
+              color: #888;
+            }
+            &-minus {
+              color: #e75123;
+            }
           }
           .count-answer {
             color: #888;
@@ -140,6 +153,9 @@ $mobile: 480px;
             color: $deep-blue-color;
             font-weight: 900;
             font-size: 20px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
 
           .qna-summary-content {

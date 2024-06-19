@@ -101,6 +101,7 @@ export default function QuestionListPage() {
   // const [sortDESC, setSortDESC] = useState<boolean>(true);
   const [filterByAnswer, setFilterByAnswer] = useState<boolean>(false);
 
+  // 마운트 시 작동
   useEffect(() => {
     if (!pageQuery) setSPage(0);
     else if (Number(pageQuery) > 0) setSPage(Number(pageQuery) - 1);
@@ -111,6 +112,7 @@ export default function QuestionListPage() {
     else setSortBy(sortByQuery);
   }, []);
 
+  // 마운트 & 업데이트 시 작동
   useEffect(() => {
     setLoading(true);
     if (state /* && state.searchResults */) {
@@ -127,6 +129,14 @@ export default function QuestionListPage() {
       getQuestionList(spage == null ? 0 : spage);
     }
   }, [spage, state, sortBy, filterByAnswer]);
+
+  // 언마운트 시 작동
+  useEffect(() => {
+    return () => {
+      // setNoQuestion(false);
+      // setFilterByAnswer(false);
+    };
+  }, []);
 
   const getQuestionList = async (spage: number) => {
     try {
@@ -171,11 +181,9 @@ export default function QuestionListPage() {
         setSearchParams({ page: `${spage + 1}` });
       }
     } catch (error: any) {
-      // if (error.response.status === 404) {
-      setNoQuestion(true);
-      // } else {
-      //   console.log(error.response.data);
-      // }
+      if (error.response.status === 404) {
+        setNoQuestion(true);
+      }
       console.error("error: ", error);
     } finally {
       setLoading(false);
@@ -190,7 +198,7 @@ export default function QuestionListPage() {
     // }
     setSortBy("createdAt");
     setFilterByAnswer(false);
-    // setSPage(0);
+    setSPage(0);
   };
   const orderByVote = () => {
     // if (sortBy === "voteCount") {
@@ -198,12 +206,13 @@ export default function QuestionListPage() {
     // }
     setSortBy("voteCount");
     setFilterByAnswer(false);
-    // setSPage(0);
+    setSPage(0);
   };
   const filterNoAnswer = () => {
-    console.log(filterByAnswer);
+    // console.log(filterByAnswer);
     setFilterByAnswer(!filterByAnswer);
     setSortBy("createdAt");
+    setSPage(0);
   };
 
   // 페이지네이션 기능
@@ -332,7 +341,15 @@ export default function QuestionListPage() {
             >
               <div className="qna-container-side">
                 <ul className="qna-state">
-                  <li className="state-count count-vote">
+                  <li
+                    className={`state-count count-vote ${
+                      qnaData.voteCount === 0
+                        ? "vote-zero"
+                        : qnaData.voteCount > 0
+                        ? "vote-plus"
+                        : "vote-minus"
+                    }`}
+                  >
                     {qnaData.voteCount} 투표
                   </li>
                   {/* 답변이 없으면 회색 글씨, 답변이 있으면 파란색 글씨
@@ -366,9 +383,12 @@ export default function QuestionListPage() {
                     {qnaData.questionTitle}
                   </div>
 
-                  <div className="qna-summary-content">
-                    {qnaData.questionContent}
-                  </div>
+                  <div
+                    className="qna-summary-content"
+                    dangerouslySetInnerHTML={{
+                      __html: qnaData.questionContent, // html 태그가 있을 시 제거
+                    }}
+                  ></div>
                 </div>
 
                 <div className="qna-container-bottom">
