@@ -14,9 +14,13 @@ import "../../styles/answerCreate.scss";
 
 interface AnswerProps {
   questionId: string | undefined;
+  refreshAnswers: () => void;
 }
 
-export default function AnswerCreate({ questionId }: AnswerProps) {
+export default function AnswerCreate({
+  questionId,
+  refreshAnswers,
+}: AnswerProps) {
   const { authToken } = authStore();
   const QuillRef = useRef<ReactQuill>();
   const [contents, setContents] = useState("");
@@ -83,6 +87,7 @@ export default function AnswerCreate({ questionId }: AnswerProps) {
       console.log("답변 제출:", response.data);
       setContents("");
       alert("답변이 성공적으로 작성되었습니다.");
+      refreshAnswers();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios 에러:", error.message);

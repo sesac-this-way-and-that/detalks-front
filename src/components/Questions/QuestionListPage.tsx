@@ -9,6 +9,7 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Question {
@@ -89,12 +90,10 @@ export default function QuestionListPage() {
   const pageQuery = searchParams.get("page");
   const sortByQuery = searchParams.get("sortBy");
 
-  //
-  const [noQuestion, setNoQuestion] = useState<boolean>(true);
+  const [noQuestion, setNoQuestion] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-
   // state 관련
-  const [qnaListData, setQnaListData] = useState<QnaListData>();
+  const [qnaListData, setQnaListData] = useState<QnaListData | null>();
   const [spage, setSPage] = useState<number>();
   // const [spage, setSPage] = useState<number>(Number(pageQuery) - 1);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -116,12 +115,13 @@ export default function QuestionListPage() {
     setLoading(true);
     if (state /* && state.searchResults */) {
       setLoading(false);
-      if (state.searchResults.numberOfElements !== 0) {
+      if (state.searchResults !== null) {
         setNoQuestion(false);
         setQnaListData(state.searchResults);
         setTotalPages(state.searchResults.totalPages);
       } else {
         setNoQuestion(true);
+        setQnaListData(null);
       }
     } else {
       getQuestionList(spage == null ? 0 : spage);
@@ -154,11 +154,11 @@ export default function QuestionListPage() {
       setTotalPages(listData.totalPages);
       setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
     } catch (error: any) {
-      if (error.response.status === 404) {
-        setNoQuestion(true);
-      } else {
-        console.log(error.response.data);
-      }
+      // if (error.response.status === 404) {
+      setNoQuestion(true);
+      // } else {
+      //   console.log(error.response.data);
+      // }
       console.error("error: ", error);
     } finally {
       setLoading(false);
@@ -288,25 +288,37 @@ export default function QuestionListPage() {
             </button>
           </div>
         </div>
-        {loading ? <div className="qna-loading">로딩중 입니다...</div> : null}
+        {loading ? (
+          <div className="qna-container">
+            <div className="qna-loading">로딩중 입니다...</div>
+          </div>
+        ) : null}
         {noQuestion ? (
-          <div className="qna-no-question">질문글이 없습니다.</div>
+          <div className="qna-container">
+            <p className="qna-empty">
+              질문글이 없습니다.
+              <span>질문하기 를 눌러 궁금한 내용을 질문해보세요!</span>
+            </p>
+          </div>
         ) : null}
         {qnaListData?.content.map((qnaData) => {
           return (
-            <div
-              className="qna-container"
-              key={qnaData.questionId}
-              onClick={() => {
-                navigate(`/question/${qnaData.questionId}`);
-              }}
-            >
+            <div className="qna-container">
               <div className="qna-container-side">
                 <ul className="qna-state">
                   <li className="state-count count-vote">
                     {qnaData.voteCount} 투표
                   </li>
                   <li className="state-count count-answer">
+                    {qnaData.answerList.length !== 0 && (
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        style={{
+                          color: "#0c7cc2",
+                          paddingTop: "3px",
+                        }}
+                      />
+                    )}
                     {qnaData.answerList.length} 답변
                   </li>
                   <li className="state-count count-view">
@@ -320,7 +332,13 @@ export default function QuestionListPage() {
                     {qnaData.questionTitle}
                   </div>
 
-                  <div className="qna-summary-content">
+                  <div
+                    className="qna-summary-content"
+                    key={qnaData.questionId}
+                    onClick={() => {
+                      navigate(`/question/${qnaData.questionId}`);
+                    }}
+                  >
                     {qnaData.questionContent}
                   </div>
                 </div>

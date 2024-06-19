@@ -283,7 +283,7 @@ export default function AnswerItem({
           </div>
           <div className="area2">
             <div className="profileStats statsList">
-              {new Date(answer.createdAt).toLocaleString()}
+              {answer.createdAt.toString().split("T")[0]}
             </div>
           </div>
         </div>
