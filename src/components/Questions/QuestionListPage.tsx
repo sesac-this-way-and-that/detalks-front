@@ -9,7 +9,7 @@ import {
   faAngleRight,
   faAngleDoubleLeft,
   faAngleDoubleRight,
-  faCheck,
+  faAward,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Question {
@@ -303,22 +303,36 @@ export default function QuestionListPage() {
         ) : null}
         {qnaListData?.content.map((qnaData) => {
           return (
-            <div className="qna-container">
+            <div
+              className="qna-container"
+              key={qnaData.questionId}
+              onClick={() => {
+                navigate(`/question/${qnaData.questionId}`);
+              }}
+            >
               <div className="qna-container-side">
                 <ul className="qna-state">
                   <li className="state-count count-vote">
                     {qnaData.voteCount} 투표
                   </li>
-                  <li className="state-count count-answer">
-                    {qnaData.answerList.length !== 0 && (
-                      <FontAwesomeIcon
-                        icon={faCheck}
-                        style={{
-                          color: "#0c7cc2",
-                          paddingTop: "3px",
-                        }}
-                      />
-                    )}
+                  {/* 답변이 없으면 회색 글씨, 답변이 있으면 파란색 글씨
+                   채택된 답변이 있으면 테두리와 아이콘 */}
+                  <li
+                    className={`state-count count-answer 
+                      ${
+                        qnaData.answerCount === 0
+                          ? ""
+                          : qnaData.isSolved
+                          ? "qna-solved"
+                          : "exist-answer"
+                      }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faAward}
+                      className={`award-icon ${
+                        qnaData.isSolved ? "qna-solved" : "display-none"
+                      }`}
+                    />
                     {qnaData.answerList.length} 답변
                   </li>
                   <li className="state-count count-view">
@@ -332,13 +346,7 @@ export default function QuestionListPage() {
                     {qnaData.questionTitle}
                   </div>
 
-                  <div
-                    className="qna-summary-content"
-                    key={qnaData.questionId}
-                    onClick={() => {
-                      navigate(`/question/${qnaData.questionId}`);
-                    }}
-                  >
+                  <div className="qna-summary-content">
                     {qnaData.questionContent}
                   </div>
                 </div>
@@ -373,7 +381,6 @@ export default function QuestionListPage() {
                           "/" +
                           qnaData.author.memberImg
                         }
-                        alt="프로필사진"
                       />
                     </div>
                     <div className="qna-user-name">
