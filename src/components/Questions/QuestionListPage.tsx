@@ -131,28 +131,45 @@ export default function QuestionListPage() {
   const getQuestionList = async (spage: number) => {
     try {
       if (!filterByAnswer) {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        let listData = response.data.data;
+
+        console.log("response: ", response.data);
+
+        // if (sortDESC) {
+        //   setQnaList(listData.content);
+        // } else {
+        //   setQnaList(listData.content.reverse());
+        // }
+        setNoQuestion(false);
+        setQnaListData(listData);
+        setTotalPages(listData.totalPages);
+        setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
+      } else {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_SERVER}/questions/unAnswered?page=${spage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        let listData = response.data.data;
+
+        console.log("response: ", response.data);
+
+        setNoQuestion(false);
+        setQnaListData(listData);
+        setTotalPages(listData.totalPages);
+        setSearchParams({ page: `${spage + 1}` });
       }
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_SERVER}/questions?sortBy=${sortBy}&page=${spage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      let listData = response.data.data;
-
-      console.log("response: ", response.data);
-
-      // if (sortDESC) {
-      //   setQnaList(listData.content);
-      // } else {
-      //   setQnaList(listData.content.reverse());
-      // }
-      setNoQuestion(false);
-      setQnaListData(listData);
-      setTotalPages(listData.totalPages);
-      setSearchParams({ sortBy: `${sortBy}`, page: `${spage + 1}` });
     } catch (error: any) {
       // if (error.response.status === 404) {
       setNoQuestion(true);
@@ -172,6 +189,7 @@ export default function QuestionListPage() {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("createdAt");
+    setFilterByAnswer(false);
     // setSPage(0);
   };
   const orderByVote = () => {
@@ -179,11 +197,13 @@ export default function QuestionListPage() {
     //   setSortDESC(!sortDESC);
     // }
     setSortBy("voteCount");
+    setFilterByAnswer(false);
     // setSPage(0);
   };
   const filterNoAnswer = () => {
     console.log(filterByAnswer);
     setFilterByAnswer(!filterByAnswer);
+    setSortBy("createdAt");
   };
 
   // 페이지네이션 기능
@@ -280,7 +300,7 @@ export default function QuestionListPage() {
             <button
               type="button"
               className={`order-btn ${
-                sortByQuery === "noAnswer" ? "active-tap" : ""
+                filterByAnswer === true ? "active-tap" : ""
               }`}
               onClick={filterNoAnswer}
             >
