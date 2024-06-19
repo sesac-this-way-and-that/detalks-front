@@ -10,6 +10,7 @@ import ReactQuillModule from "./ReactQuillModule";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import "../../styles/index.scss";
+import "../../styles/answerItem.scss";
 import { userInfo } from "os";
 
 interface AnswerItemProps {
@@ -243,7 +244,7 @@ export default function AnswerItem({
           </div>
           <div className="area2">
             <div className="profileStats statsList">
-              {new Date(answer.createdAt).toLocaleString()}
+              {answer.createdAt.toString().split("T")[0]}
             </div>
           </div>
         </div>

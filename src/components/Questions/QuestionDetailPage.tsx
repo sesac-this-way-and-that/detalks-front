@@ -27,6 +27,7 @@ export default function QuestionDetailPage() {
 
   const [isBookMarked, setIsBookMarked] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
+  const [isAnswerVoted, setIsAnswerVoted] = useState<boolean>(false);
 
   const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
   const handleVoteIncrement = async () => {
@@ -106,16 +107,33 @@ export default function QuestionDetailPage() {
           Authorization: `Bearer ${authToken}`,
         },
       });
+      console.log("response.data.data:", response.data.data);
       setQuestionData(response.data.data);
       setVoteCount(response.data.data.voteCount);
       setIsBookMarked(response.data.data.bookmarkState);
+
       setIsSolved(response.data.data.isSolved);
 
-      console.log(
-        "response.data.data.voteCount: ",
-        response.data.data.voteCount
+      // [추가] 이미 답변된 질문인지 확인
+      const userAnswer = response.data.data.answerList.find(
+        (answer: any) => answer.author.memberIdx === userData?.idx
       );
+      setHasUserAnswered(!!userAnswer);
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
 
+  // 답변 재 랜더링
+  const refreshAnswers = async () => {
+    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      setQuestionData(response.data.data);
       // [추가] 이미 답변된 질문인지 확인
       const userAnswer = response.data.data.answerList.find(
         (answer: any) => answer.author.memberIdx === userData?.idx
@@ -205,8 +223,14 @@ export default function QuestionDetailPage() {
       console.error("Error updating bookmark:", error);
     }
   };
+
   // console.log("userDetail: ", userDetail);
   useEffect(() => {
+    if (isSolved) {
+      setIsAnswerVoted(true);
+    } else {
+      setIsAnswerVoted(false);
+    }
     handleSelectedQuesId();
   }, []);
   useEffect(() => {
@@ -289,42 +313,21 @@ export default function QuestionDetailPage() {
     }
   };
 
-  // 답변 재 랜더링
-  const refreshAnswers = async () => {
-    const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionId}`;
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      setQuestionData(response.data.data);
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    }
-  };
-
   return (
     <section className="questionDetailpage_wrapper">
       <article className="closed_container1" key={questionData?.questionId}>
         <div className="closed_header">
           <h1 className="headerTitle">문제 해결</h1>
-          <button
-            className="closed_askQBtn"
-            onClick={() => navigate(`/question/create`)}
-          >
-            질문 하기
-          </button>
         </div>
         <div className="question_container">
           <div className="question_section1">
             {questionData?.questionTitle}
-            {questionData?.answerList.length !== 0 ? "[해결]" : ""}
+            {isSolved && "[해결]"}
           </div>
           <div className="question_section2">
             <div className="section2_1">
               <div className="questionStats statsList">
-                {userDetail.rep}평 {/* Display vote count */}
+                {voteCount}평 {/* Display vote count */}
               </div>
               <div className="questionStats statsList">
                 {/* {questionData?.answerList} 답변 */}
@@ -332,21 +335,24 @@ export default function QuestionDetailPage() {
               <div className="questionStats statsList">
                 {questionData?.viewCount} 열람
               </div>
+              <div className="questionStats statsList">
+                {questionData?.questionRep} 현상금
+              </div>
             </div>
             <div className="section2_2">
               <div className="profileStats statsList">
                 <img
-                  src="https://picsum.photos/200/300?grayscale"
+                  src={userData?.img}
                   alt=""
                   style={{ width: "20px", height: "20px", borderRadius: "50%" }}
                 />
               </div>
               <div className="profileStats statsList">
                 {questionData?.author.memberName}
-                <span className="viewCountSpan">{questionData?.viewCount}</span>
+                <span className="viewCountSpan">{userDetail.rep}</span>
               </div>
               <div className="profileStats statsList">
-                {questionData?.createdAt.toString().split("T").join(" ")}
+                {questionData?.createdAt.toString().split("T")[0]}
               </div>
             </div>
           </div>
@@ -355,10 +361,7 @@ export default function QuestionDetailPage() {
               <button
                 className="answerBtn answer_likeBtn"
                 onClick={handleVoteIncrement}
-                disabled={
-                  userData?.name === questionData?.author.memberName ||
-                  voteCount >= 1
-                }
+                disabled={userData?.name === questionData?.author.memberName}
               >
                 ▲
               </button>
@@ -366,10 +369,7 @@ export default function QuestionDetailPage() {
               <button
                 className="answerBtn answer_disLikeBtn"
                 onClick={handleVoteDecrement}
-                disabled={
-                  userData?.name === questionData?.author.memberName ||
-                  voteCount <= 0
-                }
+                disabled={userData?.name === questionData?.author.memberName}
               >
                 ▼
               </button>
@@ -384,22 +384,28 @@ export default function QuestionDetailPage() {
                 )}
               </div>
               <div className="solvedMark">
-                {questionData?.answerList.length !== 0 ? (
+                {isSolved && (
                   <FontAwesomeIcon
                     icon={faCheck}
                     style={{ color: "hsl(148, 70%, 31%)" }}
                   />
-                ) : (
-                  ""
                 )}
               </div>
             </div>
             <div className="section3_content">
-              <div className="tagList">{questionData?.tagNameList}</div>
               <div
                 className="section3_body"
                 dangerouslySetInnerHTML={{ __html: processedContent }}
               ></div>
+              <div className="tagList_container">
+                {questionData?.tagNameList.map((tag, i) => {
+                  return (
+                    <div className="tagList" key={i}>
+                      {tag}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
           {userData?.name === questionData?.author.memberName && (
@@ -420,7 +426,9 @@ export default function QuestionDetailPage() {
         </div>
       </article>
       <article className="closed_container2">
-        <h1 className="subTitle">{questionData?.answerCount} 답변</h1>
+        {questionData?.answerCount !== 0 && (
+          <h1 className="subTitle">{questionData?.answerCount} 답변</h1>
+        )}
       </article>
       {/* 답변 리스트 map */}
       {questionData?.answerList.map((answer) => (
@@ -432,9 +440,13 @@ export default function QuestionDetailPage() {
       ))}
       <article className="closed_container4">
         {/* 사용자가 이미 답변을 작성했을 경우 입력 비활성화 */}
-        {!hasUserAnswered && (
-          <AnswerCreate questionId={questionData?.questionId} />
-        )}
+        {userData?.name === questionData?.author.memberName ||
+          (!hasUserAnswered && (
+            <AnswerCreate
+              questionId={questionData?.questionId}
+              refreshAnswers={refreshAnswers}
+            />
+          ))}
       </article>
     </section>
   );
