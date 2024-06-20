@@ -91,6 +91,10 @@ $mobile: 480px;
           color: $main-color;
         }
       }
+      &.isBountied {
+        border: 2px solid $main-color;
+        box-shadow: 0 0 5px $main-color;
+      }
       .qna-container-side {
         width: 13%;
         display: flex;
@@ -136,6 +140,12 @@ $mobile: 480px;
           }
           .count-view {
             color: #888;
+          }
+          .count-rep {
+            color: $main-color;
+            font-size: 15px;
+            position: relative;
+            top: 15px;
           }
         }
       }
@@ -348,6 +358,13 @@ $mobile: 480px;
               width: 80px;
               text-align: center;
             }
+            .count-rep {
+              font-size: 15px;
+              position: relative;
+              top: 0;
+              left: 15px;
+              width: 90px;
+            }
           }
         }
 
@@ -433,6 +450,13 @@ $mobile: 480px;
             }
             .count-answer {
               padding: 1px 10px;
+            }
+            .count-rep {
+              font-size: 13px;
+              position: relative;
+              top: 0;
+              left: 5px;
+              width: 85px;
             }
           }
         }
