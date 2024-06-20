@@ -135,52 +135,29 @@ export default function AnswerItem({
     fetchVoteState();
   }, [answer.answerId, userData, voteCount]);
 
-  // 취소 있는 버전
+  // 투표
   const handleVoteIncrement = async () => {
     if (!authToken) {
       alert("투표하려면 로그인이 필요합니다.");
       navigate("/login");
       return;
     }
-    if (voteState === true) {
-      // 이미 좋아요를 누른 경우 취소
-      const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
-      try {
-        if (!authToken) {
-          alert("투표하려면 로그인이 필요합니다.");
-          navigate("/login");
-          return;
+    const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+    try {
+      await axios.post(
+        url,
+        { voteState: true },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-        await axios.delete(url, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        setVoteCount(voteCount - 1);
-        setVoteState(null);
-        await refreshAnswers();
-      } catch (error) {
-        console.error("투표 취소 오류: ", error);
-      }
-    } else {
-      // 좋아요 추가
-      const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
-      const data = { voteState: true };
-
-      try {
-        await axios.post(url, data, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        const updatedVoteCount =
-          voteState === null ? voteCount + 1 : voteCount + 2;
-        setVoteCount(updatedVoteCount);
-        setVoteState(true);
-        await refreshAnswers();
-      } catch (error) {
-        console.error("투표 오류: ", error);
-      }
+      );
+      console.log("Vote incremented successfully");
+      setVoteCount((prevCount) => prevCount + 1);
+    } catch (error) {
+      console.error("Error incrementing vote:", error);
+      alert("투표는 한 번만 가능합니다.");
     }
   };
 
@@ -190,44 +167,117 @@ export default function AnswerItem({
       navigate("/login");
       return;
     }
-    if (voteState === false) {
-      // 이미 싫어요를 누른 경우 취소
-      const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
-      try {
-        await axios.delete(url, {
+    const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+    try {
+      await axios.post(
+        url,
+        { voteState: false },
+        {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
-        });
-        setVoteCount(voteCount + 1);
-        setVoteState(null);
-        await refreshAnswers();
-      } catch (error) {
-        console.error("투표 취소 오류: ", error);
-        alert("투표 취소 오류");
-      }
-    } else {
-      // 싫어요 추가
-      const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
-      const data = { voteState: false };
-
-      try {
-        await axios.post(url, data, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        const updatedVoteCount =
-          voteState === null ? voteCount - 1 : voteCount - 2;
-        setVoteCount(updatedVoteCount);
-        setVoteState(false);
-        await refreshAnswers();
-      } catch (error) {
-        console.error("투표 취소 오류: ", error);
-        alert("투표 취소 오류");
-      }
+        }
+      );
+      setVoteCount((prevCount) => prevCount - 1);
+    } catch (error) {
+      console.error("Error decrementing vote:", error);
+      alert("투표는 한 번만 가능합니다.");
     }
   };
+
+  // // 취소 있는 버전
+  // const handleVoteIncrement = async () => {
+  //   if (!authToken) {
+  //     alert("투표하려면 로그인이 필요합니다.");
+  //     navigate("/login");
+  //     return;
+  //   }
+  //   if (voteState === true) {
+  //     // 이미 좋아요를 누른 경우 취소
+  //     const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+  //     try {
+  //       if (!authToken) {
+  //         alert("투표하려면 로그인이 필요합니다.");
+  //         navigate("/login");
+  //         return;
+  //       }
+  //       await axios.delete(url, {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       });
+  //       setVoteCount(voteCount - 1);
+  //       setVoteState(null);
+  //       await refreshAnswers();
+  //     } catch (error) {
+  //       console.error("투표 취소 오류: ", error);
+  //     }
+  //   } else {
+  //     // 좋아요 추가
+  //     const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+  //     const data = { voteState: true };
+
+  //     try {
+  //       await axios.post(url, data, {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       });
+  //       const updatedVoteCount =
+  //         voteState === null ? voteCount + 1 : voteCount + 2;
+  //       setVoteCount(updatedVoteCount);
+  //       setVoteState(true);
+  //       await refreshAnswers();
+  //     } catch (error) {
+  //       console.error("투표 오류: ", error);
+  //     }
+  //   }
+  // };
+
+  // const handleVoteDecrement = async () => {
+  //   if (!authToken) {
+  //     alert("투표하려면 로그인이 필요합니다.");
+  //     navigate("/login");
+  //     return;
+  //   }
+  //   if (voteState === false) {
+  //     // 이미 싫어요를 누른 경우 취소
+  //     const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+  //     try {
+  //       await axios.delete(url, {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       });
+  //       setVoteCount(voteCount + 1);
+  //       setVoteState(null);
+  //       await refreshAnswers();
+  //     } catch (error) {
+  //       console.error("투표 취소 오류: ", error);
+  //       alert("투표 취소 오류");
+  //     }
+  //   } else {
+  //     // 싫어요 추가
+  //     const url = `${process.env.REACT_APP_API_SERVER}/votes/answer/${answer.answerId}`;
+  //     const data = { voteState: false };
+
+  //     try {
+  //       await axios.post(url, data, {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //         },
+  //       });
+  //       const updatedVoteCount =
+  //         voteState === null ? voteCount - 1 : voteCount - 2;
+  //       setVoteCount(updatedVoteCount);
+  //       setVoteState(false);
+  //       await refreshAnswers();
+  //     } catch (error) {
+  //       console.error("투표 취소 오류: ", error);
+  //       alert("투표 취소 오류");
+  //     }
+  //   }
+  // };
 
   // 답변 채택
   const handleClick = () => {
