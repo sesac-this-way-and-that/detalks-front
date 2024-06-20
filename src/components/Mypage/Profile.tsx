@@ -56,6 +56,18 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
     return name.length > 20 ? name.slice(0, 20) + "..." : name;
   };
 
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    return new Date(dateString).toLocaleString(undefined, options);
+  };
+
   return (
     <>
       <div className="mypage-profile-container">
@@ -113,14 +125,28 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
                       )}
                     </li>
                     <li>
-                      <span>{question.voteCount} 투표</span>
+                      {question.isQuestion ? (
+                        <span
+                          className={question.isSolved ? "is-solved-vote" : ""}
+                        >
+                          {question.voteCount} 투표
+                        </span>
+                      ) : (
+                        <span
+                          className={
+                            question.isSelected ? "is-selected-vote" : ""
+                          }
+                        >
+                          {question.voteCount} 투표
+                        </span>
+                      )}
                     </li>
                     <li>
                       <span>
                         {getDisplayName(question.titleOrContent || "")}
                       </span>
                     </li>
-                    <li>{question.createdAt}</li>
+                    <li>{formatDate(question.createdAt)}</li>
                   </ul>
                 </Link>
               ))}
