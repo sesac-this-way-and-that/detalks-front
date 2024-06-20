@@ -33,15 +33,15 @@ $mobile: 480px;
     .qna-write-question {
       border: none;
       border-radius: 5px;
-      color: black;
+      color: $block-color;
       font-size: 17px;
-      background-color: $block-color;
-      padding: 5px 15px;
-      box-shadow: 1px 1px 3px gray;
+      font-weight: bold;
+      background-color: $main-color;
+      padding: 10px 13px;
       &:hover {
         cursor: pointer;
         color: $block-color;
-        background-color: $main-color;
+        background-color: #1f5683;
         box-shadow: none;
         font-weight: bold;
       }
@@ -159,6 +159,7 @@ $mobile: 480px;
         .qna-summary {
           margin-bottom: 10px;
           .qna-summary-title {
+            width: 94%;
             margin-bottom: 10px;
             color: $deep-blue-color;
             font-weight: 900;
@@ -248,6 +249,22 @@ $mobile: 480px;
             width: 80px;
             margin-left: 30px;
             text-align: center;
+          }
+          .qna-bookmark {
+            position: absolute;
+            top: -100px;
+            left: 690px;
+            padding: 5px;
+            .bookmark-icon {
+              width: 28px;
+              height: 28px;
+              &.bookmark-on {
+                color: $main-color;
+              }
+              &.bookmark-off {
+                color: #888;
+              }
+            }
           }
         }
       }
@@ -403,6 +420,10 @@ $mobile: 480px;
               position: relative;
               left: 260px;
             }
+            .qna-bookmark {
+              top: -130px;
+              left: 610px;
+            }
           }
         }
       }
@@ -506,6 +527,14 @@ $mobile: 480px;
               width: 70px;
               position: relative;
               left: 50px;
+            }
+            .qna-bookmark {
+              top: -115px;
+              left: 305px;
+              .bookmark-icon {
+                width: 23px;
+                height: 23px;
+              }
             }
           }
         }

@@ -10,7 +10,9 @@ import {
   faAngleDoubleLeft,
   faAngleDoubleRight,
   faAward,
+  faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { faBookmark as faBookmarkReg } from "@fortawesome/free-regular-svg-icons";
 
 interface Question {
   questionId: number;
@@ -270,6 +272,34 @@ export default function QuestionListPage() {
     return pages;
   };
 
+  const toWritePage = () => {
+    if (authToken) {
+      navigate("/question/create");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  // 오늘과 작성일 연월일 비교하기
+  const compareDate = (date: Date) => {
+    const today = new Date();
+    const dateYear = Number(date.toString().split("-")[0]);
+    const dateMonth = Number(date.toString().split("-")[1]);
+    const dateDate = Number(date.toString().split("-")[2].split("T")[0]);
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth() + 1;
+    const todayDate = today.getDate();
+    if (
+      dateYear === todayYear &&
+      dateMonth === todayMonth &&
+      dateDate === todayDate
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <section className="qna-list-page">
       {/* <p>spage: {spage}</p>
@@ -278,10 +308,7 @@ export default function QuestionListPage() {
       <p>totalPages: {totalPages}</p> */}
       <article className="qna-header">
         <h2 className="title">질의응답</h2>
-        <button
-          className="qna-write-question"
-          onClick={() => navigate(`/question/create`)}
-        >
+        <button className="qna-write-question" onClick={toWritePage}>
           질문하기
         </button>
       </article>
@@ -437,10 +464,26 @@ export default function QuestionListPage() {
                       {qnaData.author.memberRep}
                     </div>
                     <div className="qna-created-at">
-                      {qnaData.createdAt.toString().split("T")[0]}
-                      {/* <br /> */}
-                      {/* {qnaData.createdAt.toString().split("T")[1]} */}
+                      {/* 작성일이 오늘이면 시간만, 아니면 날짜만 표기 */}
+                      {compareDate(qnaData.createdAt)
+                        ? qnaData.createdAt.toString().split("T")[1]
+                        : qnaData.createdAt.toString().split("T")[0]}
                     </div>
+                    {authToken ? (
+                      <div className="qna-bookmark">
+                        {qnaData.bookmarkState ? (
+                          <FontAwesomeIcon
+                            icon={faBookmark}
+                            className="bookmark-icon bookmark-on"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faBookmarkReg}
+                            className="bookmark-icon bookmark-off"
+                          />
+                        )}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
