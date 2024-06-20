@@ -78,14 +78,6 @@
           width: 100%;
 
           .section3_body {
-            height: 163px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            word-break: break-word;
-
-            display: -webkit-box;
-            -webkit-line-clamp: 7; // 원하는 라인수
-            -webkit-box-orient: vertical;
             .ql-syntax {
               border-radius: 5px;
               padding: 10px;
