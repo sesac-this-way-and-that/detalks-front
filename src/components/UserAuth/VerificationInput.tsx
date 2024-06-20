@@ -8,7 +8,8 @@ export default function VerificationInput({
   accessType,
   accessText,
 }: AccountForm) {
-  const { verificationCode, setVerificationCode } = accountStore();
+  const { email, verificationCode, setEmail, setVerificationCode } =
+    accountStore();
   const [beforeVerification, setBeforeVerification] = useState<boolean>(true);
   const [code, setCode] = useState<string>("");
   const [verifyMsg, setVerifyMsg] = useState<string>("");
@@ -19,14 +20,22 @@ export default function VerificationInput({
   };
 
   const checkVerification = () => {
-    if (code === verificationCode) {
-      setVerifyMsg("인증번호가 일치합니다.");
-      setBeforeVerification(false);
-      setVerificationCode("");
-    } else {
-      setVerifyMsg("인증번호가 일치하지 않습니다.");
-      setBeforeVerification(true);
-    }
+    const url = `${process.env.REACT_APP_API_SERVER}/email/verify`;
+    const codeData = {
+      email: email,
+      code: code,
+    };
+    axios
+      .post(url, codeData)
+      .then((res) => {
+        setVerifyMsg("인증코드가 일치합니다.");
+        setBeforeVerification(false);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        alert("인증에 실패했습니다.");
+        return;
+      });
   };
 
   return (
