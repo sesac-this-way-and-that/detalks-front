@@ -342,7 +342,7 @@ export default function QuestionDetailPage() {
           <div className="question_section2">
             <div className="section2_1">
               <div className="questionStats statsList">
-                {voteCount}평 {/* Display vote count */}
+                {voteCount} 투표 {/* Display vote count */}
               </div>
               <div className="questionStats statsList">
                 {/* {questionData?.answerList} 답변 */}
