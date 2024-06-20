@@ -1,6 +1,6 @@
 import axios from "axios";
 import accountStore from "../../store/userStore";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AccountForm } from "./userInterface";
 import PwdInput from "./PwdInput";
 
@@ -29,6 +29,8 @@ export default function VerificationInput({
     }
   };
 
+  console.log("v", verificationCode);
+  console.log("c", code);
   return (
     <>
       <label>
@@ -45,7 +47,9 @@ export default function VerificationInput({
           type="text"
           ref={codeRef}
           onChange={storeCode}
+          onBlur={storeCode}
           disabled={beforeVerification ? false : true}
+          defaultValue={verificationCode}
         />
         <div>
           <span
