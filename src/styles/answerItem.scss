@@ -1,14 +1,44 @@
-.closed_container3 {
-  .section3_2 {
-    border: 1px solid black;
+.answerItem_wrapper {
+  display: flex;
+  .answerItem_container1 {
+    display: flex;
+    margin-bottom: 20px;
+    .container1_section1 {
+      padding: 0 16px 0 0;
+      text-align: center;
+      button,
+      div {
+        margin-bottom: 13px;
+      }
+      .answerBtn {
+        border: 1px solid hsl(210, 8%, 85%);
+        border-radius: 50%;
+        background-color: #ffffff;
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+  .answerItem_container2 {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    .answerItem {
-      .part3_2 {
-        .section4_body {
-          .ql-syntax {
-            background-color: black;
-          }
+    .container2_section1 {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      .section1_part1 {
+        display: flex;
+        .image_container {
+          padding: 3px 7px;
         }
+      }
+    }
+    .container2_section2 {
+      margin-bottom: 20px;
+      .rich_editor_container {
         #toolBar {
           display: flex;
           overflow: scroll;
@@ -29,12 +59,46 @@
         }
       }
     }
+    .container2_section3 {
+      display: flex;
+      justify-content: space-between;
+      .resultBtn {
+        display: flex;
+        gap: 10px;
+        color: hsl(210, 8%, 42%);
+        .section_text {
+          font-size: 15px;
+          cursor: pointer;
+        }
+        .section_text:hover {
+          color: black;
+        }
+      }
+      .editor_section2 {
+        color: hsl(210, 8%, 42%);
+        .section_text {
+          font-size: 15px;
+          cursor: pointer;
+        }
+        .section_text:hover {
+          color: black;
+        }
+      }
+    }
   }
 }
 
 @media screen and (min-width: 738px) {
-  #toolBar {
-    display: flex;
-    overflow: initial;
+  .answerItem_wrapper {
+    .answerItem_container2 {
+      .container2_section2 {
+        .rich_editor_container {
+          #toolBar {
+            display: flex;
+            overflow: initial;
+          }
+        }
+      }
+    }
   }
 }

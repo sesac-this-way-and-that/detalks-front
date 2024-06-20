@@ -58,7 +58,6 @@ export default function QuestionCreateAndModifyPage() {
 
   // X
   useEffect(() => {
-    console.log("Text area input value changed:", textAreaInputValue);
     const formatTextToHTML = (text: string) => {
       const regex = /`([^`]*)`/g;
       const parts: string[] = [];
@@ -95,6 +94,7 @@ export default function QuestionCreateAndModifyPage() {
     setFormattedText(formatTextToHTML(textAreaInputValue));
   }, [textAreaInputValue]);
 
+  console.log("content: ", contents);
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
@@ -102,7 +102,7 @@ export default function QuestionCreateAndModifyPage() {
       alert("제목을 작성해주세요.");
       return;
     }
-    if (!contents.trim()) {
+    if (!contents.trim() || contents.trim() === "<p><br></p>") {
       alert("내용을 입력해주세요.");
       return;
     }
@@ -226,7 +226,8 @@ export default function QuestionCreateAndModifyPage() {
                       QuillRef.current = element;
                     }
                   }}
-                  value={questionId ? textAreaInputValue : contents}
+                  // value={questionId ? textAreaInputValue : contents}
+                  value={contents}
                   onChange={setContents}
                   modules={modules}
                   formats={formats}
