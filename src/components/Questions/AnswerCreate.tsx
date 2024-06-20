@@ -100,25 +100,23 @@ export default function AnswerCreate({
   return (
     <div className="answer-container">
       <h1 className="subTitle">내 답변</h1>
-      <div className="richEditorText_container">
-        <div>
-          <div id="toolBar">
-            <ReactQuillModule />
-          </div>
-          <ReactQuill
-            ref={(element) => {
-              if (element !== null) {
-                QuillRef.current = element;
-              }
-            }}
-            value={contents}
-            onChange={setContents}
-            modules={modules}
-            formats={formats}
-            theme="snow"
-            placeholder="내용을 입력해주세요."
-          />
+      <div className="rich_editor_container">
+        <div id="toolBar">
+          <ReactQuillModule />
         </div>
+        <ReactQuill
+          ref={(element) => {
+            if (element !== null) {
+              QuillRef.current = element;
+            }
+          }}
+          value={contents}
+          onChange={setContents}
+          modules={modules}
+          formats={formats}
+          theme="snow"
+          placeholder="내용을 입력해주세요."
+        />
       </div>
       <div className="closedBtn_container">
         <button

@@ -1,9 +1,22 @@
 .answer-container {
-  .richEditorText_container {
-    div {
-      .quill {
-        // border: 1px solid black;
-        height: 200px;
+  .rich_editor_container {
+    margin-bottom: 20px;
+    #toolBar {
+      display: flex;
+      overflow: scroll;
+      .ql-formats {
+        display: flex;
+      }
+    }
+    .quill {
+      height: 220px;
+      .ql-snow {
+        .ql-editor {
+          .ql-syntax {
+            background-color: lightgray;
+            color: black;
+          }
+        }
       }
     }
   }
@@ -21,12 +34,10 @@
 
 @media screen and (min-width: 592px) {
   .answer-container {
-    .richEditorText_container {
-      div {
-        .quill {
-          // border: 1px solid black;
-          height: 300px;
-        }
+    .rich_editor_container {
+      #toolBar {
+        display: flex;
+        overflow: initial;
       }
     }
   }
