@@ -285,7 +285,7 @@ $mobile: 480px;
       // border: 1px solid red;
 
       .headerNavigation {
-        width: 760px;
+        width: 800px;
         // border: 1px solid blue;
         display: flex;
         justify-content: space-between;
@@ -456,6 +456,11 @@ $mobile: 480px;
     max-width: 960px;
   }
   .headerWrapper {
+    .headerContainer {
+      .headerNavigation {
+        width: 800px;
+      }
+    }
     .qna-write-question {
       bottom: 70px;
       right: 10vw;
