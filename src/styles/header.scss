@@ -236,10 +236,10 @@ $mobile: 480px;
         }
       }
 
-      input:checked ~ .headerMenu {
-        right: 0;
-        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.3);
-      }
+      // input:checked ~ .headerMenu {
+      //   right: 0;
+      //   box-shadow: -20px 0 40px rgba(0, 0, 0, 0.3);
+      // }
     }
   }
   .qna-write-question {
@@ -465,7 +465,7 @@ $mobile: 480px;
   }
 }
 
-@media screen and (max-width: $tablet) {
+@media screen and (max-width: 900px) {
   .container {
     width: 100%;
   }
@@ -475,6 +475,10 @@ $mobile: 480px;
       width: 100%;
       // border: 1px solid red;
       .headerNavigation {
+        input:checked ~ .headerMenu {
+          right: 0;
+          box-shadow: -20px 0 40px rgba(0, 0, 0, 0.3);
+        }
         width: 80%;
         // border: 1px solid red;
         .hamburger,
