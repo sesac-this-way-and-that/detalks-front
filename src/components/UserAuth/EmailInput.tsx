@@ -81,7 +81,14 @@ export default function EmailInput({ accessType }: AccountForm) {
           icon={faCheck}
           className={`checkIcon ${emailValid ? "" : "display-none"}`}
         />
-        <input type="email" required onChange={emailOnChange} name="email" />
+        <input
+          type="email"
+          required
+          onChange={emailOnChange}
+          onBlur={emailOnChange}
+          name="email"
+          defaultValue={"eic2021@naver.com"}
+        />
         <div>
           <span
             className={`emailInputMsg ${

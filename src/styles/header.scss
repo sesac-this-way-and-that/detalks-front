@@ -35,12 +35,10 @@ $mobile: 480px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // border: 1px solid red;
 
     .headerLogoContainer {
       a {
         display: flex;
-        // border: 1px solid red;
         color: $main-color;
         .headerLogo {
           width: 30px;
@@ -90,7 +88,6 @@ $mobile: 480px;
         }
       }
       .searchInput {
-        // border: 1px solid red;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -143,7 +140,7 @@ $mobile: 480px;
             text-decoration: none;
             display: block;
             padding: 20px 25px;
-            font-size: 15px;
+            // font-size: 15px;
             line-height: 1;
             transition: 0.3s;
             // border: 1px solid black;
@@ -205,7 +202,7 @@ $mobile: 480px;
           width: 25px;
         }
       }
-
+      // checkbox
       .toggle-menu {
         position: absolute;
         right: 25px;
@@ -224,12 +221,13 @@ $mobile: 480px;
       input:checked ~ .hamburger {
         background: transparent;
 
+        // x crossing "/"
         &:before {
           top: 0;
           transform: rotate(-45deg);
           width: 30px;
         }
-
+        // x crossing "\"
         &:after {
           top: 0;
           transform: rotate(45deg);
@@ -343,11 +341,12 @@ $mobile: 480px;
               }
             }
             a {
+              width: 112px;
               color: black;
               text-decoration: none;
               display: block;
               padding: 20px 25px;
-              font-size: 16px;
+              font-size: 15px;
               line-height: 1;
               transition: 0.3s;
               // border: 1px solid black;
