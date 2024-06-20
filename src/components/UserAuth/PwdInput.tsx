@@ -77,7 +77,7 @@ export default function PwdInput({ accessType }: AccountForm) {
           onChange={pwdOnChange}
           onBlur={pwdOnChange}
           name="pwd"
-          defaultValue={"test1234*"}
+          defaultValue={`${accessType === "login" ? "qwer123!" : ""}`}
         />
         <div>
           <span
@@ -105,7 +105,6 @@ export default function PwdInput({ accessType }: AccountForm) {
             required
             onChange={pwdCheckOnChange}
             onBlur={pwdCheckOnChange}
-            defaultValue={"test1234*"}
           />
           <div>
             <span
