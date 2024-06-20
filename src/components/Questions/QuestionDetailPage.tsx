@@ -32,31 +32,51 @@ export default function QuestionDetailPage() {
   const [hasUserAnswered, setHasUserAnswered] = useState<boolean>(false);
 
   const handleVoteIncrement = async () => {
+    if (!authToken) {
+      alert("투표하려면 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
     const url = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}?voteState=true`;
     try {
-      await axios.post(url, null, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      await axios.post(
+        url,
+        { voteState: true },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       console.log("Vote incremented successfully");
       setVoteCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error("Error incrementing vote:", error);
+      alert("투표는 한 번만 가능합니다.");
     }
   };
 
   const handleVoteDecrement = async () => {
+    if (!authToken) {
+      alert("투표하려면 로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
     const url = `${process.env.REACT_APP_API_SERVER}/votes/question/${questionData?.questionId}?voteState=false`;
     try {
-      await axios.post(url, null, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      await axios.post(
+        url,
+        { voteState: false },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       setVoteCount((prevCount) => prevCount - 1);
     } catch (error) {
       console.error("Error decrementing vote:", error);
+      alert("투표는 한 번만 가능합니다.");
     }
   };
 
