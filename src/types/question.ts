@@ -30,6 +30,8 @@ export interface QuestionDetail {
   author: {
     memberIdx: number;
     memberName: string;
+    memberRep: number;
+    memberImg: string;
   };
   answerList: AnswerDetail[];
   answerCount: number;
@@ -49,6 +51,8 @@ export interface QuestionDetail {
     author: {
       memberIdx: number;
       memberName: string;
+      memberRep: number;
+      memberImg: string;
     };
     answerVoteDtoList: AnswerVote[];
     

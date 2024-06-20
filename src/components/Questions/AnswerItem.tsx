@@ -326,8 +326,12 @@ export default function AnswerItem({
           <div className="section1_part1">
             <div className="image_container">
               <img
-                src={process.env.REACT_APP_STATIC_SERVER + "/" + userData?.img}
-                alt={userData?.img}
+                src={
+                  process.env.REACT_APP_STATIC_SERVER +
+                  "/" +
+                  answer.author.memberImg
+                }
+                alt={answer.author.memberImg}
                 style={{
                   width: "20px",
                   height: "20px",
