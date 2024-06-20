@@ -71,7 +71,14 @@ export default function PwdInput({ accessType }: AccountForm) {
             pwdMsg === "사용 가능한 비밀번호입니다." ? "" : "display-none"
           }`}
         />
-        <input type="password" required onChange={pwdOnChange} name="pwd" />
+        <input
+          type="password"
+          required
+          onChange={pwdOnChange}
+          onBlur={pwdOnChange}
+          name="pwd"
+          defaultValue={"test1234*"}
+        />
         <div>
           <span
             className={`pwdInputMsg ${
@@ -93,7 +100,13 @@ export default function PwdInput({ accessType }: AccountForm) {
               pwdCheckMsg === "비밀번호가 일치합니다." ? "" : "display-none"
             }`}
           />
-          <input type="password" required onChange={pwdCheckOnChange} />
+          <input
+            type="password"
+            required
+            onChange={pwdCheckOnChange}
+            onBlur={pwdCheckOnChange}
+            defaultValue={"test1234*"}
+          />
           <div>
             <span
               className={`pwdCheckInputMsg ${
