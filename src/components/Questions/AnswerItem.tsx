@@ -12,6 +12,7 @@ import ReactQuillModule from "./ReactQuillModule";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import "../../styles/index.scss";
+import "../../styles/answerItem.scss";
 
 interface AnswerItemProps {
   answer: AnswerDetail;
@@ -245,28 +246,30 @@ export default function AnswerItem({
   };
 
   return (
-    <div className="closed_container3" key={answer.answerId}>
-      <div className="section3_1">
-        <button
-          className="answerBtn answer_likeBtn"
-          onClick={handleVoteIncrement}
-          disabled={userData?.idx === answer.author.memberIdx}
-        >
-          ▲
-        </button>
-        <div>{voteCount}</div>
-        <button
-          className="answerBtn answer_disLikeBtn"
-          onClick={handleVoteDecrement}
-          disabled={userData?.idx === answer.author.memberIdx}
-        >
-          ▼
-        </button>
+    <div className="answerItem_wrapper" key={answer.answerId}>
+      <div className="answerItem_container1">
+        <div className="container1_section1">
+          <button
+            className="answerBtn answer_likeBtn"
+            onClick={handleVoteIncrement}
+            disabled={userData?.idx === answer.author.memberIdx}
+          >
+            ▲
+          </button>
+          <div>{voteCount}</div>
+          <button
+            className="answerBtn answer_disLikeBtn"
+            onClick={handleVoteDecrement}
+            disabled={userData?.idx === answer.author.memberIdx}
+          >
+            ▼
+          </button>
+        </div>
       </div>
-      <div className="section3_2">
-        <div className="part3_1">
-          <div className="area1">
-            <div className="profileStats statsList">
+      <div className="answerItem_container2">
+        <div className="container2_section1">
+          <div className="section1_part1">
+            <div className="image_container">
               <img
                 src={process.env.REACT_APP_STATIC_SERVER + "/" + userData?.img}
                 alt={userData?.img}
@@ -281,14 +284,14 @@ export default function AnswerItem({
               {answer.author.memberName} 님
             </div>
           </div>
-          <div className="area2">
+          <div className="section1_part2">
             <div className="profileStats statsList">
               {answer.createdAt.toString().split("T")[0]}
             </div>
           </div>
         </div>
-        <div className="answerItem">
-          <div className="part3_2">
+        <div className="container2_section2">
+          <div className="rich_editor_container">
             {isEditing ? (
               <>
                 <div id="toolBar">
@@ -315,40 +318,43 @@ export default function AnswerItem({
               />
             )}
           </div>
-          <div>
-            {/* 채택 */}
-            {isQuestionAuthor && !selected && (
-              <button onClick={handleClick}>답변 채택</button>
-            )}
-            {selected && (
-              <div>
-                <span>채택됨</span>
-              </div>
-            )}
-          </div>
-          <div className="answer_actions">
+        </div>
+        <div className="container2_section3">
+          <div className="resultBtn">
             {userData?.idx === answer.author.memberIdx && (
               <>
                 {isEditing ? (
                   <>
-                    <button onClick={handleSaveEdit} className="saveBtn">
+                    <div onClick={handleSaveEdit} className="section_text">
                       저장
-                    </button>
-                    <button onClick={handleCancelEdit} className="cancelBtn">
+                    </div>
+                    <div onClick={handleCancelEdit} className="section_text">
                       취소
-                    </button>
+                    </div>
                   </>
                 ) : (
                   <>
-                    <button onClick={handleEdit} className="editBtn">
+                    <div onClick={handleEdit} className="section_text">
                       수정
-                    </button>
-                    <button onClick={handleDelete} className="deleteBtn">
+                    </div>
+                    <div onClick={handleDelete} className="section_text">
                       삭제
-                    </button>
+                    </div>
                   </>
                 )}
               </>
+            )}
+          </div>
+          <div className="editor_section2">
+            {isQuestionAuthor && !selected && (
+              <div onClick={handleClick} className="section_text">
+                답변 채택
+              </div>
+            )}
+            {selected && (
+              <div>
+                <span className="section_text">채택됨</span>
+              </div>
             )}
           </div>
         </div>
