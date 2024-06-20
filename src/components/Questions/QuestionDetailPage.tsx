@@ -357,7 +357,9 @@ export default function QuestionDetailPage() {
             <div className="section2_2">
               <div className="profileStats statsList">
                 <img
-                  src={userData?.img}
+                  src={
+                    process.env.REACT_APP_STATIC_SERVER + "/" + userData?.img
+                  }
                   alt=""
                   style={{ width: "20px", height: "20px", borderRadius: "50%" }}
                 />
