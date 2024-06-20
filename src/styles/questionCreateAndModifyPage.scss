@@ -1,3 +1,8 @@
+$desktop: 1500px;
+$notebook: 1200px;
+$tablet: 768px;
+$mobile: 480px;
+
 .application_wrapper {
   padding: 80px 21px;
 
@@ -7,7 +12,6 @@
   }
 
   .application_container1 {
-    // border: 1px solid black;
     .subTitle_container,
     .applicationForm_container,
     .attempt_container,
@@ -172,10 +176,8 @@
   }
 }
 
-@media screen and (min-width: 738px) {
+@media screen and (min-width: $tablet) {
   .application_wrapper {
-    width: 1050px;
-    margin: 0 auto;
     .application_container1 {
       .subTitle_container {
         .descriptionTitle {
@@ -193,39 +195,12 @@
             div {
               #toolBar {
                 display: flex;
-                overflow: initial;
+                overflow: hidden;
               }
             }
           }
         }
       }
-      // .attempt_container {
-      //   .question_container {
-      //     .richEditorText_container {
-      //       div {
-      //         #toolBar {
-      //           display: flex;
-      //           overflow: scroll;
-      //           .ql-formats {
-      //             display: flex;
-      //           }
-      //         }
-      //         .quill {
-      //           height: 220px;
-      //           .ql-snow {
-      //             .ql-editor {
-      //               .ql-syntax {
-      //                 background-color: lightgray;
-      //                 color: black;
-      //               }
-      //             }
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-
       .application_footer {
         .application_lang {
           .application_lang_type {
@@ -240,5 +215,17 @@
         }
       }
     }
+  }
+}
+
+@media screen and (min-width: $notebook) {
+  .application_wrapper {
+    margin: 0 110px 0 100px;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .application_wrapper {
+    margin: 0 450px 0 430px;
   }
 }

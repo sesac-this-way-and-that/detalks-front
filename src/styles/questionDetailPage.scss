@@ -1,3 +1,8 @@
+$desktop: 1500px;
+$notebook: 1200px;
+$tablet: 768px;
+$mobile: 480px;
+
 .questionDetailpage_wrapper {
   padding: 80px 21px;
   .closed_container1 {
@@ -254,17 +259,9 @@
   }
 }
 
-// $desktop: 1500px;
-// $notebook: 1200px;
-// $tablet: 768px;
-// $mobile: 480px;
-// // 900 노트북, desktop
-// // 700 tablet
-// // 300 mobile
-@media screen and (min-width: 592px) {
+@media screen and (min-width: $tablet) {
   .questionDetailpage_wrapper {
-    width: 1050px;
-    margin: 0 auto;
+    margin: 0 10px 0 10px;
     .closed_container1 {
       .question_container {
         .question_section2 {
@@ -334,14 +331,14 @@
   }
 }
 
-// @media screen and (min-width: 1500px) {
-//   section {
-//     .closed_container1,
-//     .closed_container2,
-//     .closed_container3,
-//     .closed_container4 {
-//       width: 900px;
-//       margin: 0 auto;
-//     }
-//   }
-// }
+@media screen and (min-width: $notebook) {
+  .questionDetailpage_wrapper {
+    margin: 0 100px 0 100px;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .questionDetailpage_wrapper {
+    margin: 0 450px 0 430px;
+  }
+}
