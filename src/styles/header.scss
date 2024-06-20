@@ -55,11 +55,9 @@ $mobile: 480px;
 
     .headerNavigation {
       width: 800px;
-      // border: 1px solid blue;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // flex: 1;
       .searchTooltip {
         cursor: pointer;
         position: absolute;
