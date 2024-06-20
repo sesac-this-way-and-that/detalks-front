@@ -333,7 +333,9 @@ export default function QuestionListPage() {
         {qnaListData?.content.map((qnaData) => {
           return (
             <div
-              className="qna-container"
+              className={`qna-container${
+                qnaData.questionRep !== 0 ? " isBountied" : ""
+              }`}
               key={qnaData.questionId}
               onClick={() => {
                 navigate(`/question/${qnaData.questionId}`);
@@ -375,6 +377,11 @@ export default function QuestionListPage() {
                   <li className="state-count count-view">
                     {qnaData.viewCount} 열람
                   </li>
+                  {qnaData.questionRep !== 0 ? (
+                    <li className="state-count count-rep">
+                      {qnaData.questionRep} 현상금
+                    </li>
+                  ) : null}
                 </ul>
               </div>
               <div className="qna-summary-container">
