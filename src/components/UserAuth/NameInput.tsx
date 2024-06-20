@@ -57,7 +57,14 @@ export default function NameInput({ accessType }: AccountForm) {
           icon={faCheck}
           className={`checkIcon ${nameValid ? "" : "display-none"}`}
         />
-        <input type="text" required onChange={nameOnChange} name="name" />
+        <input
+          type="text"
+          required
+          onChange={nameOnChange}
+          onBlur={nameOnChange}
+          name="name"
+          defaultValue={"테스트계정"}
+        />
         <div>
           <span
             className={`nameInputMsg ${
