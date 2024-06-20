@@ -6,6 +6,7 @@ import {
   ChangeEvent,
   FormEvent,
   KeyboardEvent,
+  MouseEvent,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPen } from "@fortawesome/free-solid-svg-icons";
@@ -30,7 +31,7 @@ export default function Header(): JSX.Element {
   const getToken = authStore((state) => state.authToken);
   const nav = useNavigate();
   const location = useLocation();
-  const sidebarRef = useRef<HTMLUListElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const prevLocation = window.location.href;
 
@@ -128,23 +129,14 @@ export default function Header(): JSX.Element {
     }, 100);
   };
 
-  const handleSidebarToggle = () => {
-    const checkbox = document.querySelector<HTMLInputElement>(".toggle-menu");
-    if (checkbox) {
-      checkbox.checked = !checkbox.checked;
-    }
-  };
-
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // console.log(sidebarRef);
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target as Node)
       ) {
         const checkbox =
           document.querySelector<HTMLInputElement>(".toggle-menu");
-        // console.log(checkbox);
         if (checkbox) {
           checkbox.checked = false;
         }
@@ -174,9 +166,9 @@ export default function Header(): JSX.Element {
             <p>Detalks</p>
           </Link>
         </div>
-        <div className="headerNavigation">
+        <div className="headerNavigation" ref={sidebarRef}>
           <input type="checkbox" className="toggle-menu" />
-          <div className="hamburger" onClick={handleSidebarToggle}></div>
+          <div className="hamburger"></div>
 
           <form className="searchInput" onSubmit={handleFormSubmit}>
             <input
@@ -185,7 +177,7 @@ export default function Header(): JSX.Element {
               onChange={handleSearchInputChange}
               onClick={() => setIsFocused(true)}
               onBlur={handleBlur}
-              onKeyDown={handleInputKeyDown} // Listen for Enter key press
+              onKeyDown={handleInputKeyDown}
             />
             <button type="submit">
               <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -211,7 +203,7 @@ export default function Header(): JSX.Element {
               </p>
             </div>
           )}
-          <ul className="headerMenu" ref={sidebarRef}>
+          <ul className="headerMenu">
             {getToken ? (
               <li className="myname-mobile">
                 <Link to={`/mypage/${userData?.idx}`}>
