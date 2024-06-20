@@ -8,6 +8,7 @@ import { useInfoStore } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRagular } from "@fortawesome/free-regular-svg-icons";
+import DOMPurify from "dompurify";
 
 import AnswerItem from "./AnswerItem";
 import AnswerCreate from "./AnswerCreate";
@@ -319,7 +320,7 @@ export default function QuestionDetailPage() {
   const handleSelectAnswer = async (answerId: string) => {
     // try {
     const response = await axios.patch(
-      `/api/questions/${questionData?.questionId}/${answerId}/select`,
+      `${process.env.REACT_APP_API_SERVER}/questions/${questionData?.questionId}/${answerId}/select`,
       null,
       {
         headers: {
@@ -347,6 +348,9 @@ export default function QuestionDetailPage() {
       window.location.reload();
     }
   };
+
+  const htmlMessage = questionData?.questionContent?.replace(/\n/g, "<br/>");
+  const escapedHtmlMessage = htmlMessage ? DOMPurify.sanitize(htmlMessage) : "";
 
   return (
     <section className="questionDetailpage_wrapper">
@@ -432,7 +436,7 @@ export default function QuestionDetailPage() {
             <div className="section3_content">
               <div
                 className="section3_body"
-                dangerouslySetInnerHTML={{ __html: processedContent }}
+                dangerouslySetInnerHTML={{ __html: escapedHtmlMessage }}
               ></div>
               <div className="tagList_container">
                 {questionData?.tagNameList.map((tag, i) => {

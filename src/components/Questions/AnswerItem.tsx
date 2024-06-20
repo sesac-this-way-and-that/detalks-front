@@ -3,10 +3,12 @@ import { QuestionDetail } from "../../types/question";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import "../../styles/index.scss";
 import { useInfoStore } from "../../store";
 import authStore from "../../store/authStore";
 import { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
+import DOMPurify from "dompurify";
 
 import ReactQuillModule from "./ReactQuillModule";
 import hljs from "highlight.js";
@@ -295,6 +297,9 @@ export default function AnswerItem({
     }
   };
 
+  const htmlMessage = answer?.answerContent?.replace(/\n/g, "<br/>");
+  const escapedHtmlMessage = htmlMessage ? DOMPurify.sanitize(htmlMessage) : "";
+
   return (
     <div className="answerItem_wrapper" key={answer.answerId}>
       <div className="answerItem_container1">
@@ -364,7 +369,7 @@ export default function AnswerItem({
             ) : (
               <div
                 className="section4_body"
-                dangerouslySetInnerHTML={{ __html: answer.answerContent }}
+                dangerouslySetInnerHTML={{ __html: escapedHtmlMessage }}
               />
             )}
           </div>

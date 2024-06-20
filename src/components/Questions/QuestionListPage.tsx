@@ -3,6 +3,7 @@ import "../../styles/questionListPage.scss";
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import authStore from "../../store/authStore";
+import "../../styles/index.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
