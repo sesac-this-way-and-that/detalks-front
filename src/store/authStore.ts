@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface authStore {
+interface authStoreType {
   authToken: string | null;
   setAuthToken: (authToken: string | null) => void;
   removeAuthToken: () => void;
 }
 
 const authStore = create(
-  persist<authStore>(
+  persist<authStoreType>(
     (set) => ({
       authToken: null,
       setAuthToken: (authToken: string | null) =>
