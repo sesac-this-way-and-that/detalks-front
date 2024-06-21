@@ -55,9 +55,8 @@ $mobile: 480px;
 
       .question_section3 {
         display: flex;
-        margin-bottom: 20px;
+        margin-bottom: 60px;
         .section3_sideBar {
-          padding: 0 16px 0 0;
           text-align: center;
           button,
           div {
@@ -79,21 +78,24 @@ $mobile: 480px;
         .section3_content {
           display: flex;
           flex-direction: column;
-          padding: 0px 12px;
-          width: 100%;
-
+          width: 87%;
+          margin: 0px 5px;
           .section3_body {
+            min-height: 164px;
             margin-bottom: 20px;
             .ql-syntax {
               border-radius: 5px;
+              width: 100%;
+              overflow: scroll;
               padding: 10px;
               background-color: hsl(210, 8%, 85%);
-              // width: fit-content;
               font-size: 17px;
             }
           }
           .tagList_container {
-            display: flex;
+            width: 100%;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
             .tagList {
               display: inline-block;
               border-radius: 15px;
@@ -101,8 +103,11 @@ $mobile: 480px;
               background-color: #eee;
               padding: 2px 13px;
               font-size: 14px;
-              margin-right: 8px;
-              max-width: 95px;
+              margin: 0 8px 5px 0;
+              width: fit-content;
+            }
+            .tagList:last-child {
+              margin: 0 8px 0 0;
             }
           }
         }
@@ -269,6 +274,16 @@ $mobile: 480px;
           display: flex;
           justify-content: space-between;
         }
+        .question_section3 {
+          .section3_content {
+            width: 94%;
+            .section3_body {
+              .ql-syntax {
+                overflow: scroll;
+              }
+            }
+          }
+        }
       }
     }
     .closed_container2 {
@@ -335,11 +350,39 @@ $mobile: 480px;
 @media screen and (min-width: $notebook) {
   .questionDetailpage_wrapper {
     margin: 0 100px 0 100px;
+    .closed_container1 {
+      .question_container {
+        .question_section3 {
+          .section3_content {
+            width: 95%;
+            .section3_body {
+              .ql-syntax {
+                overflow: scroll;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
 @media screen and (min-width: $desktop) {
   .questionDetailpage_wrapper {
     margin: 0 450px 0 430px;
+    .closed_container1 {
+      .question_container {
+        .question_section3 {
+          .section3_content {
+            width: 95%;
+            .section3_body {
+              .ql-syntax {
+                overflow: scroll;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

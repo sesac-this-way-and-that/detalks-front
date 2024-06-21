@@ -37,6 +37,17 @@
     .rich_editor_container {
       #toolBar {
         display: flex;
+        overflow: scroll;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 879px) {
+  .answer-container {
+    .rich_editor_container {
+      #toolBar {
+        display: flex;
         overflow: initial;
       }
     }
