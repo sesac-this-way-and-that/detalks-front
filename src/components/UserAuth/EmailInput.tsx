@@ -87,7 +87,7 @@ export default function EmailInput({ accessType }: AccountForm) {
           onChange={emailOnChange}
           onBlur={emailOnChange}
           name="email"
-          defaultValue={"eic2021@naver.com"}
+          defaultValue={`${accessType === "login" ? "test@test.com" : ""}`}
         />
         <div>
           <span

@@ -57,26 +57,23 @@ export default function RegisterPage() {
   const accessText = "회원가입";
 
   const reqVerification = () => {
-    const url = `${process.env.REACT_APP_API_SERVER}/email`;
+    const url = `${process.env.REACT_APP_API_SERVER}/email/send`;
     const userData = {
       email: email,
     };
     console.log("userdata: ", userData);
     if (emailValid && nameValid && pwdValid) {
-      /* !!!!!!!!!!!!!!!!!테스트할 때 예외처리 우회용 주석!! 아무 메일 넣고 인증코드는 빈값으로 두기
+      // /* !!!!!!!!!!!!!!!!!테스트할 때 예외처리 우회용 주석!! 아무 메일 넣고 인증코드는 빈값으로 두기
       axios
         .post(url, userData)
         .then((res) => {
-          console.log("then res.data: ", res.data);
-          setVerificationCode(res.data.slice(9));
-          console.log("code", verificationCode, "res", res.data.slice(9));
           alert("입력한 이메일로 인증번호가 전송되었습니다.");
         })
         .catch((err) => {
           console.log("err: ", err);
           alert("이메일 전송에 실패했습니다.");
-        }); 
-        */
+        });
+      // */
       setBeforeSendMail(!beforeSendMail);
       setEmailValid(false);
       setNameValid(false);

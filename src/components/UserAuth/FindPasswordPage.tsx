@@ -35,7 +35,7 @@ export default function FindPasswordPage() {
   const accessText = "비밀번호 찾기";
 
   const reqVerification = () => {
-    const url = `${process.env.REACT_APP_API_SERVER}/email/password`;
+    const url = `${process.env.REACT_APP_API_SERVER}/email/password/send`;
     const userData = {
       email: email,
     };
@@ -44,9 +44,6 @@ export default function FindPasswordPage() {
       axios
         .post(url, userData)
         .then((res) => {
-          console.log("then res.data: ", res.data);
-          setVerificationCode(res.data.slice(9));
-          console.log("code", verificationCode, "res", res.data.slice(9));
           alert("입력한 이메일로 인증번호가 전송되었습니다.");
           setBeforeSendMail(!beforeSendMail);
         })
@@ -67,7 +64,7 @@ export default function FindPasswordPage() {
       email: email,
       pwd: pwd,
     };
-    console.log("uuuu", userData);
+    console.log(userData);
     axios
       .patch(url, userData)
       .then((res) => {
