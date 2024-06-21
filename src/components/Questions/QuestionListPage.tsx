@@ -120,7 +120,7 @@ export default function QuestionListPage() {
     setLoading(true);
     if (state /* && state.searchResults */) {
       setLoading(false);
-      if (state.searchResults !== null) {
+      if (state.searchResults !== false) {
         setNoQuestion(false);
         setQnaListData(state.searchResults);
         setTotalPages(state.searchResults.totalPages);
@@ -301,6 +301,37 @@ export default function QuestionListPage() {
     }
   };
 
+  /*  const postBookmark = (questionId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("post");
+    const url = `${process.env.REACT_APP_API_SERVER}/bookmarks/${questionId}`;
+    axios
+      .post(url, null, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        alert("북마크 등록 실패");
+      });
+  };
+  const deleteBookmark = (questionId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("delete");
+    const url = `${process.env.REACT_APP_API_SERVER}/bookmarks/${questionId}`;
+    axios
+      .delete(url, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        alert("북마크 삭제 실패");
+      });
+  }; */
+
   return (
     <section className="qna-list-page">
       {/* <p>spage: {spage}</p>
@@ -332,7 +363,7 @@ export default function QuestionListPage() {
               }`}
               onClick={orderByVote}
             >
-              평점순
+              투표순
             </button>
             <button
               type="button"
@@ -358,139 +389,149 @@ export default function QuestionListPage() {
             </p>
           </div>
         ) : null}
-        {qnaListData?.content.map((qnaData) => {
-          return (
-            <div
-              className={`qna-container${
-                qnaData.questionRep !== 0 ? " isBountied" : ""
-              }`}
-              key={qnaData.questionId}
-              onClick={() => {
-                navigate(`/question/${qnaData.questionId}`);
-              }}
-            >
-              <div className="qna-container-side">
-                <ul className="qna-state">
-                  <li
-                    className={`state-count count-vote ${
-                      qnaData.voteCount === 0
-                        ? "vote-zero"
-                        : qnaData.voteCount > 0
-                        ? "vote-plus"
-                        : "vote-minus"
-                    }`}
-                  >
-                    {qnaData.voteCount} 투표
-                  </li>
-                  {/* 답변이 없으면 회색 글씨, 답변이 있으면 파란색 글씨
+        {qnaListData === undefined || qnaListData === null
+          ? null
+          : qnaListData.content.map((qnaData) => {
+              return (
+                <div
+                  className={`qna-container${
+                    qnaData.questionRep > 0 ? " isBountied" : ""
+                  }`}
+                  key={qnaData.questionId}
+                  onClick={() => {
+                    navigate(`/question/${qnaData.questionId}`);
+                  }}
+                >
+                  <div className="qna-container-side">
+                    <ul className="qna-state">
+                      <li
+                        className={`state-count count-vote ${
+                          qnaData.voteCount === 0
+                            ? "vote-zero"
+                            : qnaData.voteCount > 0
+                            ? "vote-plus"
+                            : "vote-minus"
+                        }`}
+                      >
+                        {qnaData.voteCount} 투표
+                      </li>
+                      {/* 답변이 없으면 회색 글씨, 답변이 있으면 파란색 글씨
                    채택된 답변이 있으면 테두리와 아이콘 */}
-                  <li
-                    className={`state-count count-answer 
+                      <li
+                        className={`state-count count-answer 
                       ${
-                        qnaData.answerCount === 0
-                          ? ""
-                          : qnaData.isSolved
-                          ? "qna-solved"
-                          : "exist-answer"
+                        qnaData.answerCount > 0
+                          ? qnaData.isSolved
+                            ? "qna-solved"
+                            : "exist-answer"
+                          : ""
                       }`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faAward}
-                      className={`award-icon ${
-                        qnaData.isSolved ? "qna-solved" : "display-none"
-                      }`}
-                    />
-                    {qnaData.answerList.length} 답변
-                  </li>
-                  <li className="state-count count-view">
-                    {qnaData.viewCount} 열람
-                  </li>
-                  {qnaData.questionRep !== 0 ? (
-                    <li className="state-count count-rep">
-                      {qnaData.questionRep} 현상금
-                    </li>
-                  ) : null}
-                </ul>
-              </div>
-              <div className="qna-summary-container">
-                <div className="qna-summary">
-                  <div className="qna-summary-title">
-                    {qnaData.questionTitle}
+                      >
+                        <FontAwesomeIcon
+                          icon={faAward}
+                          className={`award-icon ${
+                            qnaData.isSolved ? "qna-solved" : "display-none"
+                          }`}
+                        />
+                        {qnaData.answerList.length} 답변
+                      </li>
+                      <li className="state-count count-view">
+                        {qnaData.viewCount} 열람
+                      </li>
+                      <li
+                        className={`state-count count-rep ${
+                          qnaData.questionRep > 0 ? "" : "display-none"
+                        }`}
+                      >
+                        {qnaData.questionRep} 현상금
+                      </li>
+                    </ul>
                   </div>
+                  <div className="qna-summary-container">
+                    <div className="qna-summary">
+                      <div className="qna-summary-title">
+                        {qnaData.questionTitle}
+                      </div>
 
-                  <div
-                    className="qna-summary-content"
-                    dangerouslySetInnerHTML={{
-                      __html: qnaData.questionContent, // html 태그가 있을 시 제거
-                    }}
-                  ></div>
-                </div>
+                      <div
+                        className="qna-summary-content"
+                        dangerouslySetInnerHTML={{
+                          __html: qnaData.questionContent, // html 태그가 있을 시 제거
+                        }}
+                      ></div>
+                    </div>
 
-                <div className="qna-container-bottom">
-                  <div className="qna-tag-list">
-                    {qnaData.tagNameList.length < 5
-                      ? qnaData.tagNameList.map((tagList, idx) => {
-                          return (
-                            <div className="qna-tag" key={idx}>
-                              {tagList}
-                            </div>
-                          );
-                        })
-                      : // 태그 수가 4개보다 많으면 4개까지만 출력 후 ... 표시
-                        [...qnaData.tagNameList.slice(0, 5)].map(
-                          (tagList, idx) => {
-                            return (
-                              <div className="qna-tag" key={idx}>
-                                {idx !== 4 ? tagList : "..."}
-                              </div>
-                            );
-                          }
-                        )}
-                  </div>
-                  <div className="qna-user-info">
-                    <div className="qna-user-image-container">
-                      <img
-                        className="qna-user-image"
-                        src={
-                          process.env.REACT_APP_STATIC_SERVER +
-                          "/" +
-                          qnaData.author.memberImg
-                        }
-                      />
-                    </div>
-                    <div className="qna-user-name">
-                      {qnaData.author.memberName}
-                    </div>
-                    <div className="qna-user-rep">
-                      {qnaData.author.memberRep}
-                    </div>
-                    <div className="qna-created-at">
-                      {/* 작성일이 오늘이면 시간만, 아니면 날짜만 표기 */}
-                      {compareDate(qnaData.createdAt)
-                        ? qnaData.createdAt.toString().split("T")[1]
-                        : qnaData.createdAt.toString().split("T")[0]}
-                    </div>
-                    {authToken ? (
+                    <div className="qna-container-bottom">
+                      <div className="qna-tag-list">
+                        {qnaData.tagNameList.length < 5
+                          ? qnaData.tagNameList.map((tagList, idx) => {
+                              return (
+                                <div className="qna-tag" key={idx}>
+                                  {tagList}
+                                </div>
+                              );
+                            })
+                          : // 태그 수가 4개보다 많으면 4개까지만 출력 후 ... 표시
+                            [...qnaData.tagNameList.slice(0, 5)].map(
+                              (tagList, idx) => {
+                                return (
+                                  <div className="qna-tag" key={idx}>
+                                    {idx !== 4 ? tagList : "..."}
+                                  </div>
+                                );
+                              }
+                            )}
+                      </div>
+                      <div className="qna-user-info">
+                        <div className="qna-user-image-container">
+                          <img
+                            className="qna-user-image"
+                            src={
+                              process.env.REACT_APP_STATIC_SERVER +
+                              "/" +
+                              qnaData.author.memberImg
+                            }
+                          />
+                        </div>
+                        <div className="qna-user-name">
+                          {qnaData.author.memberName}
+                        </div>
+                        <div className="qna-user-rep">
+                          {qnaData.author.memberRep}
+                        </div>
+                        <div className="qna-created-at">
+                          {/* 작성일이 오늘이면 시간만, 아니면 날짜만 표기 */}
+                          {compareDate(qnaData.createdAt)
+                            ? qnaData.createdAt.toString().split("T")[1]
+                            : qnaData.createdAt.toString().split("T")[0]}
+                        </div>
+                        {/* {authToken ? (
                       <div className="qna-bookmark">
                         {qnaData.bookmarkState ? (
                           <FontAwesomeIcon
                             icon={faBookmark}
                             className="bookmark-icon bookmark-on"
+                            onClick={(e) => {
+                              deleteBookmark(qnaData.questionId, e);
+                            }}
                           />
                         ) : (
                           <FontAwesomeIcon
                             icon={faBookmarkReg}
                             className="bookmark-icon bookmark-off"
+                            onClick={(e) => {
+                              postBookmark(qnaData.questionId, e);
+                            }}
                           />
                         )}
                       </div>
-                    ) : null}
+                    ) : null} */}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
       </article>
       <article className="qna-footer">
         <div className="qna-total">

@@ -20,8 +20,10 @@ export default function LoginPage() {
     if (authToken) {
       if (location.state !== "toMainPage") {
         alert("로그인된 상태입니다. 메인 페이지로 이동합니다.");
+        nav("/");
+      } else {
+        nav("/");
       }
-      nav("/");
     }
   }, []);
 
