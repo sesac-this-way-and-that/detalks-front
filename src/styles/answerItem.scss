@@ -37,11 +37,11 @@
       }
     }
     .container2_section2 {
+      min-height: 93px;
       margin-bottom: 20px;
       .rich_editor_container {
         #toolBar {
           display: flex;
-          overflow: scroll;
           .ql-formats {
             display: flex;
           }
