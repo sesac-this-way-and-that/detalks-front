@@ -140,10 +140,8 @@ $mobile: 480px;
             text-decoration: none;
             display: block;
             padding: 20px 25px;
-            // font-size: 15px;
             line-height: 1;
             transition: 0.3s;
-            // border: 1px solid black;
 
             &:hover {
               color: $main-color;
@@ -234,11 +232,6 @@ $mobile: 480px;
           width: 30px;
         }
       }
-
-      // input:checked ~ .headerMenu {
-      //   right: 0;
-      //   box-shadow: -20px 0 40px rgba(0, 0, 0, 0.3);
-      // }
     }
   }
   .qna-write-question {
@@ -281,18 +274,14 @@ $mobile: 480px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // border: 1px solid red;
 
       .headerNavigation {
         width: 800px;
-        // border: 1px solid blue;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        // flex: 1;
 
         .searchInput {
-          // border: 1px solid red;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -474,14 +463,12 @@ $mobile: 480px;
     padding: 10px 10px;
     .headerContainer {
       width: 100%;
-      // border: 1px solid red;
       .headerNavigation {
         input:checked ~ .headerMenu {
           right: 0;
           box-shadow: -20px 0 40px rgba(0, 0, 0, 0.3);
         }
         width: 80%;
-        // border: 1px solid red;
         .hamburger,
         .toggle-menu {
           display: block;
@@ -534,7 +521,6 @@ $mobile: 480px;
               }
             }
             a {
-              // border: 1px solid red;
               font-size: 18px;
               &:hover {
                 padding: 30px;
@@ -549,7 +535,6 @@ $mobile: 480px;
         .searchTooltip {
           position: absolute;
           background-color: white;
-          // padding: 15px;
           width: 240px;
           top: 50px;
           left: 25vw;

@@ -22,24 +22,7 @@ type UserInfo = {
   bookmarkCount?: number;
   tags?: string[];
 };
-/*
-"idx": 1,
-        "email": "789rlgur@naver.com",
-        "name": "rekey",
-        "isDeleted": false,
-        "reason": null,
-        "state": true,
-        "img": "default5.png",
-        "summary": null,
-        "about": null,
-        "rep": 1,
-        "social": "NONE",
-        "created": "2024-06-08 17:48:18",
-        "visited": "2024-06-08 17:48:18",
-        "updated": null,
-        "qcount": 0,
-        "acount": 0
-*/
+
 type UserStore = {
   userInfo: UserInfo | null;
   isLogin: boolean;
@@ -61,7 +44,6 @@ export const useInfoStore = create<UserStore>()(
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log("이것은 zustand" + res.data);
           set((state) => ({
             userInfo: res.data.data,
             isLogin: true,

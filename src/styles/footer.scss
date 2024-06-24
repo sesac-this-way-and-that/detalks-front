@@ -22,7 +22,6 @@
     width: 100%;
     .logo {
       padding-left: 20px;
-      // padding-right: 10px;
       margin: auto 0;
       p {
         font-size: 23px;
@@ -63,12 +62,10 @@
       display: none;
     }
     .footer-content {
-      //   border: 1px solid red;
       width: 550px;
       height: 165px;
       display: flex;
       justify-content: space-between;
-      //   align-items: center;
       div {
         width: 120px;
         margin-left: 20px;
@@ -119,7 +116,6 @@ $mobile: 480px;
       width: 100%;
       .logo {
         padding-left: 20px;
-        // padding-right: 10px;
         margin: auto 0;
         p {
           font-size: 23px;
@@ -160,12 +156,10 @@ $mobile: 480px;
         display: none;
       }
       .footer-content {
-        //   border: 1px solid red;
         width: 450px;
         height: 130px;
         display: flex;
         justify-content: space-between;
-        //   align-items: center;
         div {
           width: 120px;
           margin-left: 20px;
@@ -212,7 +206,6 @@ $mobile: 480px;
       width: 100%;
       .logo {
         padding-left: 20px;
-        // padding-right: 10px;
         margin: auto 0;
         p {
           font-size: 23px;
@@ -351,7 +344,6 @@ $mobile: 480px;
         div {
           width: 67px;
           margin: 0 auto;
-          // margin-left: 20px;
           margin-bottom: 20px;
           p {
             font-size: 12px;

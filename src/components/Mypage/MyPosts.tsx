@@ -115,7 +115,6 @@ const MyPosts: React.FC = () => {
     indexOfLastItem
   );
   const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const renderPageNumbers = () => {
     const maxPagesToShow = 5;
@@ -192,12 +191,12 @@ const MyPosts: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     };
     return new Date(dateString).toLocaleString(undefined, options);
   };
@@ -267,45 +266,45 @@ const MyPosts: React.FC = () => {
             <>
               {currentItems.map((question) => (
                 <Link to={`/question/${question.questionId}`} key={question.id}>
-                <ul>
-                  <li>
-                    {question.isQuestion ? (
-                      <span className={question.isSolved ? "is-solved" : ""}>
-                        Q
+                  <ul>
+                    <li>
+                      {question.isQuestion ? (
+                        <span className={question.isSolved ? "is-solved" : ""}>
+                          Q
+                        </span>
+                      ) : (
+                        <span
+                          className={question.isSelected ? "is-selected" : ""}
+                        >
+                          A
+                        </span>
+                      )}
+                    </li>
+                    <li>
+                      {question.isQuestion ? (
+                        <span
+                          className={question.isSolved ? "is-solved-vote" : ""}
+                        >
+                          {question.voteCount} 투표
+                        </span>
+                      ) : (
+                        <span
+                          className={
+                            question.isSelected ? "is-selected-vote" : ""
+                          }
+                        >
+                          {question.voteCount} 투표
+                        </span>
+                      )}
+                    </li>
+                    <li>
+                      <span>
+                        {getDisplayName(question.titleOrContent || "")}
                       </span>
-                    ) : (
-                      <span
-                        className={question.isSelected ? "is-selected" : ""}
-                      >
-                        A
-                      </span>
-                    )}
-                  </li>
-                  <li>
-                    {question.isQuestion ? (
-                      <span
-                        className={question.isSolved ? "is-solved-vote" : ""}
-                      >
-                        {question.voteCount} 투표
-                      </span>
-                    ) : (
-                      <span
-                        className={
-                          question.isSelected ? "is-selected-vote" : ""
-                        }
-                      >
-                        {question.voteCount} 투표
-                      </span>
-                    )}
-                  </li>
-                  <li>
-                    <span>
-                      {getDisplayName(question.titleOrContent || "")}
-                    </span>
-                  </li>
-                  <li>{formatDate(question.createdAt)}</li>
-                </ul>
-              </Link>
+                    </li>
+                    <li>{formatDate(question.createdAt)}</li>
+                  </ul>
+                </Link>
               ))}
             </>
           ) : (

@@ -6,7 +6,6 @@ import {
   ChangeEvent,
   FormEvent,
   KeyboardEvent,
-  MouseEvent,
 } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPen } from "@fortawesome/free-solid-svg-icons";
@@ -93,13 +92,11 @@ export default function Header(): JSX.Element {
           params: searchParams,
         }
       );
-      console.log("Search Results:", response.data);
       nav("/questions", { state: { searchResults: response.data.data } });
       setIsFocused(false);
       setSearchQuery("");
     } catch (error) {
       nav("/questions", { state: { searchResults: false } });
-      // console.error("Search Error:", error);
     }
   };
 

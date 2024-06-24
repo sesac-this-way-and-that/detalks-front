@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../styles/questionDetailPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -24,7 +24,6 @@ export default function QuestionDetailPage() {
 
   const [formattedText, setFormattedText] = useState<string>("");
   const [textAreaInputValue, setTextAreaInputValue] = useState<string>("");
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isBookMarked, setIsBookMarked] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
@@ -49,7 +48,6 @@ export default function QuestionDetailPage() {
           },
         }
       );
-      console.log("Vote incremented successfully");
       setVoteCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error("Error incrementing vote:", error);
@@ -129,7 +127,6 @@ export default function QuestionDetailPage() {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log("response.data.data:", response.data.data);
       setQuestionData(response.data.data);
       setVoteCount(response.data.data.voteCount);
       setIsBookMarked(response.data.data.bookmarkState);
@@ -155,36 +152,18 @@ export default function QuestionDetailPage() {
         },
       });
 
-      console.log("Associated votes deleted successfully", urlVotes);
-
       const url = `${process.env.REACT_APP_API_SERVER}/questions/${questionData?.questionId}`;
       await axios.delete(url, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log("Question deleted successfully");
       navigate("/questions");
     } catch (error) {
       console.error("Unexpected error:", error);
     }
   };
 
-  const processQuestionContent = (content: string) => {
-    // Regular expression to match code blocks
-    const codeBlockRegex =
-      /<span style="background-color: lightgray; font-family: monospace; white-space: pre-wrap; display: inline-block;">([\s\S]*?)<\/span>/g;
-    // Replace code blocks with styled <pre> and <code> tags
-    return content.replace(codeBlockRegex, (match, p1) => {
-      return `<pre style="background-color: lightgray; font-family: monospace; white-space: pre-wrap; display: inline-block;">${p1}</pre>`;
-    });
-  };
-
-  const processedContent = questionData?.questionContent
-    ? processQuestionContent(questionData.questionContent)
-    : "";
-
-  // const { userId } = useParams<{ userId: string }>();
   const [userDetail, setUserDetail] = useState({
     idx: userData?.idx,
     name: userData?.name || "default-name",
@@ -195,12 +174,7 @@ export default function QuestionDetailPage() {
     acount: userData?.acount || 0,
     rep: userData?.rep || 0,
   });
-  // const [userRep, setUserRep] = useState<number>(0);
   const handleUserRep = async () => {
-    console.log(
-      "questionData?.author.memberIdx, ",
-      questionData?.author.memberIdx
-    );
     if (!questionData?.author.memberIdx) return;
 
     const url = `${process.env.REACT_APP_API_SERVER}/member/idx/${questionData?.author.memberIdx}`;
@@ -208,7 +182,6 @@ export default function QuestionDetailPage() {
     try {
       const response = await axios.get(url);
       const { data } = response.data;
-      console.log("handleUserRep: ", data);
       setUserDetail({
         idx: data.idx,
         name: data.name || "default-name",
@@ -219,13 +192,11 @@ export default function QuestionDetailPage() {
         acount: data?.acount || 0,
         rep: data?.rep || 0,
       });
-      console.log(userDetail.rep);
     } catch (error) {
       console.error("Error updating bookmark:", error);
     }
   };
 
-  // console.log("userDetail: ", userDetail);
   useEffect(() => {
     if (isSolved) {
       setIsAnswerVoted(true);
@@ -249,7 +220,6 @@ export default function QuestionDetailPage() {
       });
 
       if (response.data && response.data.result === true) {
-        console.log(response.data.msg);
         setIsBookMarked(true);
       } else {
         console.error(
@@ -273,7 +243,6 @@ export default function QuestionDetailPage() {
       });
 
       if (response.data && response.data.result === true) {
-        console.log(response.data.msg);
         setIsBookMarked(false);
       } else {
         console.error(
@@ -309,7 +278,6 @@ export default function QuestionDetailPage() {
       const userAnswer = response.data.data.answerList.find(
         (answer: any) => answer.author.memberIdx === userData?.idx
       );
-      console.log("response.data.data: ", response.data.data);
       setHasUserAnswered(!!userAnswer);
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -318,7 +286,6 @@ export default function QuestionDetailPage() {
 
   // 답변 채택
   const handleSelectAnswer = async (answerId: string) => {
-    // try {
     const response = await axios.patch(
       `${process.env.REACT_APP_API_SERVER}/questions/${questionData?.questionId}/${answerId}/select`,
       null,
@@ -367,9 +334,6 @@ export default function QuestionDetailPage() {
             <div className="section2_1">
               <div className="questionStats statsList">
                 {voteCount} 투표 {/* Display vote count */}
-              </div>
-              <div className="questionStats statsList">
-                {/* {questionData?.answerList} 답변 */}
               </div>
               <div className="questionStats statsList">
                 {questionData?.viewCount} 열람

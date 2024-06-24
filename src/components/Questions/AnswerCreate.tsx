@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import authStore from "../../store/authStore";
 import axios from "axios";
-import { AnswerDetail, QuestionDetail } from "../../types/question";
-import { useInfoStore } from "../../store";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -65,8 +63,6 @@ export default function AnswerCreate({
 
   // 답변 제출
   const handleSubmit = async () => {
-    // e.preventDefault();
-
     if (!authToken) {
       alert("답변을 제출하려면 로그인이 필요합니다.");
       navigate("/login");
@@ -84,7 +80,6 @@ export default function AnswerCreate({
           Authorization: `Bearer ${authToken}`,
         },
       });
-      console.log("답변 제출:", response.data);
       setContents("");
       alert("답변이 성공적으로 작성되었습니다.");
       refreshAnswers();

@@ -11,9 +11,6 @@ export default function SocialAccount(props: any) {
         <FontAwesomeIcon icon={faGoogle} />
         &nbsp; GOOGLE로 {props.accessText} 하기
       </button>
-      {/* <button className="githubAccountBtn">
-        GITHUB로 {props.accessText} 하기
-      </button> */}
     </article>
   );
 }

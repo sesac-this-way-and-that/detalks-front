@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AccountForm } from "./userInterface";
 import accountStore from "../../store/userStore";
 import axios from "axios";
@@ -39,20 +39,20 @@ export default function EmailInput({ accessType }: AccountForm) {
         return res.data;
       })
       .catch((err) => {
-        // if (err.response.status === 400) {
-        switch (accessType) {
-          case "register":
-            setEmailValid(false);
-            setEmailMsg("이미 사용 중인 이메일입니다.");
-            break;
-          case "findPw":
-            setEmailValid(true);
-            setEmailMsg("");
-            break;
+        if (err.response.status === 400) {
+          switch (accessType) {
+            case "register":
+              setEmailValid(false);
+              setEmailMsg("이미 사용 중인 이메일입니다.");
+              break;
+            case "findPw":
+              setEmailValid(true);
+              setEmailMsg("");
+              break;
+          }
+        } else {
+          console.log("err: ", err);
         }
-        // } else {
-        console.log("err: ", err);
-        // }
       });
   };
 

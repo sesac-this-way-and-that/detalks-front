@@ -10,7 +10,6 @@ interface WithdrawUserProps {
 }
 
 const WithdrawUser: React.FC<WithdrawUserProps> = ({ onHide }) => {
-  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [reason, setReason] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(true);

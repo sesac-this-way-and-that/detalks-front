@@ -9,7 +9,7 @@ export default function PwdInput({ accessType }: AccountForm) {
   const [pwdCheckMsg, setPwdCheckMsg] = useState<string>("");
   const [inputPwd, setInputPwd] = useState<string>("");
   const [inputPwdCheck, setInputPwdCheck] = useState<string>("");
-  const { pwdValid, setPwd, setPwdValid } = accountStore();
+  const { setPwd, setPwdValid } = accountStore();
 
   // 비밀번호 유효성 검사
   const pwdPattern = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\W)(?=\S+$).{8,16}/;

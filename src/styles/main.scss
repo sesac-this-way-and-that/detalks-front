@@ -88,9 +88,6 @@ body {
 // 데스크탑
 @media (min-width: $desktop) {
   .main-container-wave {
-    // height: 1000px;
-    //   border: 1px solid red;
-
     .one {
       background: $main-color;
       animation: move 16s infinite linear;
@@ -104,8 +101,6 @@ body {
       left: -300px;
     }
     .three {
-      //   width: 700px;
-      //   height: 700px;
       background: $yellow-color;
       animation: move 20s infinite linear;
       bottom: -300px;
@@ -181,7 +176,6 @@ body {
   article {
     .main-container {
       max-width: 1140px;
-      // border: 1px solid red;
       min-height: 1000px;
     }
     .contents {
@@ -194,7 +188,6 @@ body {
         background-color: $deep-blue-color;
         border-radius: 5px;
         box-shadow: 3px 3px 3px rgb(154, 154, 154);
-        // border: 1px solid red;
       }
       .main-content {
         width: 700px;
@@ -275,8 +268,6 @@ body {
     .wave-box {
       opacity: 0.8;
     }
-    // height: 1000px;
-    //   border: 1px solid red;
     .one {
       background: $main-color;
       animation: move 6s infinite linear;
@@ -290,8 +281,6 @@ body {
       left: -500px;
     }
     .three {
-      //   width: 700px;
-      //   height: 700px;
       background: $yellow-color;
       animation: move 19s infinite linear;
       bottom: -300px;
@@ -355,7 +344,6 @@ body {
   article {
     .main-container {
       max-width: 960px;
-      //   border: 1px solid red;
       min-height: 700px;
     }
 
@@ -369,7 +357,6 @@ body {
         background-color: $deep-blue-color;
         border-radius: 5px;
         box-shadow: 3px 3px 3px rgb(154, 154, 154);
-        // border: 1px solid red;
       }
       .main-content {
         width: 490px;
@@ -461,8 +448,6 @@ body {
       left: -500px;
     }
     .three {
-      //   width: 700px;
-      //   height: 700px;
       background: $yellow-color;
       animation: move 18s infinite linear;
       bottom: -500px;
@@ -526,7 +511,6 @@ body {
   article {
     .main-container {
       max-width: 720px;
-      //   border: 1px solid red;
       min-height: 600px;
     }
     .contents {
@@ -539,7 +523,6 @@ body {
         background-color: $deep-blue-color;
         border-radius: 5px;
         box-shadow: 3px 3px 3px rgb(154, 154, 154);
-        // border: 1px solid red;
       }
       .main-content {
         width: 400px;
@@ -676,7 +659,6 @@ body {
     }
     .main-container {
       max-width: 100%;
-      //   border: 1px solid red;
       min-height: 550px;
     }
 
@@ -691,7 +673,6 @@ body {
         background-color: $deep-blue-color;
         border-radius: 5px;
         box-shadow: 3px 3px 3px rgb(154, 154, 154);
-        // border: 1px solid red;
       }
       .main-content {
         width: 250px;

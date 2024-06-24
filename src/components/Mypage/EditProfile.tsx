@@ -101,11 +101,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
             "Content-Type": "multipart/form-data",
           },
         });
-
-        console.log(response2.data);
       }
-
-      console.log(response1.data);
 
       onUserInfoChange({
         idx: userInfo.idx,
@@ -168,7 +164,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
         {userInfo.img && (
           <div onClick={handleImageClick} className="profile-img">
             <img
-              // src={process.env.REACT_APP_STATIC_SERVER + "/" + userInfo.img}
               src={imageUrl}
               alt={imageUrl}
               style={{ width: "180px", cursor: "pointer" }}

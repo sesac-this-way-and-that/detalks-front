@@ -16,7 +16,6 @@ export default function RegisterPage() {
     email,
     name,
     pwd,
-    verificationCode,
     emailValid,
     nameValid,
     pwdValid,
@@ -61,9 +60,7 @@ export default function RegisterPage() {
     const userData = {
       email: email,
     };
-    console.log("userdata: ", userData);
     if (emailValid && nameValid && pwdValid) {
-      // /* !!!!!!!!!!!!!!!!!테스트할 때 예외처리 우회용 주석!! 아무 메일 넣고 인증코드는 빈값으로 두기
       axios
         .post(url, userData)
         .then((res) => {
@@ -73,7 +70,6 @@ export default function RegisterPage() {
           console.log("err: ", err);
           alert("이메일 전송에 실패했습니다.");
         });
-      // */
       setBeforeSendMail(!beforeSendMail);
       setEmailValid(false);
       setNameValid(false);
@@ -91,21 +87,14 @@ export default function RegisterPage() {
       name: name,
       pwd: pwd,
     };
-    // const formData = new FormData();
-    // formData.append("email", email);
-    // formData.append("name", name);
-    // formData.append("pwd", pwd);
-    console.log(userData);
     axios
       .post(url, userData)
       .then((res) => {
         alert("회원가입 성공");
-        console.log("then res.data: ", res.data);
         setEmail("");
         setName("");
         setPwd("");
         // 회원가입>로그인 상황에선 로그인 후 이전 페이지로 자동 이동하는 대신 메인페이지로 이동
-        // nav("/login", { replace: true });
         nav("/login", { state: "toMainPage" });
       })
       .catch((err) => {
