@@ -11,9 +11,7 @@ import {
   faAngleDoubleLeft,
   faAngleDoubleRight,
   faAward,
-  faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBookmark as faBookmarkReg } from "@fortawesome/free-regular-svg-icons";
 
 interface Question {
   questionId: number;
@@ -84,7 +82,6 @@ interface QnaListData {
 export default function QuestionListPage() {
   const location = useLocation();
   const { state } = location;
-  // console.log(state.searchResults);
   const navigate = useNavigate();
   const { authToken } = authStore();
 
@@ -98,10 +95,8 @@ export default function QuestionListPage() {
   // state 관련
   const [qnaListData, setQnaListData] = useState<QnaListData | null>();
   const [spage, setSPage] = useState<number>();
-  // const [spage, setSPage] = useState<number>(Number(pageQuery) - 1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [sortBy, setSortBy] = useState<string>("createdAt");
-  // const [sortDESC, setSortDESC] = useState<boolean>(true);
   const [filterByAnswer, setFilterByAnswer] = useState<boolean>(false);
 
   // 마운트 시 작동
@@ -118,7 +113,7 @@ export default function QuestionListPage() {
   // 마운트 & 업데이트 시 작동
   useEffect(() => {
     setLoading(true);
-    if (state /* && state.searchResults */) {
+    if (state) {
       setLoading(false);
       if (state.searchResults !== false) {
         setNoQuestion(false);
@@ -133,14 +128,6 @@ export default function QuestionListPage() {
     }
   }, [spage, state, sortBy, filterByAnswer]);
 
-  // 언마운트 시 작동
-  useEffect(() => {
-    return () => {
-      // setNoQuestion(false);
-      // setFilterByAnswer(false);
-    };
-  }, []);
-
   const getQuestionList = async (spage: number) => {
     try {
       if (!filterByAnswer) {
@@ -154,13 +141,6 @@ export default function QuestionListPage() {
         );
         let listData = response.data.data;
 
-        console.log("response: ", response.data);
-
-        // if (sortDESC) {
-        //   setQnaList(listData.content);
-        // } else {
-        //   setQnaList(listData.content.reverse());
-        // }
         setNoQuestion(false);
         setQnaListData(listData);
         setTotalPages(listData.totalPages);
@@ -175,8 +155,6 @@ export default function QuestionListPage() {
           }
         );
         let listData = response.data.data;
-
-        console.log("response: ", response.data);
 
         setNoQuestion(false);
         setQnaListData(listData);
@@ -196,23 +174,16 @@ export default function QuestionListPage() {
   // 정렬 기능
 
   const orderByNew = () => {
-    // if (sortBy === "createdAt") {
-    //   setSortDESC(!sortDESC);
-    // }
     setSortBy("createdAt");
     setFilterByAnswer(false);
     setSPage(0);
   };
   const orderByVote = () => {
-    // if (sortBy === "voteCount") {
-    //   setSortDESC(!sortDESC);
-    // }
     setSortBy("voteCount");
     setFilterByAnswer(false);
     setSPage(0);
   };
   const filterNoAnswer = () => {
-    // console.log(filterByAnswer);
     setFilterByAnswer(!filterByAnswer);
     setSortBy("createdAt");
     setSPage(0);
@@ -301,43 +272,8 @@ export default function QuestionListPage() {
     }
   };
 
-  /*  const postBookmark = (questionId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log("post");
-    const url = `${process.env.REACT_APP_API_SERVER}/bookmarks/${questionId}`;
-    axios
-      .post(url, null, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        alert("북마크 등록 실패");
-      });
-  };
-  const deleteBookmark = (questionId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log("delete");
-    const url = `${process.env.REACT_APP_API_SERVER}/bookmarks/${questionId}`;
-    axios
-      .delete(url, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        alert("북마크 삭제 실패");
-      });
-  }; */
-
   return (
     <section className="qna-list-page">
-      {/* <p>spage: {spage}</p>
-      <p>cpage: {cpage}</p>
-      <p>pageQuery: {pageQuery}</p>
-      <p>totalPages: {totalPages}</p> */}
       <article className="qna-header">
         <h2 className="title">질의응답</h2>
         <button className="qna-write-question" onClick={toWritePage}>
@@ -505,27 +441,6 @@ export default function QuestionListPage() {
                             ? qnaData.createdAt.toString().split("T")[1]
                             : qnaData.createdAt.toString().split("T")[0]}
                         </div>
-                        {/* {authToken ? (
-                      <div className="qna-bookmark">
-                        {qnaData.bookmarkState ? (
-                          <FontAwesomeIcon
-                            icon={faBookmark}
-                            className="bookmark-icon bookmark-on"
-                            onClick={(e) => {
-                              deleteBookmark(qnaData.questionId, e);
-                            }}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faBookmarkReg}
-                            className="bookmark-icon bookmark-off"
-                            onClick={(e) => {
-                              postBookmark(qnaData.questionId, e);
-                            }}
-                          />
-                        )}
-                      </div>
-                    ) : null} */}
                       </div>
                     </div>
                   </div>
@@ -538,7 +453,6 @@ export default function QuestionListPage() {
           총 {noQuestion ? 0 : qnaListData?.totalElements} 질문
         </div>
         <div className="pages-button">
-          {/* {startPagePerTen === 1 ? null : ( */}
           <button
             type="button"
             onClick={() => changePage(1)}
@@ -548,8 +462,6 @@ export default function QuestionListPage() {
           >
             <FontAwesomeIcon icon={faAngleDoubleLeft} />
           </button>
-          {/* )} */}
-          {/* {startPagePerTen === 1 ? null : ( */}
           <button
             type="button"
             onClick={() => changePage(Number(pageQuery) - 10)}
@@ -559,9 +471,7 @@ export default function QuestionListPage() {
           >
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
-          {/* )} */}
           {pagesRenderer()}
-          {/* {totalPages <= endPagePerTen ? null : ( */}
           <button
             type="button"
             onClick={() => changePage(Number(pageQuery) + 10)}
@@ -571,8 +481,6 @@ export default function QuestionListPage() {
           >
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
-          {/* )} */}
-          {/* {totalPages <= endPagePerTen ? null : ( */}
           <button
             type="button"
             onClick={() => changePage(totalPages)}
@@ -582,7 +490,6 @@ export default function QuestionListPage() {
           >
             <FontAwesomeIcon icon={faAngleDoubleRight} />
           </button>
-          {/* )} */}
         </div>
       </article>
     </section>

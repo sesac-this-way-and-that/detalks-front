@@ -46,18 +46,12 @@ export default function LoginPage() {
       email: email,
       pwd: pwd,
     };
-    console.log("userdata: ", userData);
-    // const formData = new FormData();
-    // formData.append("email", email);
-    // formData.append("pwd", pwd);
     axios
       .post(url, userData)
       .then((res) => {
-        console.log("then res.data: ", res.data);
         localStorage.setItem("authToken", res.data.token);
         setAuthToken(localStorage.getItem("authToken"));
         getInfo();
-        // alert("로그인 성공");
         setEmail("");
         setPwd("");
         if (location.state === "toMainPage") {

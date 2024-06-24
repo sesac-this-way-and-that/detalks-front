@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useInfoStore } from "../store";
-import Header from "./Header";
 import { Link } from "react-router-dom";
 import questions from "../assets/questions.png";
 import questionDetail from "../assets/questionDetail.png";

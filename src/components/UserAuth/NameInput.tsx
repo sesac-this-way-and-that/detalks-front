@@ -27,10 +27,10 @@ export default function NameInput({ accessType }: AccountForm) {
         return res.data;
       })
       .catch((err) => {
-        // if (err.response.status === 400) {
-        setNameValid(false);
-        return { msg: "이미 사용 중인 이름입니다." };
-        // }
+        if (err.response.status === 400) {
+          setNameValid(false);
+          return { msg: "이미 사용 중인 이름입니다." };
+        }
       });
     setNameMsg(response.msg);
   };

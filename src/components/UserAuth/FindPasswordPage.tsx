@@ -11,7 +11,6 @@ export default function FindPasswordPage() {
   const {
     email,
     pwd,
-    verificationCode,
     emailValid,
     setEmail,
     setPwd,
@@ -19,7 +18,6 @@ export default function FindPasswordPage() {
     setEmailValid,
   } = accountStore();
   const [beforeSendMail, setBeforeSendMail] = useState<boolean>(true);
-  const [beforeVerification, setBeforeVerification] = useState<boolean>(true);
 
   // 언마운트 시 스토어 상태 초기화
   useEffect(() => {
@@ -39,7 +37,6 @@ export default function FindPasswordPage() {
     const userData = {
       email: email,
     };
-    console.log("userdata: ", userData);
     if (emailValid) {
       axios
         .post(url, userData)
@@ -64,16 +61,13 @@ export default function FindPasswordPage() {
       email: email,
       pwd: pwd,
     };
-    console.log(userData);
     axios
       .patch(url, userData)
       .then((res) => {
         alert("비밀번호가 변경되었습니다.");
-        console.log("then res.data: ", res.data);
         setEmail("");
         setPwd("");
         // 비밀번호 찾기>로그인 상황에선 로그인 후 이전 페이지로 자동 이동하는 대신 메인페이지로 이동
-        // nav("/login", { replace: true });
         nav("/login", { state: "toMainPage" });
       })
       .catch((err) => {

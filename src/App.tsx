@@ -12,7 +12,6 @@ import GoogleAccount from "./components/UserAuth/GoogleAccount";
 import QuestionCreateAndModifyPage from "./components/Questions/QuestionCreateAndModifyPage";
 import QuestionListPage from "./components/Questions/QuestionListPage";
 import QuestionDetailPage from "./components/Questions/QuestionDetailPage";
-import SocialAccount from "./components/UserAuth/SocialAccount";
 
 function App() {
   return (
@@ -40,10 +39,6 @@ function App() {
           path="/question/update/:questionId"
           element={<QuestionCreateAndModifyPage />}
         />
-        {/* <Route
-          path="/question/create/:questionId"
-          element={<Question type="create" />}
-        /> */}
       </Routes>
       <Footer />
     </>

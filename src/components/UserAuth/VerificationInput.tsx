@@ -1,6 +1,6 @@
 import axios from "axios";
 import accountStore from "../../store/userStore";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { AccountForm } from "./userInterface";
 import PwdInput from "./PwdInput";
 
@@ -8,8 +8,7 @@ export default function VerificationInput({
   accessType,
   accessText,
 }: AccountForm) {
-  const { email, verificationCode, setEmail, setVerificationCode } =
-    accountStore();
+  const { email, verificationCode } = accountStore();
   const [beforeVerification, setBeforeVerification] = useState<boolean>(true);
   const [code, setCode] = useState<string>("");
   const [verifyMsg, setVerifyMsg] = useState<string>("");
@@ -38,8 +37,6 @@ export default function VerificationInput({
       });
   };
 
-  console.log("v", verificationCode);
-  console.log("c", code);
   return (
     <>
       <label>

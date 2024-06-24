@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  SyntheticEvent,
-  useMemo,
-} from "react";
+import { useState, useRef, useEffect, SyntheticEvent, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import authStore from "../../store/authStore";
@@ -24,8 +18,6 @@ export default function QuestionCreateAndModifyPage() {
   const [tagInptValue, setTagInputValue] = useState<string>("");
   const [reputationInputValue, setReputationInputValue] = useState<number>();
   const [tagOutputvalue, setTagOutputValue] = useState<string[]>([]);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
   const [applicationContent, setApplicationContent] = useState<string>("");
   //answer-container
   const QuillRef = useRef<ReactQuill>();
@@ -94,7 +86,6 @@ export default function QuestionCreateAndModifyPage() {
     setFormattedText(formatTextToHTML(textAreaInputValue));
   }, [textAreaInputValue]);
 
-  console.log("content: ", contents);
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
@@ -122,14 +113,12 @@ export default function QuestionCreateAndModifyPage() {
       .replace(/<br>/g, "\n");
     const questionData = {
       questionTitle: applicationContent,
-      // questionContent: textAreaInputValue,
       questionContent: newContent,
       tagNames: tagOutputvalue,
       questionRep: reputationInputValue,
     };
 
     try {
-      console.log("Submitting question data:", questionData);
       const response = await axios({
         method,
         url,
@@ -139,8 +128,6 @@ export default function QuestionCreateAndModifyPage() {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("Response data:", response.data);
       navigate(`/questions`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -226,7 +213,6 @@ export default function QuestionCreateAndModifyPage() {
                       QuillRef.current = element;
                     }
                   }}
-                  // value={questionId ? textAreaInputValue : contents}
                   value={contents}
                   onChange={setContents}
                   modules={modules}

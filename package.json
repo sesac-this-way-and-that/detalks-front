@@ -1,6 +1,7 @@
 {
-  "name": "client",
+  "name": "detalks-client",
   "version": "0.1.0",
+  "description": "한국의 개발자들을 위한 Q&A 커뮤니티",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.2",

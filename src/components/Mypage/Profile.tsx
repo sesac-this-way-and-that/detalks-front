@@ -43,8 +43,6 @@ const Profile: React.FC<ProfileProps> = ({ userInfo }) => {
       .get(apiUrl)
       .then((response) => {
         const { data } = response.data;
-        console.log(response);
-        console.log(data);
         setTopQuestions(data.slice(0, 5));
       })
       .catch((error) => {

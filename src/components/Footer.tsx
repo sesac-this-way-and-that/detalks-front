@@ -3,7 +3,6 @@ export default function Footer() {
     <footer className="footer">
       <div className="container">
         <div className="logo">
-          {/* <img src={Logo} alt="" /> */}
           <p>DEBUG TALKS</p>
           <p>
             <a href="https://github.com/sesac-this-way-and-that" target="blank">
@@ -48,15 +47,6 @@ export default function Footer() {
               <li>이기혁</li>
             </ul>
           </div>
-          {/* <div className="mobile-git-btn">
-            <a
-              href="https://github.com/purple11-11/HandChatter"
-              target="_blank"
-            >
-              <img src={Github} alt="" /> 
-              Debug Talks
-            </a>
-          </div> */}
         </div>
       </div>
     </footer>
